@@ -1,6 +1,6 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:../apps/api/inboxos.db"
 }
 
 generator client {
@@ -42,6 +42,7 @@ model Email {
   subject     String
   body        String
   status      String   @default("UNREAD")
+  category    String?  // Added for email classification
   createdAt   DateTime @default(now())
 
   userId    String
