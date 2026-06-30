@@ -15,6 +15,7 @@ import {
   Trash2
 } from 'lucide-react';
 import { type EmailData } from './EmailRow';
+import { useCompose } from '../context/ComposeContext';
 
 const API_BASE = 'http://localhost:8000';
 
@@ -160,6 +161,7 @@ interface EmailViewerProps {
 }
 
 export const EmailViewer: React.FC<EmailViewerProps> = ({ emailId, onBack }) => {
+  const { openCompose } = useCompose();
   const [checkedActions, setCheckedActions] = useState<Record<number, boolean>>({});
 
   // Fetch full email details via TanStack Query
@@ -450,7 +452,11 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({ emailId, onBack }) => 
           {/* Quick Action buttons */}
           <div className="flex gap-3">
             <button 
-              onClick={() => alert('Reply Action triggered.')}
+              onClick={() => openCompose({
+                to: email.sender,
+                subject: `Re: ${email.subject}`,
+                body: email.analysis?.suggested_reply || ''
+              })}
               className="flex-1 py-3.5 text-xs font-semibold rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-center transition-all glow-accent"
             >
               Reply Draft

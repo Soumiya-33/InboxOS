@@ -14,6 +14,7 @@ import {
   X
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useCompose } from '../context/ComposeContext';
 
 interface SidebarItemProps {
   icon: React.ReactNode;
@@ -54,16 +55,15 @@ interface LayoutProps {
   children: React.ReactNode;
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  onComposeClick?: () => void;
 }
 
 export const Layout: React.FC<LayoutProps> = ({ 
   children, 
   activeTab, 
-  setActiveTab,
-  onComposeClick 
+  setActiveTab
 }) => {
   const { user, logout } = useAuth();
+  const { openCompose } = useCompose();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -98,7 +98,7 @@ export const Layout: React.FC<LayoutProps> = ({
         {/* Compose Button */}
         <div className="px-4 py-4">
           <button 
-            onClick={onComposeClick}
+            onClick={() => openCompose()}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm transition-all duration-200 glow-accent-hover active:scale-[0.98]"
           >
             <Plus size={16} />
@@ -179,7 +179,7 @@ export const Layout: React.FC<LayoutProps> = ({
             <button 
               onClick={() => {
                 setIsMobileMenuOpen(false);
-                if (onComposeClick) onComposeClick();
+                openCompose();
               }}
               className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm mb-4 transition-all duration-200"
             >

@@ -5,6 +5,7 @@ import { LoginForm } from './components/LoginForm';
 import { RegisterForm } from './components/RegisterForm';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { EmailList } from './components/EmailList';
+import { ComposeModal } from './components/ComposeModal';
 import { 
   ShieldAlert, 
   CheckCircle2, 
@@ -58,15 +59,10 @@ const DashboardContent: React.FC = () => {
     { title: 'Average Action Time', value: '1.2m', change: '-12%', isPositive: true, icon: <Clock size={18} /> },
   ];
 
-  const handleComposeAction = () => {
-    alert('Compose action triggered (Compose modal will follow in the next steps).');
-  };
-
   return (
     <Layout 
       activeTab={activeTab} 
       setActiveTab={setActiveTab}
-      onComposeClick={handleComposeAction}
     >
       <div className="space-y-8 animate-fadeIn">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -192,19 +188,22 @@ const DashboardContent: React.FC = () => {
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<LoginForm />} />
-      <Route path="/register" element={<RegisterForm />} />
-      <Route 
-        path="/" 
-        element={
-          <ProtectedRoute>
-            <DashboardContent />
-          </ProtectedRoute>
-        } 
-      />
-      {/* Fallback to dashboard */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
+        <Route 
+          path="/" 
+          element={
+            <ProtectedRoute>
+              <DashboardContent />
+            </ProtectedRoute>
+          } 
+        />
+        {/* Fallback to dashboard */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <ComposeModal />
+    </>
   );
 }
