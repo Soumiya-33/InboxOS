@@ -10,6 +10,7 @@ import {
   Search, 
   RefreshCw
 } from 'lucide-react';
+import { EmailViewer } from './EmailViewer';
 
 const API_BASE = 'http://localhost:8000';
 
@@ -183,6 +184,7 @@ const FALLBACK_MOCK_EMAILS: EmailData[] = [
 ];
 
 export const EmailList: React.FC = () => {
+  const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   
@@ -219,6 +221,16 @@ export const EmailList: React.FC = () => {
 
   // Fallback to mock data if API fails
   const emailsList = data || FALLBACK_MOCK_EMAILS;
+
+  // Intercept rendering if an email is selected
+  if (selectedEmailId) {
+    return (
+      <EmailViewer 
+        emailId={selectedEmailId} 
+        onBack={() => setSelectedEmailId(null)} 
+      />
+    );
+  }
 
   // Filter local data (Search & Tabs)
   const filteredEmails = emailsList.filter(email => {
@@ -358,7 +370,7 @@ export const EmailList: React.FC = () => {
             <EmailRow 
               key={email.id} 
               email={email} 
-              onClick={() => alert(`Email details clicked (id: ${email.id}). Detail view will follow in the next steps.`)}
+              onClick={() => setSelectedEmailId(email.id)}
             />
           ))}
         </div>
