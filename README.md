@@ -526,12 +526,12 @@ Increase efficiency inside the dark glassmorphism dashboard UI.
 
 ## 13. Performance Optimizations
 
-*   📡 **Parser Caching:** Parsed multipart email contexts and structures are serialized and stored in Redis with a 24-hour expiration window.
-*   🤖 **AI Batch Classification:** Reduces LLM latency by grouping low-importance emails (such as newsletters and support tickets) and classifying them in batches of 5. Uses a lightweight routing model (like `gpt-4o-mini`) for initial sorting before processing with complex extraction pipelines.
-*   🗂️ **Database Composite Indexing:** High-speed queries are achieved using composite indexes built on `(user_id, received_at DESC)` and `(category, priority_score DESC)`.
-*   🖥️ **Instanced Rendering:** The frontend dashboard list utilizes Virtual Scrolling (`react-window`) to smoothly render long inbox logs containing 10,000+ entries.
-*   ⚡ **Connection Pooling:** Backend connections are managed using `AsyncPG` with SQLALchemy async engines, maintaining connections without initialization lag.
-*   🛡️ **Redis-Backed Throttling:** Protects pipeline processes using rate limiters configured to allow a burst of 50 emails/hour per connected inbox user.
+*  **Parser Caching:** Parsed multipart email contexts and structures are serialized and stored in Redis with a 24-hour expiration window.
+*  **AI Batch Classification:** Reduces LLM latency by grouping low-importance emails (such as newsletters and support tickets) and classifying them in batches of 5. Uses a lightweight routing model (like `gpt-4o-mini`) for initial sorting before processing with complex extraction pipelines.
+*  **Database Composite Indexing:** High-speed queries are achieved using composite indexes built on `(user_id, received_at DESC)` and `(category, priority_score DESC)`.
+*  **Instanced Rendering:** The frontend dashboard list utilizes Virtual Scrolling (`react-window`) to smoothly render long inbox logs containing 10,000+ entries.
+*  **Connection Pooling:** Backend connections are managed using `AsyncPG` with SQLALchemy async engines, maintaining connections without initialization lag.
+*  **Redis-Backed Throttling:** Protects pipeline processes using rate limiters configured to allow a burst of 50 emails/hour per connected inbox user.
 
 ---
 
