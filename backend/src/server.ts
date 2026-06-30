@@ -7,7 +7,8 @@ import { requireAuth, AuthenticatedRequest } from './middleware/auth.middleware'
 import { EventBus } from './services/event-bus.service';
 import { google } from 'googleapis';
 import crypto from 'crypto';
-
+import { EmailSenderService } from './services/email-sender.service';
+import { encrypt } from './utils/crypto';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -327,17 +328,6 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GMAIL_REDIRECT_URI || 'http://localhost:8000/api/integrations/gmail/callback'
 );
 
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'default_secret_key_32_chars_long!'; 
-const IV_LENGTH = 16;
-
-function encrypt(text: string) {
-  const iv = crypto.randomBytes(IV_LENGTH);
-  const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(ENCRYPTION_KEY.padEnd(32, '0').slice(0, 32)), iv);
-  let encrypted = cipher.update(text);
-  encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return iv.toString('hex') + ':' + encrypted.toString('hex');
-}
-
 /**
  * GET /api/integrations/gmail/auth
  * Generates the Google OAuth URL.
@@ -405,6 +395,101 @@ app.get('/api/integrations/gmail/callback', async (req: Request, res: Response) 
   } catch (error) {
     console.error('OAuth callback error:', error);
     return res.status(500).json({ error: 'OAuth integration failed' });
+  }
+});
+
+/**
+ * POST /api/emails/send
+ * Sends an outbound email via SMTP
+ */
+app.post('/api/emails/send', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { to, subject, text, html, inReplyTo } = req.body;
+    if (!to || !subject || !text) {
+      return res.status(400).json({ error: 'Missing to, subject, or text' });
+    }
+    
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+    const result = await EmailSenderService.send(userId, { to, subject, text, html, inReplyTo });
+    return res.status(200).json({ message: 'Email sent successfully', messageId: result.messageId });
+  } catch (error: any) {
+    console.error('Send email error:', error.message);
+    return res.status(500).json({ error: 'Failed to send email' });
+  }
+});
+
+/**
+ * Webhook Config Routes
+ */
+app.post('/api/webhooks/config', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { targetUrl, events } = req.body;
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+    if (!targetUrl || !Array.isArray(events)) return res.status(400).json({ error: 'Invalid payload' });
+
+    const secret = crypto.randomBytes(32).toString('hex');
+    const hook = await prisma.webhookEndpoint.create({
+      data: { targetUrl, events: JSON.stringify(events), secret, userId }
+    });
+    
+    return res.json({ id: hook.id, targetUrl: hook.targetUrl, events: JSON.parse(hook.events), secret: hook.secret });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to create webhook' });
+  }
+});
+
+app.get('/api/webhooks/config', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+    const hooks = await prisma.webhookEndpoint.findMany({ where: { userId } });
+    const formatted = hooks.map(h => ({ id: h.id, targetUrl: h.targetUrl, events: JSON.parse(h.events) }));
+    return res.json(formatted);
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to fetch webhooks' });
+  }
+});
+
+app.patch('/api/webhooks/config/:id', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+    const { targetUrl, events } = req.body;
+    const id = req.params.id as string;
+
+    const hook = await prisma.webhookEndpoint.findUnique({ where: { id } });
+    if (!hook || hook.userId !== userId) return res.status(404).json({ error: 'Not found' });
+
+    await prisma.webhookEndpoint.update({
+      where: { id },
+      data: {
+        ...(targetUrl && { targetUrl }),
+        ...(events && { events: JSON.stringify(events) })
+      }
+    });
+    return res.json({ message: 'Webhook updated' });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to update webhook' });
+  }
+});
+
+app.delete('/api/webhooks/config/:id', requireAuth, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+    const id = req.params.id as string;
+
+    const hook = await prisma.webhookEndpoint.findUnique({ where: { id } });
+    if (!hook || hook.userId !== userId) return res.status(404).json({ error: 'Not found' });
+
+    await prisma.webhookEndpoint.delete({ where: { id } });
+    return res.json({ message: 'Webhook deleted' });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to delete webhook' });
   }
 });
 

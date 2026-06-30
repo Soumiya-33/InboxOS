@@ -15,6 +15,7 @@ model User {
   emails        Email[]
   settings      UserSettings?
   emailAccounts EmailAccount[]
+  webhooks      WebhookEndpoint[]
 }
 
 model UserSettings {
@@ -60,6 +61,9 @@ model EmailAccount {
   encryptedTokens String    // Encrypted refresh & access tokens
   syncState       String    @default("connected")
   lastSyncAt      DateTime?
+  lastMessageId   String?
+  smtpHost        String?
+  smtpPort        Int?
   createdAt       DateTime  @default(now())
 
   userId          String
@@ -67,4 +71,17 @@ model EmailAccount {
   
   @@unique([userId, provider, emailAddress])
   @@map("email_accounts")
+}
+
+model WebhookEndpoint {
+  id        String   @id @default(uuid())
+  targetUrl String
+  events    String   // JSON array stored as a string: '["email.received","action.created"]'
+  secret    String   // HMAC signing secret for payload verification
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("webhook_endpoints")
 }
