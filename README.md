@@ -35,11 +35,12 @@
 
 ---
 
-## 1. Introduction & Problem Statement 
+
+## 1. Introduction & Problem Statement
 
 The average knowledge worker receives **120+ emails per day**. 
 
-Inboxes have become a cluttered dumping ground containing a chaotic mix of urgent project threads, high-priority notifications, OTP verification codes, meeting invites, invoices, automated newsletters, and spam. Current tools attempt to solve this with summaries, but a summary is simply shorter noise. 
+Inboxes have become a cluttered  dumping ground containing a chaotic mix of urgent project threads, high-priority notifications, OTP verification codes, meeting invites, invoices, automated newsletters, and spam. Current tools attempt to solve this with summaries, but a summary is simply shorter noise. 
 
 **InboxOS** represents a paradigm shift. It is a dedicated **decision + execution layer** that sits on top of your existing mail provider. If Gmail or Outlook is the hard drive, InboxOS is the operating system. It parses incoming streams, uses structured AI reasoning to identify deadlines and tasks, evaluates programmatic routing rules, and automatically acts on them—scheduling calendar events, creating dashboard tasks, and pushing urgent alerts directly to your messaging apps. 
 
@@ -592,4 +593,7 @@ We welcome contributions to the pipeline connectors and adapters!
 *   [Google API Gmail SDK](https://developers.google.com/gmail/api/guides)
 *   [Microsoft Graph SDK Reference](https://learn.microsoft.com/en-us/graph/use-the-api)
 *   [Celery Worker Queue Manual](https://docs.celeryq.dev/en/stable/)
-*   [Ollama Local LLM Quickstart](https://github.com/ollama/ollama) 
+*   [Ollama Local LLM Quickstart](https://github.com/ollama/ollama)
+
+
+..

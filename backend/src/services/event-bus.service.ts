@@ -1,11 +1,27 @@
 import Redis from 'ioredis';
+import { PrismaClient } from '@prisma/client';
+import { WebhookDispatcher } from './webhook-dispatcher.service';
 
+const prisma = new PrismaClient();
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379/0';
 
 export class EventBus {
   private static pubClient: Redis | null = null;
   private static subClient: Redis | null = null;
   private static subHandlers: Map<string, Array<(payload: any) => void>> = new Map();
+  private static webhookCache: { data: any[], expiresAt: number } | null = null;
+
+  private static async getWebhooks(topic: string) {
+    if (!this.webhookCache || Date.now() > this.webhookCache.expiresAt) {
+      this.webhookCache = { 
+        data: await prisma.webhookEndpoint.findMany(), 
+        expiresAt: Date.now() + 30_000 
+      };
+    }
+    return this.webhookCache.data.filter(h => {
+      try { return JSON.parse(h.events).includes(topic); } catch { return false; }
+    });
+  }
 
   /**
    * Initializes the Redis publish client connection.
@@ -74,6 +90,17 @@ export class EventBus {
       const client = this.getPubClient();
       const message = JSON.stringify(payload);
       await client.publish(topic, message);
+      
+      // Fire external webhooks registered for this event
+      try {
+        const hooks = await this.getWebhooks(topic);
+        for (const hook of hooks) {
+          WebhookDispatcher.dispatch(hook.targetUrl, hook.secret, topic, payload);
+        }
+      } catch (err) {
+        console.error('[EventBus] External webhook dispatch error:', err);
+      }
+      
     } catch (error) {
       console.error(`Failed to publish event to topic "${topic}":`, error);
       throw error;
