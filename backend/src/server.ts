@@ -90,6 +90,18 @@ app.use(cookieParser());
 app.use('/api', rateLimiter);
 
 /**
+ * GET /api/health
+ * Lightweight API health check endpoint.
+ */
+app.get('/api/health', (req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date(),
+  });
+});
+
+
+/**
  * POST /api/auth/register
  * Creates a new user in the database.
  */
