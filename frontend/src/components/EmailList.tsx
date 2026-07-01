@@ -343,6 +343,7 @@ export const EmailList: React.FC = () => {
             onClick={() => refetch()}
             disabled={isLoading || isFetching}
             title="Refresh Ingests"
+            aria-label="Refresh Ingests"
             className="p-3 rounded-xl bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:bg-white/10 active:scale-95 transition-all disabled:opacity-50 shrink-0"
           >
             <RefreshCw size={14} className={`${isLoading || isFetching ? 'animate-spin' : ''}`} />
@@ -433,6 +434,7 @@ export const EmailList: React.FC = () => {
               <button
                 disabled={currentPage === 1}
                 onClick={() => handlePageChange(currentPage - 1)}
+                aria-label="Previous page"
                 className="p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:text-white transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95"
               >
                 <ChevronLeft size={14} />
@@ -448,6 +450,7 @@ export const EmailList: React.FC = () => {
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => handlePageChange(currentPage + 1)}
+                aria-label="Next page"
                 className="p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:text-white transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95"
               >
                 <ChevronRight size={14} />

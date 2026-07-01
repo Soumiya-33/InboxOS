@@ -63,7 +63,7 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bg-base flex flex-col justify-center items-center px-4 relative overflow-hidden select-none">
+    <main className="min-h-screen bg-bg-base flex flex-col justify-center items-center px-4 relative overflow-hidden select-none">
       
       {/* Background ambient lighting effects */}
       <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-indigo-500/10 blur-[120px] pointer-events-none" />
