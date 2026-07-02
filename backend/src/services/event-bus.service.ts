@@ -2,6 +2,7 @@ import Redis from 'ioredis';
 import { EventEmitter } from 'events';
 import { PrismaClient } from '@prisma/client';
 import { WebhookDispatcher } from './webhook-dispatcher.service';
+import { Queue, Worker, Job } from 'bullmq';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
@@ -13,9 +14,12 @@ const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379/0';
 
 export class EventBus {
   private static pubClient: Redis | null = null;
-  private static subClient: Redis | null = null;
   private static subHandlers: Map<string, Array<(payload: any) => void>> = new Map();
   private static webhookCache: { data: any[], expiresAt: number } | null = null;
+
+  // BullMQ components
+  private static eventQueue: Queue | null = null;
+  private static eventWorker: Worker | null = null;
 
   // In-memory fallback emitter
   private static localEmitter = new EventEmitter();
@@ -62,7 +66,7 @@ export class EventBus {
   }
 
   /**
-   * Initializes the Redis publish client connection.
+   * Initializes the Redis connection and BullMQ queue.
    */
   private static getPubClient(): Redis | null {
     if (this.useLocalEmitter) {
@@ -81,73 +85,37 @@ export class EventBus {
       });
 
       this.pubClient.on('error', (error: any) => {
-        console.error('Redis Pub Client Error:', error.message || error);
+        console.error('Redis Client Error:', error.message || error);
         if (error.code === 'ECONNREFUSED') {
           this.triggerFallback();
         }
       });
 
       this.pubClient.on('connect', () => {
-        console.log('Redis Pub Client Connected');
+        console.log('Redis Client Connected for EventBus');
       });
     }
     return this.pubClient;
   }
 
   /**
-   * Initializes the Redis subscribe client connection.
+   * Returns the BullMQ queue instance.
    */
-  private static getSubClient(): Redis | null {
-    if (this.useLocalEmitter) {
-      return null;
-    }
-    if (!this.subClient) {
-      this.subClient = new Redis(REDIS_URL, {
-        maxRetriesPerRequest: null,
-        retryStrategy: (times) => {
-          if (times > 2) {
-            this.triggerFallback();
-            return null;
-          }
-          return 500;
-        }
-      });
-
-      this.subClient.on('error', (error: any) => {
-        console.error('Redis Sub Client Error:', error.message || error);
-        if (error.code === 'ECONNREFUSED') {
-          this.triggerFallback();
-        }
-      });
-
-      this.subClient.on('connect', () => {
-        console.log('Redis Sub Client Connected');
-      });
-
-      // Set up global message dispatcher for the subscriber connection
-      this.subClient.on('message', (channel, message) => {
-        try {
-          const payload = JSON.parse(message);
-          const handlers = this.subHandlers.get(channel);
-          if (handlers) {
-            handlers.forEach((handler) => {
-              try {
-                handler(payload);
-              } catch (handlerError) {
-                console.error(`Error in event handler for channel ${channel}:`, handlerError);
-              }
-            });
-          }
-        } catch (parseError) {
-          console.error(`Error parsing message on channel ${channel}:`, parseError);
-        }
+  public static getQueue(): Queue | null {
+    if (this.useLocalEmitter) return null;
+    if (!this.eventQueue) {
+      const client = this.getPubClient();
+      if (!client || this.useLocalEmitter) return null;
+      
+      this.eventQueue = new Queue('inboxos-events', {
+        connection: client as any
       });
     }
-    return this.subClient;
+    return this.eventQueue;
   }
 
   /**
-   * Publishes a structured JSON payload to a Redis Pub/Sub topic.
+   * Publishes a structured JSON payload to a BullMQ queue topic.
    */
   public static async publish(topic: string, payload: any): Promise<void> {
     try {
@@ -166,14 +134,20 @@ export class EventBus {
         return;
       }
 
-      const client = this.getPubClient();
-      if (!client || this.useLocalEmitter) {
+      const queue = this.getQueue();
+      if (!queue || this.useLocalEmitter) {
         this.localEmitter.emit(topic, payload);
         return;
       }
 
-      const message = JSON.stringify(payload);
-      await client.publish(topic, message);
+      // Add to BullMQ with retry logic
+      await queue.add(topic, payload, {
+        attempts: 3,
+        backoff: {
+          type: 'exponential',
+          delay: 2000
+        }
+      });
     } catch (error: any) {
       if (error.code === 'ECONNREFUSED') {
         this.triggerFallback();
@@ -186,7 +160,7 @@ export class EventBus {
   }
 
   /**
-   * Subscribes to a Redis Pub/Sub topic and runs the handler on received messages.
+   * Subscribes to a topic. If running in BullMQ mode, initializes a Worker to handle the queue.
    */
   public static async subscribe(topic: string, handler: (payload: any) => void): Promise<void> {
     try {
@@ -198,20 +172,39 @@ export class EventBus {
       }
       handlers.push(handler);
 
-      // Also register on the local emitter
+      // Also register on the local emitter for fallback
       this.localEmitter.on(topic, handler);
 
       if (this.useLocalEmitter) {
         return;
       }
 
-      const client = this.getSubClient();
+      const client = this.getPubClient();
       if (!client || this.useLocalEmitter) {
         return;
       }
 
-      // Subscribe the Redis client to the topic channel
-      await client.subscribe(topic);
+      // Instantiate BullMQ Worker if it's not already running
+      if (!this.eventWorker) {
+        this.eventWorker = new Worker('inboxos-events', async (job: Job) => {
+          const registeredHandlers = this.subHandlers.get(job.name);
+          if (registeredHandlers && registeredHandlers.length > 0) {
+            console.log(`[BullMQ EventBus] Executing job ${job.id} for event: "${job.name}"`);
+            for (const subHandler of registeredHandlers) {
+              await subHandler(job.data);
+            }
+          }
+        }, {
+          connection: client as any,
+          concurrency: 5
+        });
+
+        this.eventWorker.on('failed', (job: any, err: Error) => {
+          console.error(`[BullMQ EventBus] Job ${job?.id} failed:`, err.message || err);
+        });
+
+        console.log('[BullMQ EventBus] Worker listener registered successfully');
+      }
     } catch (error: any) {
       if (error.code === 'ECONNREFUSED') {
         this.triggerFallback();
@@ -223,16 +216,20 @@ export class EventBus {
   }
 
   /**
-   * Cleanly disconnects client connections.
+   * Cleanly disconnects queue and worker clients.
    */
   public static async disconnect(): Promise<void> {
+    if (this.eventQueue) {
+      await this.eventQueue.close();
+      this.eventQueue = null;
+    }
+    if (this.eventWorker) {
+      await this.eventWorker.close();
+      this.eventWorker = null;
+    }
     if (this.pubClient) {
       await this.pubClient.quit();
       this.pubClient = null;
-    }
-    if (this.subClient) {
-      await this.subClient.quit();
-      this.subClient = null;
     }
     this.subHandlers.clear();
     this.localEmitter.removeAllListeners();

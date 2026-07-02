@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { LoginForm } from './components/LoginForm';
@@ -7,6 +7,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { EmailList } from './components/EmailList';
 import { ComposeModal } from './components/ComposeModal';
 import { LandingPage } from './components/LandingPage';
+import { SocketProvider, useSocket } from './context/SocketContext';
 import { 
   ShieldAlert, 
   CheckCircle2, 
@@ -24,6 +25,8 @@ import {
   Radio,
   Bell
 } from 'lucide-react';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 interface MetricCardProps {
   title: string;
@@ -59,6 +62,27 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, isPositiv
 const DashboardContent: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { socket } = useSocket();
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('task.created', (data: any) => {
+      setToastMessage(`New Task Extracted: ${data.title}`);
+      setTimeout(() => setToastMessage(null), 4000);
+    });
+
+    socket.on('rule.executed', (data: any) => {
+      setToastMessage(`Rule Executed: "${data.ruleName}" (${data.status})`);
+      setTimeout(() => setToastMessage(null), 4000);
+    });
+
+    return () => {
+      socket.off('task.created');
+      socket.off('rule.executed');
+    };
+  }, [socket]);
 
   const getActiveTab = () => {
     const path = location.pathname;
@@ -96,14 +120,62 @@ const DashboardContent: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  const handleSave = (e: React.FormEvent) => {
+  // Synced backend settings fields
+  const [signature, setSignature] = useState('');
+  const [autoReply, setAutoReply] = useState(false);
+  const [theme, setTheme] = useState('dark');
+
+  // Load preferences from backend settings API
+  useEffect(() => {
+    if (activeTab !== 'settings') return;
+
+    const loadSettings = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/users/me/settings`, {
+          credentials: 'include'
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setTheme(data.theme || 'dark');
+          setSignature(data.signature || '');
+          setAutoReply(!!data.autoReply);
+        }
+      } catch (err) {
+        console.error('Failed to load user settings:', err);
+      }
+    };
+
+    loadSettings();
+  }, [activeTab]);
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch(`${API_BASE}/api/users/me/settings`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          theme,
+          signature: signature || null,
+          autoReply
+        }),
+        credentials: 'include'
+      });
+
+      if (res.ok) {
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 3000);
+      } else {
+        console.error('Failed to save settings: server returned non-200');
+      }
+    } catch (err) {
+      console.error('Failed to save settings to API:', err);
+    } finally {
       setIsSaving(false);
-      setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 3000);
-    }, 800);
+    }
   };
 
   const metrics = [
@@ -116,6 +188,12 @@ const DashboardContent: React.FC = () => {
   if (activeTab === 'settings') {
     return (
       <Layout activeTab={activeTab} setActiveTab={setActiveTab}>
+        {toastMessage && (
+          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-indigo-600/95 border border-indigo-500/30 text-white text-xs font-semibold shadow-2xl backdrop-blur-md animate-bounce">
+            <Sparkles size={14} className="text-amber-300" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
         <div className="space-y-6 animate-fadeIn">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-5">
@@ -190,17 +268,42 @@ const DashboardContent: React.FC = () => {
                         required
                       />
                     </div>
+                    <div className="space-y-2 col-span-1">
+                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Email Signature</label>
+                      <input
+                        type="text"
+                        value={signature}
+                        onChange={(e) => setSignature(e.target.value)}
+                        className="w-full bg-white/5 border border-white/5 rounded-xl px-4 py-2.5 text-xs text-gray-100 placeholder-gray-500 focus:outline-none focus:border-indigo-500/40 focus:ring-1 focus:ring-indigo-500/25 transition-all"
+                        placeholder="Sent from InboxOS"
+                      />
+                    </div>
+                    <div className="space-y-2 col-span-1 flex items-center pt-5">
+                      <label className="flex items-center gap-3 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={autoReply}
+                          onChange={(e) => setAutoReply(e.target.checked)}
+                          className="h-4 w-4 rounded border-white/10 bg-white/5 text-indigo-600 focus:ring-indigo-500/30"
+                        />
+                        <span className="text-xs font-semibold text-gray-300">Enable Auto Reply</span>
+                      </label>
+                    </div>
                   </div>
 
                   <div className="border-t border-white/5 pt-5 space-y-4">
                     <h4 className="text-xs font-semibold text-gray-300">Theme Preferences</h4>
                     <div className="flex items-center justify-between p-4 rounded-xl bg-white/3 border border-white/5">
                       <div>
-                        <p className="text-xs font-semibold text-gray-200">Interface Dark Mode</p>
+                        <p className="text-xs font-semibold text-gray-200">Interface Theme: <span className="text-indigo-400 capitalize">{theme}</span></p>
                         <p className="text-[10px] text-gray-500">Toggle between dark and light themes.</p>
                       </div>
-                      <button type="button" className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 border border-white/5 text-[10px] font-bold transition-all uppercase tracking-wider">
-                        Toggle Light Mode
+                      <button 
+                        type="button" 
+                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                        className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 border border-white/5 text-[10px] font-bold transition-all uppercase tracking-wider"
+                      >
+                        Toggle {theme === 'dark' ? 'Light' : 'Dark'} Mode
                       </button>
                     </div>
                   </div>
@@ -504,6 +607,12 @@ const DashboardContent: React.FC = () => {
       activeTab={activeTab} 
       setActiveTab={setActiveTab}
     >
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-indigo-600/95 border border-indigo-500/30 text-white text-xs font-semibold shadow-2xl backdrop-blur-md animate-bounce">
+          <Sparkles size={14} className="text-amber-300" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
       <div className="space-y-8 animate-fadeIn">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -637,7 +746,9 @@ export default function App() {
           path="/dashboard/*" 
           element={
             <ProtectedRoute>
-              <DashboardContent />
+              <SocketProvider>
+                <DashboardContent />
+              </SocketProvider>
             </ProtectedRoute>
           } 
         />

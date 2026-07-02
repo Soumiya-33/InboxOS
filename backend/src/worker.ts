@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { AIService } from './services/ai.service';
 import { logger } from './utils/logger';
 import { emailsProcessedCounter } from './utils/metrics';
+import { RulesEngineService } from './services/rules-engine.service';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
@@ -41,7 +42,7 @@ export async function registerWorkerHandlers() {
       logger.info('[Worker] Email classification result', { emailId, category: result.category, confidence: result.confidence });
 
       // 3. Update the email with the category
-      await prisma.email.update({
+      const updatedEmail = await prisma.email.update({
         where: { id: email.id },
         data: {
           category: result.category,
@@ -49,6 +50,13 @@ export async function registerWorkerHandlers() {
       });
 
       logger.info('[Worker] Email classification updated successfully in database', { emailId });
+
+      // 3.5 Evaluate rules engine logic against the email
+      try {
+        await RulesEngineService.evaluateRules(updatedEmail, email.userId);
+      } catch (ruleErr: any) {
+        logger.error('[Worker] Rules engine execution failed', { emailId, error: ruleErr.message || ruleErr });
+      }
 
       // 4. Extract and save actions
       logger.info('[Worker] Extracting action items from email', { emailId });
@@ -66,6 +74,21 @@ export async function registerWorkerHandlers() {
         logger.info('[Worker] Saved action items successfully', { emailId });
       } else {
         logger.info('[Worker] No action items extracted from email', { emailId });
+      }
+
+      // 4.5 Generate thread summary and email vector embedding
+      try {
+        logger.info('[Worker] Generating thread summary', { threadId: email.threadId });
+        await AIService.generateSummary(email.threadId);
+      } catch (sumErr: any) {
+        logger.error('[Worker] Thread summarization failed', { threadId: email.threadId, error: sumErr.message || sumErr });
+      }
+
+      try {
+        logger.info('[Worker] Generating vector embedding', { emailId });
+        await AIService.embedEmail(emailId);
+      } catch (embedErr: any) {
+        logger.error('[Worker] Email embedding failed', { emailId, error: embedErr.message || embedErr });
       }
 
       // Increment successful processing counter
