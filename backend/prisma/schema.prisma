@@ -8,23 +8,25 @@ generator client {
 }
 
 model User {
-  id           String        @id @default(uuid())
-  email        String        @unique
-  passwordHash String
-  createdAt     DateTime       @default(now())
+  id            String           @id @default(uuid())
+  email         String           @unique
+  passwordHash  String
+  createdAt     DateTime         @default(now())
   emails        Email[]
   settings      UserSettings?
   emailAccounts EmailAccount[]
   webhooks      WebhookEndpoint[]
   rules         Rule[]
+  reminders     Reminder[]
+  notifications Notification[]
 }
 
 model UserSettings {
-  id        String  @id @default(uuid())
-  theme     String  @default("dark")
-  signature String?
-  autoReply Boolean @default(false)
-  telegramChatId String?
+  id              String  @id @default(uuid())
+  theme           String  @default("dark")
+  signature       String?
+  autoReply       Boolean @default(false)
+  telegramChatId  String?
   telegramEnabled Boolean @default(false)
 
   userId    String  @unique
@@ -49,16 +51,17 @@ model Email {
   status      String   @default("UNREAD")
   category    String?  // Added for email classification
   createdAt   DateTime @default(now())
+  links       Json?
+  attachments Json?
 
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  threadId  String
-  thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  threadId    String
+  thread      Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
   actionItems ActionItem[]
-  embedding Unsupported("vector(1536)")?
-
-  analysis  EmailAnalysis?
+  reminders   Reminder[]
+  embedding   String?
 
   @@index([userId])
   @@index([threadId])
@@ -84,16 +87,55 @@ model EmailAnalysis {
 }
 
 model ActionItem {
-  id              String   @id @default(uuid())
+  id              String    @id @default(uuid())
   emailId         String
   taskDescription String
-  isCompleted     Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  deadline        DateTime? // Added deadline DateTime?
+  isCompleted     Boolean   @default(false)
+  deadline        DateTime?
+  createdAt       DateTime  @default(now())
 
   email           Email    @relation(fields: [emailId], references: [id], onDelete: Cascade)
 }
 
+// ─── Reminder System ──────────────────────────────────────────────────────────
+
+model Reminder {
+  id          String    @id @default(uuid())
+  userId      String
+  emailId     String
+  deadline    DateTime  // stored in UTC
+  offsets     Int[]     // minutes before deadline: [1440, 60, 0]
+  status      String    @default("PENDING") // PENDING | FIRED | SNOOZED | CANCELLED
+  snoozeUntil DateTime?
+  jobIds      String[]  // BullMQ job IDs — used for cancellation
+  createdAt   DateTime  @default(now())
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  email         Email          @relation(fields: [emailId], references: [id], onDelete: Cascade)
+  notifications Notification[]
+
+  // Deduplication: same email + same deadline = one reminder set
+  @@unique([emailId, deadline])
+  @@index([userId, status])
+  @@index([deadline])
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  userId     String
+  reminderId String
+  channel    String   // 'telegram' | 'slack' | 'discord'
+  message    String
+  sentAt     DateTime @default(now())
+  isRead     Boolean  @default(false)
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reminder Reminder @relation(fields: [reminderId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
+
+// ─── Email Accounts ───────────────────────────────────────────────────────────
 
 model EmailAccount {
   id              String    @id @default(uuid())
@@ -175,3 +217,119 @@ model RuleExecutionLog {
 
   rule         Rule     @relation(fields: [ruleId], references: [id], onDelete: Cascade)
 }
+
+model Integration {
+  id              String   @id @default(uuid())
+  userId          String
+  provider        String   // 'google_calendar' or similar
+  encryptedTokens String   // Encrypted refresh & access tokens
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider])
+}
+
+model CalendarEvent {
+  id            String   @id @default(uuid())
+  userId        String
+  emailId       String
+  title         String
+  startTime     DateTime
+  endTime       DateTime
+  location      String?
+  attendees     String[]
+  meetingLink   String?
+  googleEventId String?  @unique
+  status        String   // 'pending' | 'created' | 'failed'
+  createdAt     DateTime @default(now())
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  email         Email    @relation(fields: [emailId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([emailId])
+}
+
+model Expense {
+  id          String   @id @default(uuid())
+  userId      String
+  emailId     String?
+  merchant    String?
+  amount      Float?
+  currency    String?  @default("USD")
+  category    String?
+  date        DateTime?
+  rawData     Json?
+  createdAt   DateTime @default(now())
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("expenses")
+}
+
+model Digest {
+  id          String   @id @default(uuid())
+  userId      String
+  type        String   @default("daily") // 'daily' | 'weekly'
+  content     String
+  emailCount  Int      @default(0)
+  sentAt      DateTime?
+  createdAt   DateTime @default(now())
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("digests")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String   // 'email_received' | 'action_item' | 'digest' | 'system'
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+model Reminder {
+  id          String   @id @default(uuid())
+  userId      String
+  emailId     String?
+  title       String
+  dueAt       DateTime
+  isSent      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([dueAt])
+  @@map("reminders")
+}
+
+model UserFeedback {
+  id            String   @id @default(uuid())
+  userId        String
+  emailId       String?
+  feedbackType  String   // 'thumbs_up' | 'thumbs_down'
+  feature       String?  // 'classify' | 'summarize' | 'reply' | 'extract_actions'
+  comment       String?
+  createdAt     DateTime @default(now())
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_feedback")
+}
+

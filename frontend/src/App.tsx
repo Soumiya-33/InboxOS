@@ -15,6 +15,7 @@ import { EmailList } from './components/EmailList';
 import { ComposeModal } from './components/ComposeModal';
 import { LandingPage } from './components/LandingPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
+import { DeadlinesWidget } from './components/DeadlinesWidget';
 import { SocketProvider, useSocket } from './context/SocketContext';
 import {
   ShieldAlert,
@@ -884,6 +885,8 @@ const DashboardContent: React.FC = () => {
                 </button>
               </div>
             </div>
+
+            <DeadlinesWidget />
 
             <div className="space-y-4">
               <h3 className="text-sm font-semibold text-white flex items-center gap-2 px-2">
