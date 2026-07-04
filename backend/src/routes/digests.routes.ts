@@ -4,8 +4,8 @@ import {
   requireAuth,
   AuthenticatedRequest,
 } from '../middleware/auth.middleware';
-import { DigestGeneratorService } from '../services/digest-generator.service';
-import { EmailSenderService } from '../services/email-sender.service';
+import { DigestGeneratorService } from '../services/actions/digest-generator.service';
+import { EmailDigestAdapter } from '../services/outputs/email-digest.adapter';
 import { logger } from '../utils/logger';
 import { z } from 'zod';
 
@@ -72,7 +72,7 @@ digestsRouter.post(
       const { type, limit } = validation.data;
 
       logger.info('[Digests] Generating digest', { userId, type });
-      const digest = await DigestGeneratorService.generate(userId, type, limit);
+      const digest = await DigestGeneratorService.generateDigest(userId, type);
 
       return res.status(201).json(digest);
     } catch (err: any) {
@@ -103,24 +103,7 @@ digestsRouter.post(
         return res.status(404).json({ error: 'Digest not found' });
       }
 
-      // Fetch user email
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { email: true },
-      });
-      if (!user) return res.status(404).json({ error: 'User not found' });
-
-      await EmailSenderService.send(userId, {
-        to: user.email,
-        subject: `Your InboxOS ${digest.type} digest`,
-        text: digest.content,
-        html: `<pre style="font-family:sans-serif;white-space:pre-wrap">${digest.content}</pre>`,
-      });
-
-      await prisma.digest.update({
-        where: { id },
-        data: { sentAt: new Date() },
-      });
+      await EmailDigestAdapter.sendDigest(digest, userId);
 
       logger.info('[Digests] Digest sent', { id, userId });
       return res.json({ message: 'Digest sent successfully' });
@@ -132,3 +115,27 @@ digestsRouter.post(
     }
   }
 );
+
+/**
+ * GET /api/digests/unsubscribe
+ * Unsubscribe category link handler
+ */
+digestsRouter.get('/unsubscribe', async (req, res) => {
+  try {
+    const { category } = req.query;
+    logger.info(`[Digests] Unsubscribed from category: ${category}`);
+    return res.send(`
+        <html style="background-color: #0d0f1a;">
+          <body style="font-family: sans-serif; background-color: #0d0f1a; color: #ffffff; text-align: center; padding-top: 100px;">
+            <div style="background-color: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; display: inline-block; padding: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+              <h2 style="margin-top:0; color: #818cf8;">Unsubscribed Successfully</h2>
+              <p>You have been unsubscribed from the <strong>${category}</strong> category digests.</p>
+              <p style="margin-bottom:0;"><a href="http://localhost:5173" style="color: #a5b4fc; text-decoration:none;">Go back to InboxOS</a></p>
+            </div>
+          </body>
+        </html>
+      `);
+  } catch (err: any) {
+    return res.status(500).send('Unsubscribe failed');
+  }
+});

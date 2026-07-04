@@ -4,7 +4,7 @@ import {
   requireAuth,
   AuthenticatedRequest,
 } from '../middleware/auth.middleware';
-import { ExpenseExtractorService } from '../services/expense-extractor.service';
+import { ExpenseExtractorService } from '../services/actions/expense-extractor.service';
 import { logger } from '../utils/logger';
 
 export const expensesRouter = Router();
@@ -73,27 +73,13 @@ expensesRouter.post(
         emailId,
         userId,
       });
-      const extracted = await ExpenseExtractorService.extractFromEmail(email);
+      const expense = await ExpenseExtractorService.extractExpense(emailId);
 
-      if (!extracted) {
+      if (!expense) {
         return res
           .status(422)
           .json({ error: 'No expense/receipt data found in this email' });
       }
-
-      // Save to database
-      const expense = await prisma.expense.create({
-        data: {
-          userId,
-          emailId,
-          merchant: extracted.merchant,
-          amount: extracted.amount,
-          currency: extracted.currency,
-          category: extracted.category,
-          date: extracted.date ? new Date(extracted.date) : null,
-          rawData: extracted as any,
-        },
-      });
 
       logger.info('[Expenses] Expense extracted and saved', {
         id: expense.id,
@@ -105,6 +91,32 @@ expensesRouter.post(
       return res
         .status(500)
         .json({ error: 'Failed to extract expense', message: err.message });
+    }
+  }
+);
+
+/**
+ * GET /api/expenses/email/:emailId
+ * Fetch expenses extracted from a specific email
+ */
+expensesRouter.get(
+  '/email/:emailId',
+  requireAuth,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+      const emailId = req.params.emailId as string;
+      const expenses = await prisma.expense.findMany({
+        where: { emailId, userId },
+        orderBy: { createdAt: 'asc' },
+      });
+
+      return res.json(expenses);
+    } catch (err: any) {
+      logger.error('[Expenses] GET /email/:emailId error:', err.message);
+      return res.status(500).json({ error: 'Failed to fetch email expenses' });
     }
   }
 );

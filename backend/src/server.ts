@@ -49,10 +49,12 @@ import { digestsRouter } from './routes/digests.routes';
 import { notificationsRouter } from './routes/notifications.routes';
 import { feedbackRouter } from './routes/feedback.routes';
 import { integrationsRouter } from './routes/integrations.routes';
+import { remindersRouter } from './routes/reminders.routes';
 
 import { CalendarExtractorService } from './services/actions/calendar-extractor.service';
 import { CalendarCreatorService } from './services/actions/calendar-creator.service';
 import { calendarEventsQueue } from './jobs/calendar-events.job';
+import { ReminderSchedulerService } from './services/actions/reminder-scheduler.service';
 
 const app = express();
 
@@ -699,6 +701,8 @@ app.get(
           theme: 'dark',
           signature: null,
           autoReply: false,
+          timezone: 'UTC',
+          digestSchedule: 'daily',
         });
       }
 
@@ -706,6 +710,8 @@ app.get(
         theme: settings.theme,
         signature: settings.signature,
         autoReply: settings.autoReply,
+        timezone: settings.timezone,
+        digestSchedule: settings.digestSchedule,
       });
     } catch (error) {
       console.error('Fetch settings error:', error);
@@ -722,6 +728,8 @@ const updateSettingsSchema = z.object({
   theme: z.string().min(1).max(50).transform(sanitizeString).optional(),
   signature: z.string().max(5000).transform(sanitizeHtml).nullable().optional(),
   autoReply: z.boolean().optional(),
+  timezone: z.string().min(1).optional(),
+  digestSchedule: z.enum(['daily', 'weekly', 'disabled']).optional(),
 });
 
 app.put(
@@ -742,7 +750,8 @@ app.put(
         });
       }
 
-      const { theme, signature, autoReply } = validation.data;
+      const { theme, signature, autoReply, timezone, digestSchedule } =
+        validation.data;
 
       const updatedSettings = await prisma.userSettings.upsert({
         where: { userId },
@@ -750,14 +759,23 @@ app.put(
           ...(theme !== undefined && { theme }),
           ...(signature !== undefined && { signature }),
           ...(autoReply !== undefined && { autoReply }),
+          ...(timezone !== undefined && { timezone }),
+          ...(digestSchedule !== undefined && { digestSchedule }),
         },
         create: {
           userId,
           theme: theme ?? 'dark',
           signature: signature ?? null,
           autoReply: autoReply ?? false,
+          timezone: timezone ?? 'UTC',
+          digestSchedule: digestSchedule ?? 'daily',
         },
       });
+
+      // Synchronize the BullMQ schedule for the user
+      const { syncDigestSchedule } =
+        await import('./jobs/digest-scheduler.job');
+      await syncDigestSchedule(userId);
 
       return res.status(200).json({
         message: 'Settings updated successfully',
@@ -765,6 +783,8 @@ app.put(
           theme: updatedSettings.theme,
           signature: updatedSettings.signature,
           autoReply: updatedSettings.autoReply,
+          timezone: updatedSettings.timezone,
+          digestSchedule: updatedSettings.digestSchedule,
         },
       });
     } catch (error) {
@@ -2430,6 +2450,7 @@ app.use('/api/digests', digestsRouter);
 app.use('/api/notifications', notificationsRouter);
 app.use('/api/feedback', feedbackRouter);
 app.use('/api/integrations', integrationsRouter);
+app.use('/api/reminders', remindersRouter);
 
 // Start Server
 

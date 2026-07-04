@@ -71,6 +71,43 @@ calendarRouter.get(
 );
 
 /**
+ * GET /api/calendar/events/:emailId
+ * List calendar events associated with a specific email
+ */
+calendarRouter.get(
+  '/:emailId',
+  requireAuth,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+      const emailId = req.params.emailId as string;
+
+      const events = await prisma.calendarEvent.findMany({
+        where: {
+          userId,
+          emailId,
+        },
+        orderBy: { startTime: 'asc' },
+      });
+
+      logger.info('[Calendar] Fetched events for email', {
+        userId,
+        emailId,
+        count: events.length,
+      });
+      return res.json(events);
+    } catch (err: any) {
+      logger.error('[Calendar] GET /:emailId error:', err.message);
+      return res
+        .status(500)
+        .json({ error: 'Failed to fetch calendar events for email' });
+    }
+  }
+);
+
+/**
  * POST /api/calendar/events
  * Create a calendar event from an email (extracts details or uses provided data)
  */

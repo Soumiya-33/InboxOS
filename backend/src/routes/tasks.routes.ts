@@ -94,6 +94,19 @@ tasksRouter.patch(
         },
       });
 
+      if (isCompleted === true) {
+        try {
+          const { ReminderSchedulerService } =
+            await import('../services/actions/reminder-scheduler.service');
+          await ReminderSchedulerService.cancelReminders(task.emailId);
+        } catch (remErr) {
+          logger.error(
+            '[Tasks] Failed to cancel reminders on task completion:',
+            remErr
+          );
+        }
+      }
+
       logger.info('[Tasks] Task updated', { id, userId });
       return res.json(updated);
     } catch (err: any) {

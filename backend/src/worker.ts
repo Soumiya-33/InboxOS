@@ -3,10 +3,13 @@ import { PrismaClient } from '@prisma/client';
 import { AIService } from './services/ai.service';
 import { indexEmailsWorker } from './jobs/index-emails.job';
 import { calendarEventsWorker } from './jobs/calendar-events.job';
+import { digestWorker } from './jobs/digest-scheduler.job';
+import { reminderWorker } from './jobs/reminder.job';
 import { logger } from './utils/logger';
 import { emailsProcessedCounter } from './utils/metrics';
 import { RulesEngineService } from './services/rules-engine.service';
 import { TelegramNotificationService } from './services/telegram-notification.service';
+import { ReminderSchedulerService } from './services/actions/reminder-scheduler.service';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 
@@ -31,6 +34,20 @@ calendarEventsWorker.on('failed', (job, err) => {
     `[BullMQ] Calendar Event Job ${job?.id} failed with error:`,
     err
   );
+});
+
+digestWorker.on('completed', (job) => {
+  console.log(`[BullMQ] Digest Job ${job.id} completed successfully.`);
+});
+digestWorker.on('failed', (job, err) => {
+  console.error(`[BullMQ] Digest Job ${job?.id} failed with error:`, err);
+});
+
+reminderWorker.on('completed', (job) => {
+  console.log(`[BullMQ] Reminder Job ${job.id} completed successfully.`);
+});
+reminderWorker.on('failed', (job, err) => {
+  console.error(`[BullMQ] Reminder Job ${job?.id} failed with error:`, err);
 });
 
 export async function registerWorkerHandlers() {
@@ -77,6 +94,25 @@ export async function registerWorkerHandlers() {
           '[Worker] Email classification updated successfully in database',
           { emailId }
         );
+
+        // 3.7 Schedule reminders for deadlines
+        if (result.deadlines && result.deadlines.length > 0) {
+          try {
+            const deadlineDates = result.deadlines
+              .map((d) => new Date(d))
+              .filter((d) => !isNaN(d.getTime()));
+            if (deadlineDates.length > 0) {
+              const { ReminderSchedulerService } =
+                await import('./services/actions/reminder-scheduler.service');
+              await ReminderSchedulerService.scheduleReminders(
+                email.id,
+                deadlineDates
+              );
+            }
+          } catch (remErr) {
+            logger.error('[Worker] Failed to schedule reminders:', remErr);
+          }
+        }
 
         // If classified as 'urgent', send Telegram alert notification if enabled
         if (updatedEmail.category === 'urgent') {
@@ -136,6 +172,41 @@ export async function registerWorkerHandlers() {
         } else {
           logger.info('[Worker] No action items extracted from email', {
             emailId,
+          });
+        }
+
+        // 4.25 Extract deadlines and schedule reminders
+        try {
+          logger.info('[Worker] Extracting deadlines from email', { emailId });
+          const deadlineStrings = await AIService.extractDeadlines(
+            email.subject,
+            email.body
+          );
+
+          if (deadlineStrings && deadlineStrings.length > 0) {
+            const deadlineDates = deadlineStrings
+              .map((d) => new Date(d))
+              .filter((d) => !isNaN(d.getTime()));
+
+            if (deadlineDates.length > 0) {
+              logger.info('[Worker] Scheduling reminders for extracted deadlines', {
+                emailId,
+                count: deadlineDates.length,
+                deadlines: deadlineDates.map((d) => d.toISOString()),
+              });
+              await ReminderSchedulerService.scheduleReminders(
+                email.id,
+                deadlineDates
+              );
+              logger.info('[Worker] Reminders scheduled successfully', { emailId });
+            }
+          } else {
+            logger.info('[Worker] No deadlines found in email', { emailId });
+          }
+        } catch (reminderErr: any) {
+          logger.error('[Worker] Reminder scheduling failed (non-fatal)', {
+            emailId,
+            error: reminderErr.message || reminderErr,
           });
         }
 
@@ -232,6 +303,22 @@ export async function registerWorkerHandlers() {
       }
     }
   );
+
+  // Sync digest schedules for all users on startup
+  try {
+    const users = await prisma.user.findMany({
+      select: { id: true },
+    });
+    const { syncDigestSchedule } = await import('./jobs/digest-scheduler.job');
+    for (const user of users) {
+      await syncDigestSchedule(user.id);
+    }
+    logger.info(
+      `[Worker] Synced digest schedules for ${users.length} users on startup.`
+    );
+  } catch (err) {
+    logger.error('[Worker] Failed to sync digest schedules on startup:', err);
+  }
 
   logger.info('Worker handlers registered and listening for events.');
 }
