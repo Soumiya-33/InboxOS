@@ -196,7 +196,6 @@ export async function registerWorkerHandlers() {
               });
               await ReminderSchedulerService.scheduleReminders(
                 email.id,
-                email.userId,
                 deadlineDates
               );
               logger.info('[Worker] Reminders scheduled successfully', { emailId });

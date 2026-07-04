@@ -2122,6 +2122,9 @@ app.post(
         return res.status(404).json({ error: 'Reminder not found' });
       }
 
+      if (!reminder.emailId) {
+        return res.status(400).json({ error: 'Reminder has no associated emailId' });
+      }
       await ReminderSchedulerService.cancelReminders(reminder.emailId);
       return res.json({ message: 'Reminder cancelled' });
     } catch (err: any) {

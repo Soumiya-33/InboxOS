@@ -234,4 +234,12 @@ export class ReminderSchedulerService {
       `[ReminderScheduler] Cancelled all active reminders for email: ${emailId}`
     );
   }
+
+  public static initWorker(): void {
+    logger.info('[ReminderScheduler] initWorker stub called (delegated to separate worker process)');
+  }
+
+  public static async shutdown(): Promise<void> {
+    logger.info('[ReminderScheduler] shutdown stub called');
+  }
 }
