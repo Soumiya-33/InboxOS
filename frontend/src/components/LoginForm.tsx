@@ -92,7 +92,7 @@ export const LoginForm: React.FC = () => {
   const inputStyle = (hasError?: boolean): React.CSSProperties => ({
     width: '100%',
     backgroundColor: 'var(--color-surface)',
-    border: `3px solid ${hasError ? 'var(--color-danger)' : 'var(--color-ink)'}`,
+    border: `1px solid ${hasError ? 'var(--color-danger)' : 'var(--color-ink)'}`,
     color: 'var(--color-ink)',
     fontFamily: 'var(--font-body)',
     fontSize: '13px',
@@ -144,7 +144,7 @@ export const LoginForm: React.FC = () => {
           className="w-full flex items-center justify-center gap-2.5 px-4 py-3 font-bold text-xs uppercase tracking-wider transition-all min-h-[44px]"
           style={{
             backgroundColor: 'var(--color-surface)',
-            border: '3px solid var(--color-ink)',
+            border: '1px solid var(--color-ink)',
             color: 'var(--color-ink)',
             boxShadow: 'var(--shadow-offset)',
             fontFamily: 'var(--font-body)',
@@ -164,14 +164,14 @@ export const LoginForm: React.FC = () => {
 
         {/* Divider */}
         <div className="relative flex py-2 items-center">
-          <div className="flex-grow" style={{ borderTop: '2px solid var(--color-ink)' }} />
+          <div className="flex-grow" style={{ borderTop: '1px solid var(--color-ink)' }} />
           <span
             className="flex-shrink mx-4 text-[10px] font-bold uppercase tracking-wider"
             style={{ color: '#888', fontFamily: 'var(--font-body)' }}
           >
             or continue with email
           </span>
-          <div className="flex-grow" style={{ borderTop: '2px solid var(--color-ink)' }} />
+          <div className="flex-grow" style={{ borderTop: '1px solid var(--color-ink)' }} />
         </div>
 
         {/* Auth Error Alert */}
@@ -180,7 +180,7 @@ export const LoginForm: React.FC = () => {
             className="flex items-center gap-3 p-3.5 text-xs text-left"
             style={{
               backgroundColor: '#FFF0F0',
-              border: '2px solid var(--color-danger)',
+              border: '1px solid var(--color-danger)',
               color: 'var(--color-danger)',
               boxShadow: '3px 3px 0 var(--color-danger)',
             }}
@@ -282,7 +282,7 @@ export const LoginForm: React.FC = () => {
             className="w-full flex items-center justify-center gap-1.5 px-4 py-3 font-bold text-xs uppercase tracking-wider transition-all disabled:opacity-50 disabled:pointer-events-none mt-2 min-h-[44px]"
             style={{
               backgroundColor: 'var(--color-accent-cta)',
-              border: '3px solid var(--color-ink)',
+              border: '1px solid var(--color-ink)',
               color: '#fff',
               boxShadow: 'var(--shadow-offset)',
               fontFamily: 'var(--font-body)',
@@ -315,7 +315,7 @@ export const LoginForm: React.FC = () => {
         {/* Footer */}
         <div
           className="text-center pt-4 text-[10px] font-semibold"
-          style={{ borderTop: '2px solid var(--color-ink)', color: '#666', fontFamily: 'var(--font-body)' }}
+          style={{ borderTop: '1px solid var(--color-ink)', color: '#666', fontFamily: 'var(--font-body)' }}
         >
           <p>Join thousands of users running email as an operating system.</p>
           <Link

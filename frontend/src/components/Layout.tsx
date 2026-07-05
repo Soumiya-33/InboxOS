@@ -22,7 +22,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         className="hidden md:flex flex-col w-[260px] h-screen sticky top-0 z-30 shrink-0"
         style={{
           backgroundColor: 'var(--color-surface)',
-          borderRight: '3px solid var(--color-ink)',
+          borderRight: '1px solid var(--color-ink)',
         }}
       >
         <SidebarNav />
@@ -43,7 +43,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           className={`relative flex flex-col w-[260px] h-full p-4 z-50 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
           style={{
             backgroundColor: 'var(--color-surface)',
-            borderRight: '3px solid var(--color-ink)',
+            borderRight: '1px solid var(--color-ink)',
           }}
         >
           <SidebarNav
@@ -60,7 +60,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           className="px-4 md:px-8 py-3 flex items-center justify-between sticky top-0 z-20"
           style={{
             backgroundColor: 'var(--color-surface)',
-            borderBottom: '3px solid var(--color-ink)',
+            borderBottom: '1px solid var(--color-ink)',
             boxShadow: '0 3px 0 var(--color-ink)',
           }}
         >
@@ -68,7 +68,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <button
             onClick={() => setIsMobileMenuOpen(true)}
             className="md:hidden p-2 flex items-center justify-center transition-colors min-h-[44px] min-w-[44px]"
-            style={{ border: '2px solid var(--color-ink)' }}
+            style={{ border: '1px solid var(--color-ink)' }}
             aria-label="Open mobile menu"
           >
             <Menu size={20} />
@@ -92,7 +92,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/* Dark Mode toggle visual */}
             <button
               className="p-2 flex items-center justify-center transition-colors min-h-[44px] min-w-[44px]"
-              style={{ border: '2px solid var(--color-ink)' }}
+              style={{ border: '1px solid var(--color-ink)' }}
               aria-label="Toggle theme"
             >
               <Moon size={16} />
@@ -101,7 +101,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/* Notification Bell */}
             <button
               className="p-2 flex items-center justify-center transition-colors relative min-h-[44px] min-w-[44px]"
-              style={{ border: '2px solid var(--color-ink)' }}
+              style={{ border: '1px solid var(--color-ink)' }}
               aria-label="Notifications"
             >
               <Bell size={16} />
@@ -127,7 +127,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 className="w-9 h-9 flex items-center justify-center text-xs font-bold"
                 style={{
                   backgroundColor: 'var(--color-accent-cta)',
-                  border: '2px solid var(--color-ink)',
+                  border: '1px solid var(--color-ink)',
                   color: '#fff',
                   fontFamily: 'var(--font-display)',
                 }}
@@ -144,7 +144,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold transition-all uppercase tracking-wider min-h-[40px]"
               style={{
                 backgroundColor: 'var(--color-danger)',
-                border: '2px solid var(--color-ink)',
+                border: '1px solid var(--color-ink)',
                 color: '#fff',
                 boxShadow: 'var(--shadow-offset-sm)',
                 fontFamily: 'var(--font-body)',

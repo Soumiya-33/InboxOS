@@ -65,7 +65,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
       className="relative overflow-hidden p-5 transition-all duration-200"
       style={{
         backgroundColor: cardBg,
-        border: '3px solid var(--color-ink)',
+        border: '1px solid var(--color-ink)',
         boxShadow: 'var(--shadow-offset)',
       }}
       onMouseEnter={e => {
@@ -429,7 +429,7 @@ const DashboardContent: React.FC = () => {
         {toastMessage && (
           <div
             className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 text-black font-black text-xs font-bold uppercase tracking-wider shadow-2xl"
-            style={{ backgroundColor: 'var(--color-ink)', border: '3px solid var(--color-ink)', boxShadow: '5px 5px 0 var(--color-accent-cta)', fontFamily: 'var(--font-body)' }}
+            style={{ backgroundColor: 'var(--color-ink)', border: '1px solid var(--color-ink)', boxShadow: '5px 5px 0 var(--color-accent-cta)', fontFamily: 'var(--font-body)' }}
           >
             <Sparkles size={14} style={{ color: 'var(--color-accent)' }} />
             <span>{toastMessage}</span>
@@ -451,7 +451,7 @@ const DashboardContent: React.FC = () => {
         )}
         <div className="space-y-6 animate-fadeIn">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5" style={{ borderBottom: '3px solid var(--color-ink)' }}>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5" style={{ borderBottom: '1px solid var(--color-ink)' }}>
             <div className="text-left">
               <h2 className="text-xl font-black tracking-tight flex items-center gap-2" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}>
                 System Preferences <Sliders size={18} style={{ color: 'var(--color-accent-cta)' }} />
@@ -461,7 +461,7 @@ const DashboardContent: React.FC = () => {
               </p>
             </div>
             {saveSuccess && (
-              <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wider" style={{ backgroundColor: 'var(--color-success)', border: '2px solid var(--color-ink)', boxShadow: '3px 3px 0 var(--color-ink)', color: '#fff' }}>
+              <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wider" style={{ backgroundColor: 'var(--color-success)', border: '1px solid var(--color-ink)', boxShadow: '3px 3px 0 var(--color-ink)', color: '#fff' }}>
                 <CheckCircle2 size={14} />
                 <span>Changes saved</span>
               </div>
@@ -484,7 +484,7 @@ const DashboardContent: React.FC = () => {
                   className="flex items-center gap-3 px-4 py-3 text-xs font-bold tracking-wide transition-all text-left uppercase"
                   style={{
                     backgroundColor: settingsSubTab === subTab.id ? 'var(--color-accent)' : 'transparent',
-                    border: `2px solid ${settingsSubTab === subTab.id ? 'var(--color-ink)' : 'transparent'}`,
+                    border: `1px solid ${settingsSubTab === subTab.id ? 'var(--color-ink)' : 'transparent'}`,
                     boxShadow: settingsSubTab === subTab.id ? '3px 3px 0 var(--color-ink)' : 'none',
                     color: 'var(--color-ink)',
                     fontFamily: 'var(--font-body)',
@@ -499,7 +499,7 @@ const DashboardContent: React.FC = () => {
             {/* Form card */}
             <div
               className="md:col-span-3 relative overflow-hidden p-6"
-              style={{ backgroundColor: 'var(--color-surface)', border: '3px solid var(--color-ink)', boxShadow: 'var(--shadow-offset)' }}
+              style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-ink)', boxShadow: 'var(--shadow-offset)' }}
             >
 
               {settingsSubTab === 'profile' && (
@@ -552,7 +552,7 @@ const DashboardContent: React.FC = () => {
                           type="checkbox"
                           checked={autoReply}
                           onChange={(e) => setAutoReply(e.target.checked)}
-                          className="h-4 w-4 rounded border-white/10 bg-white border-2 border-black text-indigo-600 focus:ring-indigo-500/30"
+                          className="h-4 w-4 rounded border-white/10 bg-white border border-black text-indigo-600 focus:ring-indigo-500/30"
                         />
                         <span className="text-xs font-semibold text-gray-800 font-bold">
                           Enable Auto Reply
@@ -582,7 +582,7 @@ const DashboardContent: React.FC = () => {
                         onClick={() =>
                           setTheme(theme === 'dark' ? 'light' : 'dark')
                         }
-                        className="px-3 py-1.5 rounded-lg bg-white border-2 border-black hover:bg-white border-2 border-black shadow-[2px_2px_0_0_#111] text-gray-800 font-bold border border-black text-[10px] font-bold transition-all uppercase tracking-wider"
+                        className="px-3 py-1.5 rounded-lg bg-white border border-black hover:bg-white border border-black shadow-[2px_2px_0_0_#111] text-gray-800 font-bold border border-black text-[10px] font-bold transition-all uppercase tracking-wider"
                       >
                         Toggle {theme === 'dark' ? 'Light' : 'Dark'} Mode
                       </button>
@@ -726,7 +726,7 @@ const DashboardContent: React.FC = () => {
                         onClick={() => setGmailConnected(!gmailConnected)}
                         className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold transition-all uppercase tracking-wider ${
                           gmailConnected
-                            ? 'bg-white border-2 border-black hover:bg-white border-2 border-black shadow-[2px_2px_0_0_#111] text-gray-800 font-bold border-black'
+                            ? 'bg-white border border-black hover:bg-white border border-black shadow-[2px_2px_0_0_#111] text-gray-800 font-bold border-black'
                             : 'bg-indigo-600 hover:bg-indigo-500 text-black font-black border-transparent'
                         }`}
                       >
@@ -753,7 +753,7 @@ const DashboardContent: React.FC = () => {
                         onClick={() => setOutlookConnected(!outlookConnected)}
                         className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold transition-all uppercase tracking-wider ${
                           outlookConnected
-                            ? 'bg-white border-2 border-black hover:bg-white border-2 border-black shadow-[2px_2px_0_0_#111] text-gray-800 font-bold border-black'
+                            ? 'bg-white border border-black hover:bg-white border border-black shadow-[2px_2px_0_0_#111] text-gray-800 font-bold border-black'
                             : 'bg-indigo-600 hover:bg-indigo-500 text-black font-black border-transparent'
                         }`}
                       >
@@ -797,7 +797,7 @@ const DashboardContent: React.FC = () => {
                         }
                         className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold transition-all uppercase tracking-wider ${
                           calendarStatus?.connected
-                            ? 'bg-white border-2 border-black hover:bg-white border-2 border-black shadow-[2px_2px_0_0_#111] text-gray-800 font-bold border-black'
+                            ? 'bg-white border border-black hover:bg-white border border-black shadow-[2px_2px_0_0_#111] text-gray-800 font-bold border-black'
                             : 'bg-indigo-600 hover:bg-indigo-500 text-black font-black border-transparent'
                         }`}
                       >
@@ -839,7 +839,7 @@ const DashboardContent: React.FC = () => {
                           }
                           className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold transition-all uppercase tracking-wider ${
                             telegramConnected
-                              ? 'bg-white border-2 border-black hover:bg-white border-2 border-black shadow-[2px_2px_0_0_#111] text-gray-800 font-bold border-black'
+                              ? 'bg-white border border-black hover:bg-white border border-black shadow-[2px_2px_0_0_#111] text-gray-800 font-bold border-black'
                               : 'bg-indigo-600 hover:bg-indigo-500 text-black font-black border-transparent'
                           }`}
                         >
@@ -895,7 +895,7 @@ const DashboardContent: React.FC = () => {
                         className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold transition-all uppercase tracking-wider ${
                           pushEnabled
                             ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                            : 'bg-white border-2 border-black border-black text-gray-600 font-bold'
+                            : 'bg-white border border-black border-black text-gray-600 font-bold'
                         }`}
                       >
                         {pushEnabled ? 'Enabled' : 'Disabled'}
@@ -919,7 +919,7 @@ const DashboardContent: React.FC = () => {
                         className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold transition-all uppercase tracking-wider ${
                           telegramAlerts
                             ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                            : 'bg-white border-2 border-black border-black text-gray-600 font-bold'
+                            : 'bg-white border border-black border-black text-gray-600 font-bold'
                         }`}
                       >
                         {telegramAlerts ? 'Enabled' : 'Disabled'}
@@ -943,7 +943,7 @@ const DashboardContent: React.FC = () => {
                         className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold transition-all uppercase tracking-wider ${
                           whatsappAlerts
                             ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                            : 'bg-white border-2 border-black border-black text-gray-600 font-bold'
+                            : 'bg-white border border-black border-black text-gray-600 font-bold'
                         }`}
                       >
                         {whatsappAlerts ? 'Enabled' : 'Disabled'}
@@ -965,7 +965,7 @@ const DashboardContent: React.FC = () => {
                         step="5"
                         value={minPriority}
                         onChange={(e) => setMinPriority(Number(e.target.value))}
-                        className="w-full accent-indigo-500 h-1 bg-white border-2 border-black shadow-[2px_2px_0_0_#111] rounded-lg cursor-pointer"
+                        className="w-full accent-indigo-500 h-1 bg-white border border-black shadow-[2px_2px_0_0_#111] rounded-lg cursor-pointer"
                       />
                       <p className="text-[10px] text-gray-600 font-bold">
                         Only emails with AI importance rating at or above{' '}
@@ -1062,7 +1062,7 @@ const DashboardContent: React.FC = () => {
                         type="button"
                         onClick={handleGenerateDigest}
                         disabled={isGeneratingDigest}
-                        className="px-4 py-2.5 rounded-xl bg-white border-2 border-black hover:bg-white border-2 border-black shadow-[2px_2px_0_0_#111] text-gray-200 border border-black font-bold text-xs uppercase tracking-wider disabled:opacity-50"
+                        className="px-4 py-2.5 rounded-xl bg-white border border-black hover:bg-white border border-black shadow-[2px_2px_0_0_#111] text-gray-200 border border-black font-bold text-xs uppercase tracking-wider disabled:opacity-50"
                       >
                         {isGeneratingDigest
                           ? 'Generating...'
@@ -1129,7 +1129,7 @@ const DashboardContent: React.FC = () => {
                               </div>
 
                               <div className="rounded-lg border border-black bg-black/30 overflow-hidden">
-                                <div className="bg-white border-2 border-black px-3 py-2 text-[10px] text-gray-700 font-bold font-bold border-b-4 border-black">
+                                <div className="bg-white border border-black px-3 py-2 text-[10px] text-gray-700 font-bold font-bold border-b-4 border-black">
                                   HTML Preview (Dark Glassmorphism)
                                 </div>
                                 <div className="p-1 h-[320px] bg-[#0d0f1a]">
@@ -1176,7 +1176,7 @@ const DashboardContent: React.FC = () => {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="px-4 py-2 text-xs font-semibold rounded-xl bg-white border-2 border-black hover:bg-white border-2 border-black shadow-[2px_2px_0_0_#111] text-gray-200 border border-black transition-all">
+            <button className="px-4 py-2 text-xs font-semibold rounded-xl bg-white border border-black hover:bg-white border border-black shadow-[2px_2px_0_0_#111] text-gray-200 border border-black transition-all">
               Diagnostics
             </button>
             <button className="px-4 py-2 text-xs font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-500 text-black font-black flex items-center gap-1.5 transition-all glow-accent">
@@ -1193,7 +1193,7 @@ const DashboardContent: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-2 space-y-2">
             <div className="flex justify-between items-center px-2">
               <h3 className="text-sm font-semibold text-black font-black flex items-center gap-2">
                 <Inbox size={16} className="text-blue-600" />
@@ -1212,7 +1212,7 @@ const DashboardContent: React.FC = () => {
               </h3>
 
               <div className="neu-card rounded-2xl p-4 border border-black space-y-3.5">
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border-2 border-black border border-black">
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-black border border-black">
                   <div className="flex items-center gap-2">
                     <Zap size={14} className="text-amber-400" />
                     <div>
@@ -1224,12 +1224,12 @@ const DashboardContent: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-green-500 text-black border-2 border-black border border-emerald-500/20">
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-green-500 text-black border border-black border border-emerald-500/20">
                     Active
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border-2 border-black border border-black">
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-black border border-black">
                   <div className="flex items-center gap-2">
                     <Zap size={14} className="text-blue-600" />
                     <div>
@@ -1241,12 +1241,12 @@ const DashboardContent: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-green-500 text-black border-2 border-black border border-emerald-500/20">
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-green-500 text-black border border-black border border-emerald-500/20">
                     Active
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border-2 border-black border border-black">
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-black border border-black">
                   <div className="flex items-center gap-2">
                     <Zap size={14} className="text-gray-700 font-bold" />
                     <div>
@@ -1258,12 +1258,12 @@ const DashboardContent: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-green-500 text-black border-2 border-black border border-emerald-500/20">
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-green-500 text-black border border-black border border-emerald-500/20">
                     Active
                   </span>
                 </div>
 
-                <button className="w-full py-2.5 rounded-xl bg-white border-2 border-black hover:bg-white border-2 border-black shadow-[2px_2px_0_0_#111] text-xs font-semibold text-blue-600 border border-black transition-all text-center block">
+                <button className="w-full py-2.5 rounded-xl bg-white border border-black hover:bg-white border border-black shadow-[2px_2px_0_0_#111] text-xs font-semibold text-blue-600 border border-black transition-all text-center block">
                   Manage Rules DSL
                 </button>
               </div>

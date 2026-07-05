@@ -91,14 +91,14 @@ export const Modal: React.FC<ModalProps> = ({
         className={`relative p-6 md:p-8 outline-none text-left max-h-[90vh] overflow-y-auto flex flex-col animate-scaleUp ${className}`}
         style={{
           backgroundColor: 'var(--color-surface)',
-          border: '3px solid var(--color-ink)',
+          border: '1px solid var(--color-ink)',
           boxShadow: '8px 8px 0px var(--color-ink)',
         }}
       >
         {/* Modal Header */}
         <div
           className="flex items-center justify-between mb-5 pb-4"
-          style={{ borderBottom: '3px solid var(--color-ink)' }}
+          style={{ borderBottom: '1px solid var(--color-ink)' }}
         >
           {title ? (
             <h2
@@ -116,7 +116,7 @@ export const Modal: React.FC<ModalProps> = ({
             onClick={onClose}
             className="p-1.5 flex items-center justify-center transition-all focus:outline-none"
             style={{
-              border: '2px solid var(--color-ink)',
+              border: '1px solid var(--color-ink)',
               backgroundColor: 'var(--color-surface)',
               boxShadow: '2px 2px 0px var(--color-ink)',
             }}

@@ -6,14 +6,14 @@ export const EmailSkeletonRow: React.FC = () => {
       className="p-4 flex gap-4 animate-pulse relative overflow-hidden mb-1.5"
       style={{
         backgroundColor: 'var(--color-surface)',
-        border: '2px solid var(--color-ink)',
+        border: '1px solid var(--color-ink)',
         boxShadow: 'var(--shadow-offset-sm)',
       }}
     >
       {/* Indicator square skeleton */}
       <div
         className="w-3 h-3 shrink-0 mt-1"
-        style={{ backgroundColor: '#ddd', border: '2px solid #bbb' }}
+        style={{ backgroundColor: '#ddd', border: '1px solid #bbb' }}
       />
 
       <div className="flex-1 space-y-3.5 min-w-0">

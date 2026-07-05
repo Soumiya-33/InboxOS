@@ -116,7 +116,7 @@ export const ComposeModal: React.FC = () => {
   const inputStyle = (hasError?: boolean): React.CSSProperties => ({
     width: '100%',
     backgroundColor: 'var(--color-surface)',
-    border: `3px solid ${hasError ? 'var(--color-danger)' : 'var(--color-ink)'}`,
+    border: `1px solid ${hasError ? 'var(--color-danger)' : 'var(--color-ink)'}`,
     color: 'var(--color-ink)',
     fontFamily: 'var(--font-body)',
     fontSize: '13px',
@@ -131,7 +131,7 @@ export const ComposeModal: React.FC = () => {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'var(--color-surface)',
-    border: '2px solid var(--color-ink)',
+    border: '1px solid var(--color-ink)',
     color: 'var(--color-ink)',
     cursor: 'pointer',
     minHeight: '36px',
@@ -153,7 +153,7 @@ export const ComposeModal: React.FC = () => {
           className="fixed top-6 right-6 z-50 px-5 py-3 flex items-center gap-3 animate-slideIn"
           style={{
             backgroundColor: 'var(--color-success)',
-            border: '3px solid var(--color-ink)',
+            border: '1px solid var(--color-ink)',
             boxShadow: 'var(--shadow-offset)',
             color: '#fff',
           }}
@@ -173,14 +173,14 @@ export const ComposeModal: React.FC = () => {
         className="relative w-full max-w-[640px] flex flex-col max-h-[90vh] z-10 overflow-hidden animate-scaleUp"
         style={{
           backgroundColor: 'var(--color-surface)',
-          border: '3px solid var(--color-ink)',
+          border: '1px solid var(--color-ink)',
           boxShadow: '8px 8px 0px var(--color-ink)',
         }}
       >
         {/* Modal Header */}
         <div
           className="flex items-center justify-between px-6 py-4"
-          style={{ borderBottom: '3px solid var(--color-ink)', backgroundColor: 'var(--color-accent)' }}
+          style={{ borderBottom: '1px solid var(--color-ink)', backgroundColor: 'var(--color-accent)' }}
         >
           <div className="flex items-center gap-2">
             <Mail size={16} style={{ color: 'var(--color-ink)' }} />
@@ -195,7 +195,7 @@ export const ComposeModal: React.FC = () => {
             onClick={closeCompose}
             className="p-2 flex items-center justify-center transition-all min-h-[44px] min-w-[44px]"
             style={{
-              border: '2px solid var(--color-ink)',
+              border: '1px solid var(--color-ink)',
               backgroundColor: 'var(--color-surface)',
             }}
             onMouseEnter={e => {
@@ -312,12 +312,12 @@ export const ComposeModal: React.FC = () => {
 
             <div
               className="flex flex-col flex-1 overflow-hidden"
-              style={{ border: '3px solid var(--color-ink)' }}
+              style={{ border: '1px solid var(--color-ink)' }}
             >
               {/* Text formatting bar */}
               <div
                 className="flex items-center justify-between px-2 py-1.5"
-                style={{ borderBottom: '2px solid var(--color-ink)', backgroundColor: '#f8f8f8' }}
+                style={{ borderBottom: '1px solid var(--color-ink)', backgroundColor: '#f8f8f8' }}
               >
                 <div className="flex items-center gap-1">
                   {[
@@ -354,7 +354,7 @@ export const ComposeModal: React.FC = () => {
                   className="flex items-center gap-1 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider disabled:opacity-50"
                   style={{
                     backgroundColor: 'var(--color-accent-cta)',
-                    border: '2px solid var(--color-ink)',
+                    border: '1px solid var(--color-ink)',
                     color: '#fff',
                     boxShadow: '2px 2px 0 var(--color-ink)',
                   }}
@@ -393,7 +393,7 @@ export const ComposeModal: React.FC = () => {
           {/* Form Submit Footer */}
           <div
             className="flex justify-end gap-3 pt-3"
-            style={{ borderTop: '3px solid var(--color-ink)' }}
+            style={{ borderTop: '1px solid var(--color-ink)' }}
           >
             <Button
               variant="secondary"

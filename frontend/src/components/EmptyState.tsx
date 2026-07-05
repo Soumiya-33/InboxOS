@@ -17,7 +17,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       className="flex flex-col items-center justify-center text-center p-12 min-h-[320px] w-full"
       style={{
         backgroundColor: 'var(--color-surface)',
-        border: '3px solid var(--color-ink)',
+        border: '1px solid var(--color-ink)',
         boxShadow: 'var(--shadow-offset)',
       }}
     >
@@ -26,7 +26,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         className="mb-5 p-4 flex items-center justify-center"
         style={{
           backgroundColor: 'var(--color-accent)',
-          border: '3px solid var(--color-ink)',
+          border: '1px solid var(--color-ink)',
           boxShadow: 'var(--shadow-offset-sm)',
         }}
       >

@@ -88,7 +88,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
             className="flex items-center justify-center w-9 h-9 shrink-0"
             style={{
               backgroundColor: 'var(--color-accent)',
-              border: '3px solid var(--color-ink)',
+              border: '1px solid var(--color-ink)',
             }}
           >
             <Sparkles size={18} className="text-black" fill="currentColor" />
@@ -113,7 +113,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           <button
             onClick={onCloseMobileMenu}
             className="p-2 flex items-center justify-center min-h-[44px] min-w-[44px]"
-            style={{ border: '3px solid var(--color-ink)' }}
+            style={{ border: '1px solid var(--color-ink)' }}
             aria-label="Close menu"
           >
             <X size={18} />
@@ -131,7 +131,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-black uppercase tracking-wider min-h-[44px] transition-all"
           style={{
             backgroundColor: 'var(--color-accent)',
-            border: '3px solid var(--color-ink)',
+            border: '1px solid var(--color-ink)',
             color: 'var(--color-ink)',
             boxShadow: '3px 3px 0 var(--color-ink)',
             fontFamily: 'var(--font-body)',
@@ -169,7 +169,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               style={{
                 backgroundColor: active ? 'var(--color-accent)' : 'transparent',
                 color: 'var(--color-ink)',
-                border: `3px solid ${active ? 'var(--color-ink)' : 'transparent'}`,
+                border: `1px solid ${active ? 'var(--color-ink)' : 'transparent'}`,
                 boxShadow: active ? '3px 3px 0 var(--color-ink)' : 'none',
                 fontFamily: 'var(--font-body)',
                 textTransform: 'uppercase',
@@ -179,13 +179,13 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
               onMouseEnter={e => {
                 if (!active) {
                   (e.currentTarget as HTMLElement).style.backgroundColor = '#f7f6f0';
-                  (e.currentTarget as HTMLElement).style.border = '3px solid var(--color-ink)';
+                  (e.currentTarget as HTMLElement).style.border = '1px solid var(--color-ink)';
                 }
               }}
               onMouseLeave={e => {
                 if (!active) {
                   (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-                  (e.currentTarget as HTMLElement).style.border = '3px solid transparent';
+                  (e.currentTarget as HTMLElement).style.border = '1px solid transparent';
                 }
               }}
             >
@@ -216,7 +216,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           className="p-3.5 text-left"
           style={{
             backgroundColor: 'var(--color-surface)',
-            border: '3px solid var(--color-ink)',
+            border: '1px solid var(--color-ink)',
             boxShadow: '3px 3px 0 var(--color-ink)',
           }}
         >
@@ -252,7 +252,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           <div
             className="flex items-center justify-between text-[9px] font-mono pt-2"
             style={{
-              borderTop: '2px solid var(--color-ink)',
+              borderTop: '1px solid var(--color-ink)',
               fontFamily: 'var(--font-mono)',
               color: '#888',
             }}

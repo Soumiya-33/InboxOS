@@ -70,7 +70,7 @@ const DETAILED_MOCK_EMAILS: Record<string, EmailData & { body_html?: string }> =
         <p>Hi there, your invoice for modern computing resources for the billing cycle ending June 30 is ready. Your credit card ending in 4242 will be charged <strong>$120.00 USD</strong> on July 5, 2026.</p>
         <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
           <thead>
-            <tr style="border-bottom: 2px solid #e5e7eb; text-align: left;">
+            <tr style="border-bottom: 1px solid #e5e7eb; text-align: left;">
               <th style="padding: 8px 0;">Description</th>
               <th style="padding: 8px 0; text-align: right;">Amount</th>
             </tr>
@@ -332,14 +332,14 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
   if (isLoading) {
     return (
       <div className="space-y-5 animate-pulse select-none">
-        <div className="h-8 w-36" style={{ backgroundColor: '#e5e5e5', border: '2px solid #bbb' }} />
+        <div className="h-8 w-36" style={{ backgroundColor: '#e5e5e5', border: '1px solid #bbb' }} />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 p-6 space-y-5" style={{ backgroundColor: '#fff', border: '3px solid #111', boxShadow: '6px 6px 0 #111' }}>
+          <div className="lg:col-span-2 p-6 space-y-5" style={{ backgroundColor: '#fff', border: '1px solid #111', boxShadow: '6px 6px 0 #111' }}>
             <div className="h-8 w-3/4" style={{ backgroundColor: '#e0e0e0' }} />
             <div className="h-10 w-full" style={{ backgroundColor: '#eee' }} />
-            <div className="h-48 w-full" style={{ backgroundColor: '#f5f5f5', border: '2px solid #ddd' }} />
+            <div className="h-48 w-full" style={{ backgroundColor: '#f5f5f5', border: '1px solid #ddd' }} />
           </div>
-          <div className="p-5 h-64" style={{ backgroundColor: '#fff', border: '3px solid #111', boxShadow: '6px 6px 0 #111' }} />
+          <div className="p-5 h-64" style={{ backgroundColor: '#fff', border: '1px solid #111', boxShadow: '6px 6px 0 #111' }} />
         </div>
       </div>
     );
@@ -348,7 +348,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
   if (isError && !email) {
     return (
       <div className="p-8 text-center flex flex-col items-center justify-center gap-4"
-        style={{ backgroundColor: 'var(--color-surface)', border: '3px solid var(--color-danger)', boxShadow: '6px 6px 0 var(--color-danger)' }}
+        style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-danger)', boxShadow: '6px 6px 0 var(--color-danger)' }}
       >
         <AlertTriangle size={32} style={{ color: 'var(--color-danger)' }} />
         <h4 className="text-sm font-bold uppercase tracking-wider"
@@ -362,7 +362,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
         <button
           onClick={onBack}
           className="px-4 py-2 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all"
-          style={{ backgroundColor: 'var(--color-surface)', border: '2px solid var(--color-ink)', boxShadow: 'var(--shadow-offset-sm)' }}
+          style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-ink)', boxShadow: 'var(--shadow-offset-sm)' }}
           onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'none'; (e.currentTarget as HTMLElement).style.transform = 'translate(4px,4px)'; }}
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-offset-sm)'; (e.currentTarget as HTMLElement).style.transform = ''; }}
         >
@@ -469,7 +469,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
         <button
           onClick={onBack}
           className="flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider min-h-[44px] transition-all"
-          style={{ backgroundColor: 'var(--color-surface)', border: '2px solid var(--color-ink)', boxShadow: 'var(--shadow-offset-sm)', fontFamily: 'var(--font-body)' }}
+          style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-ink)', boxShadow: 'var(--shadow-offset-sm)', fontFamily: 'var(--font-body)' }}
           onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'none'; (e.currentTarget as HTMLElement).style.transform = 'translate(2px,2px)'; }}
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-offset-sm)'; (e.currentTarget as HTMLElement).style.transform = ''; }}
         >
@@ -492,10 +492,10 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
         {/* ── Left Column: Email Content Viewport ────────────────────────────────── */}
         <section
           className="lg:col-span-2 overflow-hidden flex flex-col min-h-[500px]"
-          style={{ backgroundColor: 'var(--color-surface)', border: '3px solid var(--color-ink)', boxShadow: 'var(--shadow-offset)' }}
+          style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-ink)', boxShadow: 'var(--shadow-offset)' }}
         >
           {/* Ingest metadata header */}
-          <div className="px-6 py-5" style={{ borderBottom: '3px solid var(--color-ink)', backgroundColor: 'var(--color-accent)' }}>
+          <div className="px-6 py-5" style={{ borderBottom: '1px solid var(--color-ink)', backgroundColor: 'var(--color-accent)' }}>
             <h1
               className="text-base font-bold mb-3"
               style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
@@ -551,10 +551,10 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
           {/* AI Panel Wrapper */}
           <div
             className="p-5 space-y-5"
-            style={{ backgroundColor: 'var(--color-surface)', border: '3px solid var(--color-ink)', boxShadow: 'var(--shadow-offset)' }}
+            style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-ink)', boxShadow: 'var(--shadow-offset)' }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between pb-3" style={{ borderBottom: '3px solid var(--color-ink)' }}>
+            <div className="flex items-center justify-between pb-3" style={{ borderBottom: '1px solid var(--color-ink)' }}>
               <div className="flex items-center gap-2">
                 <Sparkles size={15} style={{ color: 'var(--color-accent-cta)' }} />
                 <h3
@@ -580,7 +580,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
               </h4>
               <div
                 className="p-3"
-                style={{ backgroundColor: '#FFFDF5', border: '2px solid var(--color-ink)' }}
+                style={{ backgroundColor: '#FFFDF5', border: '1px solid var(--color-ink)' }}
               >
                 <p className="text-xs leading-normal" style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-body)' }}>
                   {email.analysis?.summary ||
@@ -606,7 +606,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
                   <div
                     key={label}
                     className="p-2 text-center"
-                    style={{ backgroundColor: color, border: '2px solid var(--color-ink)', boxShadow: '2px 2px 0 var(--color-ink)' }}
+                    style={{ backgroundColor: color, border: '1px solid var(--color-ink)', boxShadow: '2px 2px 0 var(--color-ink)' }}
                   >
                     <div className="mx-auto mb-1 flex justify-center" style={{ color: 'var(--color-ink)' }}>{icon}</div>
                     <p className="text-[9px] font-bold uppercase" style={{ color: 'var(--color-ink)' }}>{label}</p>
@@ -619,7 +619,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
             </div>
 
             {/* Extracted Action Items */}
-            <div className="space-y-2" style={{ borderTop: '2px solid var(--color-ink)', paddingTop: '16px' }}>
+            <div className="space-y-2" style={{ borderTop: '1px solid var(--color-ink)', paddingTop: '16px' }}>
               <h4
                 className="text-[10px] font-bold uppercase tracking-widest"
                 style={{ color: '#666', fontFamily: 'var(--font-body)' }}
@@ -636,7 +636,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
                       className="flex items-start gap-3 p-3 cursor-pointer transition-all"
                       style={{
                         backgroundColor: isChecked ? 'var(--color-success)' : 'var(--color-surface)',
-                        border: '2px solid var(--color-ink)',
+                        border: '1px solid var(--color-ink)',
                         boxShadow: isChecked ? 'none' : '2px 2px 0 var(--color-ink)',
                         transform: isChecked ? 'translate(2px,2px)' : '',
                       }}
@@ -672,7 +672,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
             </div>
 
             {/* Upcoming Meetings */}
-            <div className="space-y-2" style={{ borderTop: '2px solid var(--color-ink)', paddingTop: '16px' }}>
+            <div className="space-y-2" style={{ borderTop: '1px solid var(--color-ink)', paddingTop: '16px' }}>
               <div className="flex items-center justify-between">
                 <h4 className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5"
                   style={{ color: '#666', fontFamily: 'var(--font-body)' }}
@@ -694,7 +694,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
 
               {!calendarStatus?.connected ? (
                 <div className="p-3 space-y-2 text-center"
-                  style={{ backgroundColor: '#FFF0F0', border: '2px solid var(--color-danger)' }}
+                  style={{ backgroundColor: '#FFF0F0', border: '1px solid var(--color-danger)' }}
                 >
                   <p className="text-[11px] leading-normal" style={{ color: 'var(--color-danger)', fontFamily: 'var(--font-body)' }}>
                     Google Calendar not linked.
@@ -702,7 +702,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
                   <button
                     onClick={connectCalendar}
                     className="w-full py-1.5 text-[10px] font-bold uppercase tracking-wider"
-                    style={{ backgroundColor: 'var(--color-danger)', border: '2px solid var(--color-ink)', color: '#fff' }}
+                    style={{ backgroundColor: 'var(--color-danger)', border: '1px solid var(--color-ink)', color: '#fff' }}
                   >
                     Link Google Calendar
                   </button>
@@ -715,7 +715,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
                     const statusBg = isPending ? 'var(--color-pending)' : isFailed ? 'var(--color-danger)' : 'var(--color-success)';
                     return (
                       <div key={idx} className="p-3 space-y-2"
-                        style={{ backgroundColor: 'var(--color-surface)', border: '2px solid var(--color-ink)', boxShadow: '2px 2px 0 var(--color-ink)' }}
+                        style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-ink)', boxShadow: '2px 2px 0 var(--color-ink)' }}
                       >
                         <div className="flex justify-between items-start gap-2">
                           <p className="text-xs font-bold leading-normal truncate" style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-body)' }}>
@@ -737,7 +737,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
                         {evt.meetingLink && (
                           <a href={evt.meetingLink} target="_blank" rel="noopener noreferrer"
                             className="inline-flex w-full justify-center items-center py-1.5 text-[10px] font-bold uppercase tracking-wider"
-                            style={{ backgroundColor: 'var(--color-accent-cta)', border: '2px solid var(--color-ink)', color: '#fff' }}
+                            style={{ backgroundColor: 'var(--color-accent-cta)', border: '1px solid var(--color-ink)', color: '#fff' }}
                           >
                             Join Meeting
                           </a>
@@ -748,14 +748,14 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
                 </div>
               ) : (
                 <div className="p-3 text-center"
-                  style={{ backgroundColor: '#f9f9f9', border: '2px solid var(--color-ink)' }}
+                  style={{ backgroundColor: '#f9f9f9', border: '1px solid var(--color-ink)' }}
                 >
                   <p className="text-[11px] leading-normal mb-2" style={{ color: '#666', fontFamily: 'var(--font-body)' }}>
                     No calendar events extracted yet.
                   </p>
                   <button onClick={triggerCalendarSync} disabled={syncingCalendar}
                     className="py-1.5 px-4 text-[10px] font-bold uppercase tracking-wider disabled:opacity-50"
-                    style={{ backgroundColor: 'var(--color-accent-cta)', border: '2px solid var(--color-ink)', color: '#fff' }}
+                    style={{ backgroundColor: 'var(--color-accent-cta)', border: '1px solid var(--color-ink)', color: '#fff' }}
                   >
                     {syncingCalendar ? 'Extracting...' : 'Extract & Create'}
                   </button>
@@ -764,7 +764,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
             </div>
 
             {/* Extracted Expenses */}
-            <div className="space-y-2" style={{ borderTop: '2px solid var(--color-ink)', paddingTop: '16px' }}>
+            <div className="space-y-2" style={{ borderTop: '1px solid var(--color-ink)', paddingTop: '16px' }}>
               <div className="flex items-center justify-between">
                 <h4 className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5"
                   style={{ color: '#666', fontFamily: 'var(--font-body)' }}
@@ -789,7 +789,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
                     const displaySymbol = exp.currency === 'JPY' ? '¥' : exp.currency === 'EUR' ? '€' : exp.currency === 'GBP' ? '£' : '$';
                     return (
                       <div key={idx} className="p-3 space-y-2"
-                        style={{ backgroundColor: '#F0FFF5', border: '2px solid var(--color-ink)', boxShadow: '2px 2px 0 var(--color-ink)' }}
+                        style={{ backgroundColor: '#F0FFF5', border: '1px solid var(--color-ink)', boxShadow: '2px 2px 0 var(--color-ink)' }}
                       >
                         <div className="flex justify-between items-start gap-2">
                           <div>
@@ -857,14 +857,14 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
                 </div>
               ) : (
                 <div className="p-3 text-center"
-                  style={{ backgroundColor: '#f9f9f9', border: '2px solid var(--color-ink)' }}
+                  style={{ backgroundColor: '#f9f9f9', border: '1px solid var(--color-ink)' }}
                 >
                   <p className="text-[11px] leading-normal mb-2" style={{ color: '#666', fontFamily: 'var(--font-body)' }}>
                     No expense data extracted yet.
                   </p>
                   <button onClick={triggerExpenseExtraction} disabled={extractingExpense}
                     className="py-1.5 px-4 text-[10px] font-bold uppercase tracking-wider disabled:opacity-50"
-                    style={{ backgroundColor: 'var(--color-success)', border: '2px solid var(--color-ink)', color: '#fff' }}
+                    style={{ backgroundColor: 'var(--color-success)', border: '1px solid var(--color-ink)', color: '#fff' }}
                   >
                     {extractingExpense ? 'Extracting...' : 'Detect & Extract Expense'}
                   </button>
@@ -874,14 +874,14 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
 
             {/* Reply Draft Suggestion */}
             {email.analysis?.suggested_reply && (
-              <div className="space-y-2" style={{ borderTop: '2px solid var(--color-ink)', paddingTop: '16px' }}>
+              <div className="space-y-2" style={{ borderTop: '1px solid var(--color-ink)', paddingTop: '16px' }}>
                 <h4 className="text-[10px] font-bold uppercase tracking-widest"
                   style={{ color: '#666', fontFamily: 'var(--font-body)' }}
                 >
                   AI Draft Suggestion
                 </h4>
                 <div className="p-3"
-                  style={{ backgroundColor: '#F0F5FF', border: '2px solid var(--color-ink)' }}
+                  style={{ backgroundColor: '#F0F5FF', border: '1px solid var(--color-ink)' }}
                 >
                   <p className="text-[11px] italic leading-relaxed" style={{ color: '#444', fontFamily: 'var(--font-body)' }}>
                     "{email.analysis.suggested_reply}"
@@ -902,7 +902,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
                 })
               }
               className="flex-1 py-3 text-xs font-bold uppercase tracking-wider text-center transition-all min-h-[44px]"
-              style={{ backgroundColor: 'var(--color-accent-cta)', border: '3px solid var(--color-ink)', boxShadow: 'var(--shadow-offset-sm)', color: '#fff', fontFamily: 'var(--font-body)' }}
+              style={{ backgroundColor: 'var(--color-accent-cta)', border: '1px solid var(--color-ink)', boxShadow: 'var(--shadow-offset-sm)', color: '#fff', fontFamily: 'var(--font-body)' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'none'; (e.currentTarget as HTMLElement).style.transform = 'translate(4px,4px)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-offset-sm)'; (e.currentTarget as HTMLElement).style.transform = ''; }}
             >
@@ -911,7 +911,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
             <button
               onClick={() => alert('Archived Inbound.')}
               className="px-4 py-3 flex items-center justify-center min-h-[44px] min-w-[44px] transition-all"
-              style={{ backgroundColor: 'var(--color-surface)', border: '3px solid var(--color-ink)', boxShadow: 'var(--shadow-offset-sm)', color: 'var(--color-ink)' }}
+              style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-ink)', boxShadow: 'var(--shadow-offset-sm)', color: 'var(--color-ink)' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'none'; (e.currentTarget as HTMLElement).style.transform = 'translate(4px,4px)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-offset-sm)'; (e.currentTarget as HTMLElement).style.transform = ''; }}
             >

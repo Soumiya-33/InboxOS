@@ -1151,7 +1151,7 @@ export const LandingPage: React.FC = () => {
                 >
                   {actionProgress ? (
                     <>
-                      <div className="h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <div className="h-3.5 w-3.5 border border-white border-t-transparent rounded-full animate-spin" />
                       <span>Dispatching...</span>
                     </>
                   ) : (
@@ -1209,15 +1209,15 @@ export const LandingPage: React.FC = () => {
 
                 {/* Simulated metrics */}
                 <div className="grid grid-cols-3 gap-3 mb-4">
-                  <div className="bg-white border-2 border-black border border-black rounded-xl p-2.5 text-left">
+                  <div className="bg-white border border-black border border-black rounded-xl p-2.5 text-left">
                     <p className="text-[9px] text-gray-700 font-bold">Total Ingested</p>
                     <p className="text-sm font-bold text-black font-black mt-1">1,284</p>
                   </div>
-                  <div className="bg-white border-2 border-black border border-black rounded-xl p-2.5 text-left">
+                  <div className="bg-white border border-black border border-black rounded-xl p-2.5 text-left">
                     <p className="text-[9px] text-gray-700 font-bold">Urgent Alerts</p>
                     <p className="text-sm font-bold text-amber-400 mt-1">4</p>
                   </div>
-                  <div className="bg-white border-2 border-black border border-black rounded-xl p-2.5 text-left">
+                  <div className="bg-white border border-black border border-black rounded-xl p-2.5 text-left">
                     <p className="text-[9px] text-gray-700 font-bold">Auto-Resolved</p>
                     <p className="text-sm font-bold text-black font-black mt-1">84%</p>
                   </div>
@@ -1635,7 +1635,7 @@ export const LandingPage: React.FC = () => {
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto px-6 py-3.5 text-xs font-semibold text-black font-black bg-white border-2 border-black shadow-[2px_2px_0_0_#111] hover:bg-white/15 border border-white/10 rounded-2xl transition-all flex items-center justify-center gap-1.5"
+                className="w-full sm:w-auto px-6 py-3.5 text-xs font-semibold text-black font-black bg-white border border-black shadow-[2px_2px_0_0_#111] hover:bg-white/15 border border-white/10 rounded-2xl transition-all flex items-center justify-center gap-1.5"
               >
                 <GithubIcon size={14} />
                 <span>Explore GitHub</span>

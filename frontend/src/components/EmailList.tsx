@@ -473,7 +473,7 @@ export const EmailList: React.FC = () => {
   const neuTabBtn = (isActive: boolean): React.CSSProperties => ({
     backgroundColor: isActive ? 'var(--color-ink)' : 'var(--color-surface)',
     color: isActive ? '#fff' : 'var(--color-ink)',
-    border: '2px solid var(--color-ink)',
+    border: '1px solid var(--color-ink)',
     boxShadow: isActive ? 'none' : 'var(--shadow-offset-sm)',
     fontFamily: 'var(--font-body)',
     fontWeight: 700,
@@ -488,24 +488,26 @@ export const EmailList: React.FC = () => {
   return (
     <div
       ref={wrapperRef}
-      className="space-y-5"
+      className="space-y-3"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
       style={{ transform: `translateY(${pullDistance}px)` }}
     >
       {/* Pull-to-refresh indicator */}
-      <div
-        className="flex justify-center items-center h-8 transition-opacity duration-200"
-        style={{ opacity: pullDistance > 0 ? 1 : 0 }}
-      >
-        <RefreshCw size={20} className={isFetching ? 'animate-spin' : ''} style={{ color: 'var(--color-ink)' }} />
-      </div>
+      {pullDistance > 0 && (
+        <div
+          className="flex justify-center items-center h-8 transition-opacity duration-200"
+          style={{ opacity: pullDistance > 0 ? 1 : 0 }}
+        >
+          <RefreshCw size={20} className={isFetching ? 'animate-spin' : ''} style={{ color: 'var(--color-ink)' }} />
+        </div>
+      )}
 
       {/* ── Filter Tabs & Options Header ───────────────────────────────────── */}
-      <div className="flex flex-col xl:flex-row gap-4 justify-between items-start xl:items-center">
+      <div className="flex flex-row items-center justify-between gap-4 w-full overflow-x-auto scrollbar-none pb-2 shrink-0">
         {/* Horizontal Category Tabs */}
-        <div className="flex flex-wrap gap-1.5 overflow-x-auto w-full xl:w-auto pb-1 xl:pb-0">
+        <div className="flex flex-row items-center gap-1.5 shrink-0">
           {CATEGORIES.map((cat) => {
             const isActive = categoryFilter === cat.id;
             return (
@@ -533,13 +535,13 @@ export const EmailList: React.FC = () => {
         </div>
 
         {/* Search & Options */}
-        <div className="flex items-center gap-2 w-full xl:w-auto shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <label
             className="flex items-center gap-2 cursor-pointer select-none px-3 py-2 font-bold text-xs uppercase tracking-wider"
             style={{
               backgroundColor: isAiSearch ? 'var(--color-accent-cta)' : 'var(--color-surface)',
               color: isAiSearch ? '#fff' : 'var(--color-ink)',
-              border: '2px solid var(--color-ink)',
+              border: '1px solid var(--color-ink)',
               boxShadow: 'var(--shadow-offset-sm)',
             }}
           >
@@ -555,7 +557,7 @@ export const EmailList: React.FC = () => {
             <span>AI Search</span>
           </label>
 
-          <div className="relative flex-1 xl:flex-none xl:w-[240px]">
+          <div className="relative w-[180px] sm:w-[240px]">
             <Search
               size={14}
               className="absolute left-3 top-3"
@@ -581,7 +583,7 @@ export const EmailList: React.FC = () => {
             className="p-2.5 flex items-center justify-center transition-all disabled:opacity-50 shrink-0"
             style={{
               backgroundColor: 'var(--color-surface)',
-              border: '2px solid var(--color-ink)',
+              border: '1px solid var(--color-ink)',
               boxShadow: 'var(--shadow-offset-sm)',
             }}
             onMouseEnter={e => {
@@ -609,7 +611,7 @@ export const EmailList: React.FC = () => {
           className="p-8 text-center flex flex-col items-center justify-center gap-3"
           style={{
             backgroundColor: 'var(--color-surface)',
-            border: '3px solid var(--color-danger)',
+            border: '1px solid var(--color-danger)',
             boxShadow: '6px 6px 0px var(--color-danger)',
           }}
         >
@@ -630,7 +632,7 @@ export const EmailList: React.FC = () => {
             className="px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all"
             style={{
               backgroundColor: 'var(--color-danger)',
-              border: '2px solid var(--color-ink)',
+              border: '1px solid var(--color-ink)',
               boxShadow: 'var(--shadow-offset-sm)',
               color: '#fff',
             }}
@@ -659,7 +661,7 @@ export const EmailList: React.FC = () => {
               className="text-center py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 mb-2"
               style={{
                 backgroundColor: 'var(--color-accent)',
-                border: '2px solid var(--color-ink)',
+                border: '1px solid var(--color-ink)',
                 color: 'var(--color-ink)',
               }}
             >
@@ -682,7 +684,7 @@ export const EmailList: React.FC = () => {
         <div
           className="flex flex-col sm:flex-row gap-4 items-center justify-between px-2 pt-4"
           style={{
-            borderTop: '3px solid var(--color-ink)',
+            borderTop: '1px solid var(--color-ink)',
             color: '#555',
             fontSize: '12px',
             fontFamily: 'var(--font-body)',
@@ -709,7 +711,7 @@ export const EmailList: React.FC = () => {
                 onChange={(e) => { setPageSize(Number(e.target.value)); setCurrentPage(1); }}
                 style={{
                   backgroundColor: 'var(--color-surface)',
-                  border: '2px solid var(--color-ink)',
+                  border: '1px solid var(--color-ink)',
                   color: 'var(--color-ink)',
                   padding: '4px 8px',
                   fontSize: '11px',
@@ -732,7 +734,7 @@ export const EmailList: React.FC = () => {
                 className="p-2 transition-all disabled:opacity-30 disabled:pointer-events-none"
                 style={{
                   backgroundColor: 'var(--color-surface)',
-                  border: '2px solid var(--color-ink)',
+                  border: '1px solid var(--color-ink)',
                   boxShadow: 'var(--shadow-offset-sm)',
                 }}
                 onMouseEnter={e => {
@@ -764,7 +766,7 @@ export const EmailList: React.FC = () => {
                 className="p-2 transition-all disabled:opacity-30 disabled:pointer-events-none"
                 style={{
                   backgroundColor: 'var(--color-surface)',
-                  border: '2px solid var(--color-ink)',
+                  border: '1px solid var(--color-ink)',
                   boxShadow: 'var(--shadow-offset-sm)',
                 }}
                 onMouseEnter={e => {

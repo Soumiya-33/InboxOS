@@ -25,7 +25,7 @@ export const Button: React.FC<ButtonProps> = ({
     fontWeight: 700,
     textTransform: 'uppercase',
     letterSpacing: '0.04em',
-    border: '3px solid var(--color-ink)',
+    border: '1px solid var(--color-ink)',
     transition: 'box-shadow 0.1s ease, transform 0.1s ease',
     cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
     opacity: disabled || isLoading ? 0.55 : 1,

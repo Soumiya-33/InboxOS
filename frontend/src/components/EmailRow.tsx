@@ -81,23 +81,23 @@ export const EmailRow = React.memo(function EmailRow({
   // Neubrutalism: solid fill + black border, 0 radius
   const getCategoryStyle = (cat: string): React.CSSProperties => {
     switch (cat) {
-      case 'urgent':   return { backgroundColor: '#E85C4A', color: '#fff', border: '2px solid #111' };
-      case 'job':      return { backgroundColor: '#A855F7', color: '#fff', border: '2px solid #111' };
-      case 'finance':  return { backgroundColor: '#4CAF6D', color: '#fff', border: '2px solid #111' };
-      case 'meeting':  return { backgroundColor: '#6EC6E8', color: '#111', border: '2px solid #111' };
-      case 'otp':      return { backgroundColor: '#F4C542', color: '#111', border: '2px solid #111' };
-      case 'newsletter': return { backgroundColor: '#999', color: '#fff', border: '2px solid #111' };
-      case 'support':  return { backgroundColor: '#6EC6E8', color: '#111', border: '2px solid #111' };
-      case 'academic': return { backgroundColor: '#3B4CCA', color: '#fff', border: '2px solid #111' };
-      case 'work':     return { backgroundColor: '#3B4CCA', color: '#fff', border: '2px solid #111' };
-      default:         return { backgroundColor: '#F4C542', color: '#111', border: '2px solid #111' };
+      case 'urgent':   return { backgroundColor: '#E85C4A', color: '#fff', border: '1px solid #111' };
+      case 'job':      return { backgroundColor: '#A855F7', color: '#fff', border: '1px solid #111' };
+      case 'finance':  return { backgroundColor: '#4CAF6D', color: '#fff', border: '1px solid #111' };
+      case 'meeting':  return { backgroundColor: '#6EC6E8', color: '#111', border: '1px solid #111' };
+      case 'otp':      return { backgroundColor: '#F4C542', color: '#111', border: '1px solid #111' };
+      case 'newsletter': return { backgroundColor: '#999', color: '#fff', border: '1px solid #111' };
+      case 'support':  return { backgroundColor: '#6EC6E8', color: '#111', border: '1px solid #111' };
+      case 'academic': return { backgroundColor: '#3B4CCA', color: '#fff', border: '1px solid #111' };
+      case 'work':     return { backgroundColor: '#3B4CCA', color: '#fff', border: '1px solid #111' };
+      default:         return { backgroundColor: '#F4C542', color: '#111', border: '1px solid #111' };
     }
   };
 
   const getPriorityStyle = (score: number): React.CSSProperties => {
-    if (score > 85) return { backgroundColor: '#E85C4A', color: '#fff', border: '2px solid #111' };
-    if (score > 65) return { backgroundColor: '#F4C542', color: '#111', border: '2px solid #111' };
-    return { backgroundColor: '#eee', color: '#555', border: '2px solid #aaa' };
+    if (score > 85) return { backgroundColor: '#E85C4A', color: '#fff', border: '1px solid #111' };
+    if (score > 65) return { backgroundColor: '#F4C542', color: '#111', border: '1px solid #111' };
+    return { backgroundColor: '#eee', color: '#555', border: '1px solid #aaa' };
   };
 
   return (
@@ -107,8 +107,8 @@ export const EmailRow = React.memo(function EmailRow({
       style={{
         backgroundColor: isUnread ? '#FFFDF5' : 'var(--color-surface)',
         border: isUnread
-          ? '3px solid var(--color-ink)'
-          : '2px solid var(--color-ink)',
+          ? '1px solid var(--color-ink)'
+          : '1px solid var(--color-ink)',
         boxShadow: isUnread
           ? 'var(--shadow-offset)'
           : 'var(--shadow-offset-sm)',
@@ -129,12 +129,12 @@ export const EmailRow = React.memo(function EmailRow({
         {isUnread ? (
           <span
             className="h-3 w-3"
-            style={{ backgroundColor: 'var(--color-accent-cta)', border: '2px solid var(--color-ink)' }}
+            style={{ backgroundColor: 'var(--color-accent-cta)', border: '1px solid var(--color-ink)' }}
           />
         ) : (
           <span
             className="h-2.5 w-2.5"
-            style={{ backgroundColor: '#ddd', border: '2px solid #bbb' }}
+            style={{ backgroundColor: '#ddd', border: '1px solid #bbb' }}
           />
         )}
       </div>
@@ -207,7 +207,7 @@ export const EmailRow = React.memo(function EmailRow({
             {email.similarity !== undefined && (
               <span
                 className="text-[9px] px-1.5 py-0.5 font-bold"
-                style={{ backgroundColor: 'var(--color-success)', color: '#fff', border: '2px solid #111' }}
+                style={{ backgroundColor: 'var(--color-success)', color: '#fff', border: '1px solid #111' }}
               >
                 {(email.similarity * 100).toFixed(0)}% Match
               </span>
@@ -241,7 +241,7 @@ export const EmailRow = React.memo(function EmailRow({
             {priorityScore > 85 && (
               <span
                 className="text-[9px] font-bold px-2 py-0.5 flex items-center gap-1"
-                style={{ backgroundColor: '#E85C4A', color: '#fff', border: '2px solid #111' }}
+                style={{ backgroundColor: '#E85C4A', color: '#fff', border: '1px solid #111' }}
               >
                 <ShieldAlert size={9} />
                 <span>Urgent</span>

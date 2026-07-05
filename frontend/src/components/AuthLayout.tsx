@@ -88,7 +88,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
           <div className="flex items-center gap-3">
             <div
               className="flex items-center justify-center w-10 h-10"
-              style={{ backgroundColor: 'var(--color-ink)', border: '3px solid var(--color-ink)' }}
+              style={{ backgroundColor: 'var(--color-ink)', border: '1px solid var(--color-ink)' }}
             >
               <Zap size={20} className="text-white" fill="white" />
             </div>
@@ -109,7 +109,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
           </div>
           <span
             className="text-[9px] font-bold px-2.5 py-1 uppercase tracking-wider"
-            style={{ border: '2px solid var(--color-ink)', color: 'var(--color-ink)', boxShadow: '2px 2px 0 var(--color-ink)' }}
+            style={{ border: '1px solid var(--color-ink)', color: 'var(--color-ink)', boxShadow: '2px 2px 0 var(--color-ink)' }}
           >
             Open Source
           </span>
@@ -126,7 +126,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
               className="inline-block px-1"
               style={{
                 backgroundColor: 'var(--color-accent)',
-                border: '3px solid var(--color-ink)',
+                border: '1px solid var(--color-ink)',
                 boxShadow: '5px 5px 0 var(--color-ink)',
                 lineHeight: '1.15',
               }}
@@ -149,13 +149,13 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
             className="relative overflow-hidden p-5"
             style={{
               backgroundColor: 'var(--color-surface)',
-              border: '3px solid var(--color-ink)',
+              border: '1px solid var(--color-ink)',
               boxShadow: 'var(--shadow-offset)',
             }}
           >
             <div
               className="flex items-center justify-between pb-3 mb-4 text-[9px] font-bold uppercase tracking-widest"
-              style={{ borderBottom: '2px solid var(--color-ink)', color: '#666' }}
+              style={{ borderBottom: '1px solid var(--color-ink)', color: '#666' }}
             >
               <span>Dynamic Pipeline Agent</span>
               <span style={{ color: 'var(--color-accent-cta)' }}>Active Thread</span>
@@ -175,7 +175,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
                     className="p-2.5 text-center transition-all duration-300"
                     style={{
                       backgroundColor: isActive ? 'var(--color-accent)' : 'transparent',
-                      border: `2px solid ${isActive ? 'var(--color-ink)' : '#ccc'}`,
+                      border: `1px solid ${isActive ? 'var(--color-ink)' : '#ccc'}`,
                       boxShadow: isActive ? '3px 3px 0 var(--color-ink)' : 'none',
                       transform: isActive ? 'translate(-1px,-1px)' : '',
                     }}
@@ -211,11 +211,11 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center z-20"
-                  style={{ backgroundColor: 'var(--color-surface)', border: '3px solid var(--color-ink)' }}
+                  style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-ink)' }}
                 >
                   <div
                     className="h-8 w-8 flex items-center justify-center mb-2"
-                    style={{ backgroundColor: 'var(--color-success)', border: '2px solid var(--color-ink)' }}
+                    style={{ backgroundColor: 'var(--color-success)', border: '1px solid var(--color-ink)' }}
                   >
                     <CheckCircle2 size={18} className="text-white" />
                   </div>
@@ -240,7 +240,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
                 className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 flex items-center gap-1 cursor-default transition-all"
                 style={{
                   backgroundColor: 'var(--color-surface)',
-                  border: '2px solid var(--color-ink)',
+                  border: '1px solid var(--color-ink)',
                   boxShadow: '2px 2px 0 var(--color-ink)',
                   color: 'var(--color-ink)',
                   fontFamily: 'var(--font-body)',
@@ -269,7 +269,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
         {/* Testimonials */}
         <div
           className="w-full max-w-[400px] mx-auto pt-6 mt-8"
-          style={{ borderTop: '3px solid var(--color-ink)' }}
+          style={{ borderTop: '1px solid var(--color-ink)' }}
         >
           <div className="min-h-[76px] flex flex-col justify-between text-left relative overflow-hidden">
             <AnimatePresence mode="wait">

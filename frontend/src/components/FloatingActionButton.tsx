@@ -11,7 +11,7 @@ export const FloatingActionButton: React.FC = () => {
       className="fixed bottom-6 right-6 z-40 block md:hidden w-14 h-14 flex items-center justify-center transition-all duration-150"
       style={{
         backgroundColor: 'var(--color-accent)',
-        border: '3px solid var(--color-ink)',
+        border: '1px solid var(--color-ink)',
         boxShadow: 'var(--shadow-offset)',
         color: 'var(--color-ink)',
       }}

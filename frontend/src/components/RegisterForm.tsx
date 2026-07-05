@@ -85,7 +85,7 @@ export const RegisterForm: React.FC = () => {
   const inputStyle = (hasError?: boolean): React.CSSProperties => ({
     width: '100%',
     backgroundColor: 'var(--color-surface)',
-    border: `3px solid ${hasError ? 'var(--color-danger)' : 'var(--color-ink)'}`,
+    border: `1px solid ${hasError ? 'var(--color-danger)' : 'var(--color-ink)'}`,
     color: 'var(--color-ink)',
     fontFamily: 'var(--font-body)',
     fontSize: '13px',
@@ -114,7 +114,7 @@ export const RegisterForm: React.FC = () => {
         {authError && (
           <div
             className="flex items-center gap-3 p-3.5 text-xs text-left"
-            style={{ backgroundColor: '#FFF0F0', border: '2px solid var(--color-danger)', color: 'var(--color-danger)', boxShadow: '3px 3px 0 var(--color-danger)' }}
+            style={{ backgroundColor: '#FFF0F0', border: '1px solid var(--color-danger)', color: 'var(--color-danger)', boxShadow: '3px 3px 0 var(--color-danger)' }}
           >
             <AlertCircle size={14} className="shrink-0" />
             <p className="leading-snug">{authError}</p>
@@ -224,7 +224,7 @@ export const RegisterForm: React.FC = () => {
             type="submit"
             disabled={isLoading}
             className="w-full flex items-center justify-center gap-1.5 px-4 py-3 font-bold text-xs uppercase tracking-wider transition-all disabled:opacity-50 disabled:pointer-events-none mt-2 min-h-[44px]"
-            style={{ backgroundColor: 'var(--color-accent-cta)', border: '3px solid var(--color-ink)', color: '#fff', boxShadow: 'var(--shadow-offset)', fontFamily: 'var(--font-body)' }}
+            style={{ backgroundColor: 'var(--color-accent-cta)', border: '1px solid var(--color-ink)', color: '#fff', boxShadow: 'var(--shadow-offset)', fontFamily: 'var(--font-body)' }}
             onMouseEnter={e => {
               if (!isLoading) {
                 (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-offset-hover)';
@@ -242,9 +242,9 @@ export const RegisterForm: React.FC = () => {
 
         {/* Divider */}
         <div className="flex items-center gap-3">
-          <div className="flex-1" style={{ borderTop: '2px solid var(--color-ink)' }} />
+          <div className="flex-1" style={{ borderTop: '1px solid var(--color-ink)' }} />
           <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#888', fontFamily: 'var(--font-body)' }}>or</span>
-          <div className="flex-1" style={{ borderTop: '2px solid var(--color-ink)' }} />
+          <div className="flex-1" style={{ borderTop: '1px solid var(--color-ink)' }} />
         </div>
 
         {/* Google */}
@@ -269,7 +269,7 @@ export const RegisterForm: React.FC = () => {
             }
           }}
           className="w-full flex items-center justify-center gap-2.5 px-4 py-3 font-bold text-xs uppercase tracking-wider transition-all min-h-[44px]"
-          style={{ backgroundColor: 'var(--color-surface)', border: '3px solid var(--color-ink)', color: 'var(--color-ink)', boxShadow: 'var(--shadow-offset)', fontFamily: 'var(--font-body)' }}
+          style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-ink)', color: 'var(--color-ink)', boxShadow: 'var(--shadow-offset)', fontFamily: 'var(--font-body)' }}
           onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-offset-hover)'; (e.currentTarget as HTMLElement).style.transform = 'translate(3px,3px)'; }}
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-offset)'; (e.currentTarget as HTMLElement).style.transform = ''; }}
         >
@@ -283,7 +283,7 @@ export const RegisterForm: React.FC = () => {
         </button>
 
         {/* Footer */}
-        <div className="text-center pt-4 text-[10px] font-semibold" style={{ borderTop: '2px solid var(--color-ink)', color: '#666', fontFamily: 'var(--font-body)' }}>
+        <div className="text-center pt-4 text-[10px] font-semibold" style={{ borderTop: '1px solid var(--color-ink)', color: '#666', fontFamily: 'var(--font-body)' }}>
           <p>Join thousands of users running email as an operating system.</p>
           <Link to="/login" onClick={clearError} className="font-bold uppercase tracking-wider mt-1 block transition-colors" style={{ color: 'var(--color-accent-cta)' }}>
             Sign In →

@@ -104,10 +104,10 @@ export const AnalyticsPage: React.FC = () => {
       <div className="space-y-8 animate-fadeIn text-left p-6 md:p-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b-4 border-black pb-5">
           <div className="space-y-2">
-            <div className="h-7 w-48 animate-pulse bg-[#e8e5d8] border-2 border-black" />
-            <div className="h-4 w-72 animate-pulse bg-[#e8e5d8] border-2 border-black" />
+            <div className="h-7 w-48 animate-pulse bg-[#e8e5d8] border border-black" />
+            <div className="h-4 w-72 animate-pulse bg-[#e8e5d8] border border-black" />
           </div>
-          <div className="h-10 w-64 animate-pulse bg-[#e8e5d8] border-2 border-black" />
+          <div className="h-10 w-64 animate-pulse bg-[#e8e5d8] border border-black" />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           {[1, 2, 3].map((i) => (
@@ -203,7 +203,7 @@ export const AnalyticsPage: React.FC = () => {
         </div>
 
         {/* Date presets and inputs */}
-        <div className="flex flex-wrap items-center gap-3 bg-white border-[3px] border-black shadow-[4px_4px_0_0_#111] p-1.5 self-start md:self-auto">
+        <div className="flex flex-wrap items-center gap-3 bg-white border border-black shadow-[4px_4px_0_0_#111] p-1.5 self-start md:self-auto">
           {(['7d', '30d', '90d', 'custom'] as const).map((p) => (
             <button
               key={p}
@@ -255,8 +255,8 @@ export const AnalyticsPage: React.FC = () => {
             <span
               className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
                 stats?.totalIngested?.isPositive
-                  ? 'bg-green-500 text-white border-2 border-black'
-                  : 'bg-red-500 text-white border-2 border-black'
+                  ? 'bg-green-500 text-white border border-black'
+                  : 'bg-red-500 text-white border border-black'
               }`}
             >
               {stats?.totalIngested?.change ?? '0%'}
@@ -269,7 +269,7 @@ export const AnalyticsPage: React.FC = () => {
         <div className="neu-card p-5 relative overflow-hidden transition-all duration-300">
           <div className="flex justify-between items-start mb-3">
             <span className="text-xs font-medium text-gray-700 font-bold">Action Resolution Rate</span>
-            <div className="p-2 rounded-xl bg-green-500 text-white border-2 border-black">
+            <div className="p-2 rounded-xl bg-green-500 text-white border border-black">
               <CheckCircle2 size={18} />
             </div>
           </div>
@@ -280,8 +280,8 @@ export const AnalyticsPage: React.FC = () => {
             <span
               className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
                 stats?.resolutionRate?.isPositive
-                  ? 'bg-green-500 text-white border-2 border-black'
-                  : 'bg-red-500 text-white border-2 border-black'
+                  ? 'bg-green-500 text-white border border-black'
+                  : 'bg-red-500 text-white border border-black'
               }`}
             >
               {stats?.resolutionRate?.change ?? '0%'}
@@ -294,7 +294,7 @@ export const AnalyticsPage: React.FC = () => {
         <div className="neu-card p-5 relative overflow-hidden transition-all duration-300">
           <div className="flex justify-between items-start mb-3">
             <span className="text-xs font-medium text-gray-700 font-bold">Urgent Pending Actions</span>
-            <div className="p-2 rounded-xl bg-yellow-400 text-black border-2 border-black">
+            <div className="p-2 rounded-xl bg-yellow-400 text-black border border-black">
               <ShieldAlert size={18} className="animate-pulse" />
             </div>
           </div>
@@ -305,8 +305,8 @@ export const AnalyticsPage: React.FC = () => {
             <span
               className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
                 stats?.pendingActions?.isPositive
-                  ? 'bg-green-500 text-white border-2 border-black'
-                  : 'bg-red-500 text-white border-2 border-black'
+                  ? 'bg-green-500 text-white border border-black'
+                  : 'bg-red-500 text-white border border-black'
               }`}
             >
               {stats?.pendingActions?.change ?? '0%'}

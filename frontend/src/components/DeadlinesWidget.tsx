@@ -118,7 +118,7 @@ const ReminderCard: React.FC<ReminderCardProps> = ({ reminder, onSnooze, onDone 
       id={`reminder-card-${reminder.id}`}
       style={{
         backgroundColor: cfg.bg,
-        border: `2px solid ${cfg.border}`,
+        border: `1px solid ${cfg.border}`,
         boxShadow: `3px 3px 0 ${cfg.border}`,
       }}
     >
@@ -180,7 +180,7 @@ const ReminderCard: React.FC<ReminderCardProps> = ({ reminder, onSnooze, onDone 
             id={`snooze-btn-${reminder.id}`}
             onClick={() => setShowSnooze(!showSnooze)}
             className="w-full flex items-center justify-center gap-1 px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-all"
-            style={{ backgroundColor: 'var(--color-surface)', border: '2px solid var(--color-ink)', boxShadow: '2px 2px 0 var(--color-ink)', color: 'var(--color-ink)' }}
+            style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-ink)', boxShadow: '2px 2px 0 var(--color-ink)', color: 'var(--color-ink)' }}
           >
             <Bell size={10} />
             Snooze
@@ -190,7 +190,7 @@ const ReminderCard: React.FC<ReminderCardProps> = ({ reminder, onSnooze, onDone 
           {showSnooze && (
             <div
               className="absolute bottom-full mb-1.5 left-0 right-0 z-50 overflow-hidden"
-              style={{ backgroundColor: 'var(--color-surface)', border: '2px solid var(--color-ink)', boxShadow: '4px 4px 0 var(--color-ink)' }}
+              style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-ink)', boxShadow: '4px 4px 0 var(--color-ink)' }}
             >
               {SNOOZE_OPTIONS.map((opt) => (
                 <button
@@ -214,7 +214,7 @@ const ReminderCard: React.FC<ReminderCardProps> = ({ reminder, onSnooze, onDone 
           id={`done-btn-${reminder.id}`}
           onClick={handleDone}
           className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-all"
-          style={{ backgroundColor: 'var(--color-success)', border: '2px solid var(--color-ink)', boxShadow: '2px 2px 0 var(--color-ink)', color: '#fff', fontFamily: 'var(--font-body)' }}
+          style={{ backgroundColor: 'var(--color-success)', border: '1px solid var(--color-ink)', boxShadow: '2px 2px 0 var(--color-ink)', color: '#fff', fontFamily: 'var(--font-body)' }}
         >
           <CheckCircle2 size={10} />
           Done
@@ -323,12 +323,12 @@ export const DeadlinesWidget: React.FC = () => {
       {/* Content */}
       <div
         className="overflow-hidden"
-        style={{ backgroundColor: 'var(--color-surface)', border: '3px solid var(--color-ink)', boxShadow: 'var(--shadow-offset)' }}
+        style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-ink)', boxShadow: 'var(--shadow-offset)' }}
       >
         {loading && (
           <div className="space-y-2.5 p-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-16 animate-pulse" style={{ backgroundColor: '#e8e5d8', border: '2px solid #ccc' }} />
+              <div key={i} className="h-16 animate-pulse" style={{ backgroundColor: '#e8e5d8', border: '1px solid #ccc' }} />
             ))}
           </div>
         )}
@@ -351,7 +351,7 @@ export const DeadlinesWidget: React.FC = () => {
           <div className="flex flex-col items-center justify-center py-8 px-4 text-center gap-2">
             <div
               className="h-10 w-10 flex items-center justify-center"
-              style={{ backgroundColor: 'var(--color-success)', border: '2px solid var(--color-ink)' }}
+              style={{ backgroundColor: 'var(--color-success)', border: '1px solid var(--color-ink)' }}
             >
               <CheckCircle2 size={18} className="text-white" />
             </div>
