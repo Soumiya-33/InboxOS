@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { type EmailData } from './EmailRow';
 import { useCompose } from '../context/ComposeContext';
-import { API_BASE } from '../config';
+import { API_BASE, authenticatedFetch } from '../config';
 
 
 // Detailed mock data containing body_html with potentially dangerous scripts (to verify sanitization)
@@ -186,7 +186,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
   >({
     queryKey: ['email-detail', emailId],
     queryFn: async () => {
-      const response = await fetch(`${API_BASE}/api/emails/${emailId}`, {
+      const response = await authenticatedFetch(`${API_BASE}/api/emails/${emailId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -210,7 +210,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
   const { data: calendarStatus } = useQuery<{ connected: boolean }>({
     queryKey: ['calendar-status'],
     queryFn: async () => {
-      const response = await fetch(
+      const response = await authenticatedFetch(
         `${API_BASE}/api/integrations/google_calendar/status`,
         {
           credentials: 'include',
@@ -224,7 +224,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
   const { data: calendarEvents, refetch: refetchEvents } = useQuery<any[]>({
     queryKey: ['email-calendar-events', emailId],
     queryFn: async () => {
-      const response = await fetch(
+      const response = await authenticatedFetch(
         `${API_BASE}/api/actions/calendar/events/${emailId}`,
         {
           credentials: 'include',
@@ -240,7 +240,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
   const triggerCalendarSync = async () => {
     setSyncingCalendar(true);
     try {
-      const response = await fetch(`${API_BASE}/api/actions/calendar/events`, {
+      const response = await authenticatedFetch(`${API_BASE}/api/actions/calendar/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ emailId }),
@@ -262,7 +262,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
 
   const connectCalendar = async () => {
     try {
-      const response = await fetch(
+      const response = await authenticatedFetch(
         `${API_BASE}/api/integrations/google_calendar/auth`,
         {
           credentials: 'include',
@@ -284,7 +284,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
   const { data: expenses, refetch: refetchExpenses } = useQuery<any[]>({
     queryKey: ['email-expenses', emailId],
     queryFn: async () => {
-      const response = await fetch(
+      const response = await authenticatedFetch(
         `${API_BASE}/api/expenses/email/${emailId}`,
         {
           credentials: 'include',
@@ -300,7 +300,7 @@ export const EmailViewer: React.FC<EmailViewerProps> = ({
   const triggerExpenseExtraction = async () => {
     setExtractingExpense(true);
     try {
-      const response = await fetch(
+      const response = await authenticatedFetch(
         `${API_BASE}/api/expenses/extract/${emailId}`,
         {
           method: 'POST',

@@ -32,7 +32,7 @@ import {
   Plus,
   RefreshCw,
 } from 'lucide-react';
-import { API_BASE } from './config';
+import { API_BASE, authenticatedFetch } from './config';
 
 
 
@@ -133,7 +133,7 @@ const DashboardContent: React.FC = () => {
 
   const fetchDigests = async () => {
     try {
-      const response = await fetch(`${API_BASE}/api/digests?limit=5`, {
+      const response = await authenticatedFetch(`${API_BASE}/api/digests?limit=5`, {
         credentials: 'include',
       });
       if (response.ok) {
@@ -157,7 +157,7 @@ const DashboardContent: React.FC = () => {
     const fetchTasks = async () => {
       setTasksLoading(true);
       try {
-        const res = await fetch(
+        const res = await authenticatedFetch(
           `${API_BASE}/api/tasks?completed=${showCompleted}&limit=50`,
           { credentials: 'include' }
         );
@@ -177,7 +177,7 @@ const DashboardContent: React.FC = () => {
 
   const handleToggleTask = async (id: string, current: boolean) => {
     try {
-      const res = await fetch(`${API_BASE}/api/tasks/${id}`, {
+      const res = await authenticatedFetch(`${API_BASE}/api/tasks/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isCompleted: !current }),
@@ -195,7 +195,7 @@ const DashboardContent: React.FC = () => {
 
   const handleDeleteTask = async (id: string) => {
     try {
-      const res = await fetch(`${API_BASE}/api/tasks/${id}`, {
+      const res = await authenticatedFetch(`${API_BASE}/api/tasks/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -212,7 +212,7 @@ const DashboardContent: React.FC = () => {
     if (activeTab !== 'settings' && activeTab !== 'inbox') return;
     const fetchGmailStatus = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/integrations/gmail/status`, {
+        const res = await authenticatedFetch(`${API_BASE}/api/integrations/gmail/status`, {
           credentials: 'include',
         });
         if (res.ok) {
@@ -229,7 +229,7 @@ const DashboardContent: React.FC = () => {
 
   const handleConnectGmail = async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/integrations/gmail/auth`, {
+      const res = await authenticatedFetch(`${API_BASE}/api/integrations/gmail/auth`, {
         credentials: 'include',
       });
       if (res.ok) {
@@ -244,7 +244,7 @@ const DashboardContent: React.FC = () => {
   const handleDisconnectGmail = async () => {
     if (!confirm('Disconnect your Gmail account?')) return;
     try {
-      await fetch(`${API_BASE}/api/integrations/gmail`, {
+      await authenticatedFetch(`${API_BASE}/api/integrations/gmail`, {
         method: 'DELETE',
         credentials: 'include',
       });
@@ -263,7 +263,7 @@ const DashboardContent: React.FC = () => {
     }
     setGmailSyncing(true);
     try {
-      const res = await fetch(`${API_BASE}/api/integrations/gmail/sync`, {
+      const res = await authenticatedFetch(`${API_BASE}/api/integrations/gmail/sync`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -290,7 +290,7 @@ const DashboardContent: React.FC = () => {
 
     const loadSettings = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/users/me/settings`, {
+        const res = await authenticatedFetch(`${API_BASE}/api/users/me/settings`, {
           credentials: 'include',
         });
         if (res.ok) {
@@ -315,7 +315,7 @@ const DashboardContent: React.FC = () => {
   const { data: calendarStatus, refetch: refetchCalendarStatus } = useQuery({
     queryKey: ['calendar-status'],
     queryFn: async () => {
-      const response = await fetch(
+      const response = await authenticatedFetch(
         `${API_BASE}/api/integrations/google_calendar/status`,
         {
           credentials: 'include',
@@ -329,7 +329,7 @@ const DashboardContent: React.FC = () => {
 
   const handleConnectCalendar = async () => {
     try {
-      const response = await fetch(
+      const response = await authenticatedFetch(
         `${API_BASE}/api/integrations/google_calendar/auth`,
         {
           credentials: 'include',
@@ -349,7 +349,7 @@ const DashboardContent: React.FC = () => {
 
   const handleDisconnectCalendar = async () => {
     try {
-      const response = await fetch(
+      const response = await authenticatedFetch(
         `${API_BASE}/api/integrations/google_calendar`,
         {
           method: 'DELETE',
@@ -366,7 +366,7 @@ const DashboardContent: React.FC = () => {
   const handleGenerateDigest = async () => {
     setIsGeneratingDigest(true);
     try {
-      const response = await fetch(`${API_BASE}/api/digests/generate`, {
+      const response = await authenticatedFetch(`${API_BASE}/api/digests/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -391,7 +391,7 @@ const DashboardContent: React.FC = () => {
   const handleSendDigest = async (digestId: string) => {
     setIsSendingDigest(digestId);
     try {
-      const response = await fetch(`${API_BASE}/api/digests/${digestId}/send`, {
+      const response = await authenticatedFetch(`${API_BASE}/api/digests/${digestId}/send`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -413,7 +413,7 @@ const DashboardContent: React.FC = () => {
     e.preventDefault();
     setIsSaving(true);
     try {
-      const res = await fetch(`${API_BASE}/api/users/me/settings`, {
+      const res = await authenticatedFetch(`${API_BASE}/api/users/me/settings`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -193,7 +193,8 @@ integrationsRouter.get(
         },
       });
       logger.info('[Integrations] Outlook connected', { userId, emailAddress });
-      return res.redirect('http://localhost:5173/dashboard/settings?tab=integrations');
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+      return res.redirect(`${frontendUrl}/dashboard/settings?tab=integrations`);
     } catch (err: any) {
       logger.error('[Integrations] Outlook callback error:', err.message);
       return res

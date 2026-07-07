@@ -20,7 +20,14 @@ export function requireAuth(
   res: Response,
   next: NextFunction
 ) {
-  const token = req.cookies?.token;
+  let token = req.cookies?.token;
+
+  if (!token && req.headers.authorization) {
+    const parts = req.headers.authorization.split(' ');
+    if (parts.length === 2 && parts[0] === 'Bearer') {
+      token = parts[1];
+    }
+  }
 
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized: No token provided' });

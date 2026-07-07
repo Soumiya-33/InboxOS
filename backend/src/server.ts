@@ -262,6 +262,7 @@ app.post('/api/auth/register', async (req: Request, res: Response) => {
 
     return res.status(201).json({
       message: 'User registered successfully',
+      token,
       user: {
         id: newUser.id,
         email: newUser.email,
@@ -359,6 +360,7 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
 
     return res.status(200).json({
       message: 'Logged in successfully',
+      token,
       user: {
         id: user.id,
         email: user.email,
@@ -472,6 +474,7 @@ app.post('/api/auth/firebase', async (req: Request, res: Response) => {
 
     return res.status(200).json({
       message: 'Authenticated via Firebase',
+      token,
       user: { id: user.id, email: user.email, username: user.username },
     });
   } catch (err: any) {
@@ -588,6 +591,7 @@ app.post('/api/auth/google/register', async (req: Request, res: Response) => {
 
     return res.status(201).json({
       message: 'User registered successfully',
+      token,
       user: { id: user.id, email: user.email, username: user.username },
     });
   } catch (err: any) {
@@ -644,6 +648,7 @@ app.post('/api/auth/google/login', async (req: Request, res: Response) => {
 
     return res.status(200).json({
       message: 'Logged in successfully',
+      token,
       user: { id: user.id, email: user.email, username: user.username },
     });
   } catch (err: any) {
@@ -697,6 +702,7 @@ app.get('/api/users/profile', requireAuth, async (req: AuthenticatedRequest, res
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
+    let newToken: string | undefined;
 
     const cacheKey = `user:profile:${userId}`;
 
@@ -889,6 +895,7 @@ app.get('/api/users/me/settings', requireAuth, async (req: AuthenticatedRequest,
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
+    let newToken: string | undefined;
 
     const settings = await prisma.userSettings.findUnique({
       where: { userId },
@@ -970,6 +977,7 @@ app.put('/api/users/me/settings', requireAuth, async (req: AuthenticatedRequest,
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
+    let newToken: string | undefined;
 
     const validation = updateSettingsSchema.safeParse(req.body);
     if (!validation.success) {
@@ -996,8 +1004,8 @@ app.put('/api/users/me/settings', requireAuth, async (req: AuthenticatedRequest,
 
       const user = await prisma.user.findUnique({ where: { id: userId } });
       if (user) {
-        const token = AuthService.generateToken(user.id, user.email, username);
-        res.cookie('token', token, {
+        newToken = AuthService.generateToken(user.id, user.email, username);
+        res.cookie('token', newToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
@@ -1179,7 +1187,8 @@ app.get('/api/integrations/gmail/callback', async (req: Request, res: Response) 
         logger.error('[GmailCallback] Initial Google Sign-in Gmail sync failed:', err);
       });
 
-      return res.redirect('http://localhost:5173/dashboard');
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+      return res.redirect(`${frontendUrl}/dashboard?token=${jwtToken}`);
     }
 
     // ── Connect Gmail to existing account flow ────────────────────────────────
@@ -1213,7 +1222,8 @@ app.get('/api/integrations/gmail/callback', async (req: Request, res: Response) 
       logger.error('[GmailCallback] Initial Gmail connect sync failed:', err);
     });
 
-    return res.redirect('http://localhost:5173/dashboard/settings?tab=integrations');
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    return res.redirect(`${frontendUrl}/dashboard/settings?tab=integrations`);
   } catch (error) {
     console.error('OAuth callback error:', error);
     return res.status(500).json({ error: 'OAuth integration failed' });

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Clock, Bell, BellOff, CheckCircle2, ChevronDown, AlertTriangle, Calendar, Zap } from 'lucide-react';
-import { API_BASE } from '../config';
+import { API_BASE, authenticatedFetch } from '../config';
 
 interface ReminderEmail {
   subject: string;
@@ -241,7 +241,7 @@ export const DeadlinesWidget: React.FC = () => {
 
   const fetchReminders = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/reminders/upcoming`, {
+      const res = await authenticatedFetch(`${API_BASE}/api/reminders/upcoming`, {
         credentials: 'include',
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -265,7 +265,7 @@ export const DeadlinesWidget: React.FC = () => {
 
   const handleSnooze = async (reminderId: string, durationMinutes: number) => {
     try {
-      const res = await fetch(`${API_BASE}/api/reminders/${reminderId}/snooze`, {
+      const res = await authenticatedFetch(`${API_BASE}/api/reminders/${reminderId}/snooze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -286,7 +286,7 @@ export const DeadlinesWidget: React.FC = () => {
   const handleDone = async (_emailId: string, reminderId: string) => {
     // Find action item is hard without ID here — cancel reminders directly
     try {
-      await fetch(`${API_BASE}/api/reminders/${reminderId}/cancel`, {
+      await authenticatedFetch(`${API_BASE}/api/reminders/${reminderId}/cancel`, {
         method: 'POST',
         credentials: 'include',
       });

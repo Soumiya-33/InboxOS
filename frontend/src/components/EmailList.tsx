@@ -20,7 +20,7 @@ import {
 import { EmailViewer } from './EmailViewer';
 import { EmptyState } from './EmptyState';
 import { useSocket } from '../context/SocketContext';
-import { API_BASE } from '../config';
+import { API_BASE, authenticatedFetch } from '../config';
 
 
 const CATEGORIES = [
@@ -65,7 +65,7 @@ export const EmailList: React.FC<EmailListProps> = ({
       const url = `${API_BASE}/api/emails?limit=${pageSize}&offset=${(currentPage - 1) * pageSize}${
         categoryFilter !== 'all' ? `&category=${categoryFilter}` : ''
       }`;
-      const response = await fetch(url, {
+      const response = await authenticatedFetch(url, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -129,7 +129,7 @@ export const EmailList: React.FC<EmailListProps> = ({
     const delayDebounceFn = setTimeout(async () => {
       setIsSearching(true);
       try {
-        const response = await fetch(`${API_BASE}/api/rag/search`, {
+        const response = await authenticatedFetch(`${API_BASE}/api/rag/search`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ query: searchQuery, limit: pageSize }),

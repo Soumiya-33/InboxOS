@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { API_BASE } from '../config';
+import { API_BASE, authenticatedFetch } from '../config';
 
 export interface User {
   id: string;
@@ -54,14 +54,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const clearError = () => setError(null);
 
-  // Check login session on mount (cookie-based — no localStorage fallback)
+  // Check login session on mount
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await fetch(`${API_BASE}/api/auth/me`, {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlToken = urlParams.get('token');
+        if (urlToken) {
+          localStorage.setItem('inboxos_token', urlToken);
+          const newUrl = window.location.pathname + window.location.search.replace(/[\?&]token=[^&]+/, '').replace(/^&/, '?');
+          window.history.replaceState({}, document.title, newUrl);
+        }
+
+        const response = await authenticatedFetch(`${API_BASE}/api/auth/me`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
         });
 
         if (response.ok) {
@@ -74,9 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             });
           }
         }
-        // If not ok (401), user is simply not logged in — no fallback needed
       } catch (err) {
-        // Backend unreachable — user is not authenticated
         console.warn('[AuthContext] Could not reach backend to verify session.');
       } finally {
         setIsLoading(false);
@@ -104,6 +109,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
 
       const data = await response.json();
+      if (data.token) {
+        localStorage.setItem('inboxos_token', data.token);
+      }
       setUser({
         id: data.user.id,
         email: data.user.email,
@@ -134,7 +142,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
 
       const data = await response.json();
-      // Auto-login after registration (backend sets JWT cookie)
+      if (data.token) {
+        localStorage.setItem('inboxos_token', data.token);
+      }
       setUser({
         id: data.user.id,
         email: data.user.email,
@@ -167,6 +177,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
 
       const data = await response.json();
+      if (data.token) {
+        localStorage.setItem('inboxos_token', data.token);
+      }
       const authenticatedUser = {
         id: data.user.id,
         email: data.user.email,
@@ -218,6 +231,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         throw new Error(errorMsg);
       }
       const data = await response.json();
+      if (data.token) {
+        localStorage.setItem('inboxos_token', data.token);
+      }
       const authenticatedUser = {
         id: data.user.id,
         email: data.user.email,
@@ -248,6 +264,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         throw new Error(errorMsg);
       }
       const data = await response.json();
+      if (data.token) {
+        localStorage.setItem('inboxos_token', data.token);
+      }
       const authenticatedUser = {
         id: data.user.id,
         email: data.user.email,
@@ -266,14 +285,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = async () => {
     setIsLoading(true);
     try {
-      await fetch(`${API_BASE}/api/auth/logout`, {
+      await authenticatedFetch(`${API_BASE}/api/auth/logout`, {
         method: 'POST',
-        credentials: 'include',
       });
     } catch (err) {
       console.warn('[AuthContext] Failed to call logout endpoint on backend.');
     } finally {
       setUser(null);
+      localStorage.removeItem('inboxos_token');
       setIsLoading(false);
     }
   };

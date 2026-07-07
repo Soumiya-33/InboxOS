@@ -15,7 +15,7 @@ import {
   CheckCircle,
   AlertCircle,
 } from 'lucide-react';
-import { API_BASE } from '../config';
+import { API_BASE, authenticatedFetch } from '../config';
 
 interface FormInputs {
   to: string;
@@ -91,7 +91,7 @@ export const ComposeModal: React.FC = () => {
   const onSubmit = async (formData: FormInputs) => {
     setIsSending(true);
     try {
-      const response = await fetch(`${API_BASE}/api/emails/send`, {
+      const response = await authenticatedFetch(`${API_BASE}/api/emails/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

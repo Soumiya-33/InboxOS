@@ -24,7 +24,7 @@ import {
   BarChart3,
   ShieldAlert,
 } from 'lucide-react';
-import { API_BASE } from '../config';
+import { API_BASE, authenticatedFetch } from '../config';
 
 const COLORS = ['#6366f1', '#a855f7', '#ec4899', '#14b8a6', '#f59e0b', '#10b981'];
 
@@ -76,7 +76,7 @@ export const AnalyticsPage: React.FC = () => {
       const url = `${API_BASE}/api/dashboard/stats?startDate=${encodeURIComponent(
         dateRange.startDate
       )}&endDate=${encodeURIComponent(dateRange.endDate)}`;
-      const res = await fetch(url, { credentials: 'include' });
+      const res = await authenticatedFetch(url, { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to fetch stats');
       return res.json();
     },
@@ -88,7 +88,7 @@ export const AnalyticsPage: React.FC = () => {
       const url = `${API_BASE}/api/dashboard/heatmap?startDate=${encodeURIComponent(
         dateRange.startDate
       )}&endDate=${encodeURIComponent(dateRange.endDate)}`;
-      const res = await fetch(url, { credentials: 'include' });
+      const res = await authenticatedFetch(url, { credentials: 'include' });
       if (!res.ok) throw new Error('Failed to fetch heatmap data');
       return res.json();
     },
