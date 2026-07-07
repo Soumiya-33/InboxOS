@@ -20,8 +20,7 @@ import {
 import { EmailViewer } from './EmailViewer';
 import { EmptyState } from './EmptyState';
 import { useSocket } from '../context/SocketContext';
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+import { API_BASE } from '../config';
 
 
 const CATEGORIES = [

@@ -15,6 +15,7 @@ import {
   CheckCircle,
   AlertCircle,
 } from 'lucide-react';
+import { API_BASE } from '../config';
 
 interface FormInputs {
   to: string;
@@ -22,8 +23,6 @@ interface FormInputs {
   subject: string;
   body: string;
 }
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export const ComposeModal: React.FC = () => {
   const { isOpen, initialValues, closeCompose } = useCompose();

@@ -18,8 +18,8 @@ import {
 } from 'lucide-react';
 import { type EmailData } from './EmailRow';
 import { useCompose } from '../context/ComposeContext';
+import { API_BASE } from '../config';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 // Detailed mock data containing body_html with potentially dangerous scripts (to verify sanitization)
 const DETAILED_MOCK_EMAILS: Record<string, EmailData & { body_html?: string }> =
