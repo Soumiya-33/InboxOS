@@ -124,7 +124,7 @@ export class AIService {
       };
     }
 
-    const provider = process.env.AI_PROVIDER || 'openai';
+    const provider = process.env.AI_PROVIDER || 'gemini';
     let result: ClassificationResult;
 
     if (provider === 'gemini') {
@@ -410,7 +410,7 @@ Provide a confidence score between 0.0 and 1.0. Also, extract all deadlines ment
     const truncatedText = this.truncateToTokens(concatenatedBodies, 8000);
 
     // 4. Prompt the LLM depending on active provider
-    const provider = process.env.AI_PROVIDER || 'openai';
+    const provider = process.env.AI_PROVIDER || 'gemini';
     let summary = '';
 
     if (provider === 'gemini') {
@@ -573,7 +573,7 @@ Provide a confidence score between 0.0 and 1.0. Also, extract all deadlines ment
     subject: string,
     body: string
   ): Promise<ActionItemResult[]> {
-    const provider = process.env.AI_PROVIDER || 'openai';
+    const provider = process.env.AI_PROVIDER || 'gemini';
     let items: ActionItemResult[] = [];
 
     if (provider === 'gemini') {
@@ -899,7 +899,7 @@ If there are no explicit, concrete tasks, return an empty array.`;
 
     const textToEmbed = this.cleanHtml(`${subject}\n\n${body}`);
 
-    const provider = process.env.AI_PROVIDER || 'openai';
+    const provider = process.env.AI_PROVIDER || 'gemini';
     let embedding: number[] = [];
 
     if (provider === 'gemini') {
@@ -1056,7 +1056,7 @@ If there are no explicit, concrete tasks, return an empty array.`;
     limit: number = 5,
     userId?: string
   ): Promise<any[]> {
-    const provider = process.env.AI_PROVIDER || 'openai';
+    const provider = process.env.AI_PROVIDER || 'gemini';
     let queryEmbedding: number[] = [];
 
     if (provider === 'gemini') {
@@ -1168,7 +1168,7 @@ If there are no explicit, concrete tasks, return an empty array.`;
    * Used by email reply generation, expense extraction, and digest generation.
    */
   public static async generateReply(prompt: string): Promise<string> {
-    const provider = process.env.AI_PROVIDER || 'openai';
+    const provider = process.env.AI_PROVIDER || 'gemini';
 
     try {
       if (provider === 'gemini') {
@@ -1217,7 +1217,7 @@ If there are no explicit, concrete tasks, return an empty array.`;
     href: string,
     text: string
   ): Promise<string> {
-    const provider = process.env.AI_PROVIDER || 'openai';
+    const provider = process.env.AI_PROVIDER || 'gemini';
     const systemPrompt = `You are a link classification assistant. Categorize the given link (based on URL and anchor text) into one of the following categories:
 - unsubscribe
 - confirm
@@ -1339,7 +1339,7 @@ Provide the result as a JSON object with a single field 'category'.`;
     subject: string,
     body: string
   ): Promise<string[]> {
-    const provider = process.env.AI_PROVIDER || 'openai';
+    const provider = process.env.AI_PROVIDER || 'gemini';
     if (provider === 'gemini') {
       return this.extractDeadlinesWithGemini(subject, body);
     } else {
