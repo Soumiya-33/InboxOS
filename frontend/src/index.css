@@ -290,3 +290,11 @@ select:focus {
   border-color: var(--color-primary) !important;
   box-shadow: 0 0 0 3px rgba(93,107,47,.10) !important;
 }
+
+.dark body, 
+.dark #root, 
+.dark main,
+.dark [data-testid="page-container"] {
+  background-color: #0b0a09 !important;
+  color: #ffffff !important;
+}
