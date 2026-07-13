@@ -15,12 +15,15 @@ export const FloatingActionButton: React.FC = () => {
         color: '#fff',
       }}
       aria-label="Compose email"
-      onMouseEnter={e => {
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 36px rgba(93,107,47,.45)';
-        (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px) scale(1.05)';
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.boxShadow =
+          '0 12px 36px rgba(93,107,47,.45)';
+        (e.currentTarget as HTMLElement).style.transform =
+          'translateY(-2px) scale(1.05)';
       }}
-      onMouseLeave={e => {
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 28px rgba(93,107,47,.35)';
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.boxShadow =
+          '0 8px 28px rgba(93,107,47,.35)';
         (e.currentTarget as HTMLElement).style.transform = '';
       }}
     >

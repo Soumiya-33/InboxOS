@@ -36,9 +36,6 @@ import {
 } from 'lucide-react';
 import { API_BASE, authenticatedFetch } from './config';
 
-
-
-
 // Extracted Dashboard Component to protect via ProtectedRoute
 const DashboardContent: React.FC = () => {
   const queryClient = useQueryClient();
@@ -116,10 +113,38 @@ const DashboardContent: React.FC = () => {
 
   // Rules tab state
   const [rulesList, setRulesList] = useState<any[]>([
-    { id: '1', name: 'Invoice Auto-Tag', condition: 'subject contains "invoice" OR "payment"', action: 'Label → Finance · Priority High', enabled: true, executions: 142 },
-    { id: '2', name: 'Newsletter Digest', condition: 'sender domain in [substack.com, beehiiv.com]', action: 'Archive · Add to Weekly Digest', enabled: true, executions: 87 },
-    { id: '3', name: 'OTP Fast-Path', condition: 'subject matches /\\b\\d{4,8}\\b/ AND sender trusted', action: 'Extract OTP → Clipboard · Archive', enabled: true, executions: 319 },
-    { id: '4', name: 'Support Escalation', condition: 'body contains "urgent" AND priority >= 80', action: 'Notify Telegram · Flag Red', enabled: false, executions: 23 },
+    {
+      id: '1',
+      name: 'Invoice Auto-Tag',
+      condition: 'subject contains "invoice" OR "payment"',
+      action: 'Label → Finance · Priority High',
+      enabled: true,
+      executions: 142,
+    },
+    {
+      id: '2',
+      name: 'Newsletter Digest',
+      condition: 'sender domain in [substack.com, beehiiv.com]',
+      action: 'Archive · Add to Weekly Digest',
+      enabled: true,
+      executions: 87,
+    },
+    {
+      id: '3',
+      name: 'OTP Fast-Path',
+      condition: 'subject matches /\\b\\d{4,8}\\b/ AND sender trusted',
+      action: 'Extract OTP → Clipboard · Archive',
+      enabled: true,
+      executions: 319,
+    },
+    {
+      id: '4',
+      name: 'Support Escalation',
+      condition: 'body contains "urgent" AND priority >= 80',
+      action: 'Notify Telegram · Flag Red',
+      enabled: false,
+      executions: 23,
+    },
   ]);
 
   // Synced backend settings fields
@@ -130,7 +155,9 @@ const DashboardContent: React.FC = () => {
     if (savedTheme) {
       return savedTheme;
     }
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const systemPrefersDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
     return systemPrefersDark ? 'dark' : 'light';
   });
   const [timezone, setTimezone] = useState('UTC');
@@ -152,9 +179,12 @@ const DashboardContent: React.FC = () => {
 
   const fetchDigests = async () => {
     try {
-      const response = await authenticatedFetch(`${API_BASE}/api/digests?limit=5`, {
-        credentials: 'include',
-      });
+      const response = await authenticatedFetch(
+        `${API_BASE}/api/digests?limit=5`,
+        {
+          credentials: 'include',
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         setDigests(data.digests || []);
@@ -203,8 +233,8 @@ const DashboardContent: React.FC = () => {
         credentials: 'include',
       });
       if (res.ok) {
-        setTasksList(prev =>
-          prev.map(t => t.id === id ? { ...t, isCompleted: !current } : t)
+        setTasksList((prev) =>
+          prev.map((t) => (t.id === id ? { ...t, isCompleted: !current } : t))
         );
       }
     } catch (err) {
@@ -219,7 +249,7 @@ const DashboardContent: React.FC = () => {
         credentials: 'include',
       });
       if (res.ok) {
-        setTasksList(prev => prev.filter(t => t.id !== id));
+        setTasksList((prev) => prev.filter((t) => t.id !== id));
       }
     } catch (err) {
       console.error('[Tasks] delete error', err);
@@ -231,9 +261,12 @@ const DashboardContent: React.FC = () => {
     if (activeTab !== 'settings' && activeTab !== 'inbox') return;
     const fetchGmailStatus = async () => {
       try {
-        const res = await authenticatedFetch(`${API_BASE}/api/integrations/gmail/status`, {
-          credentials: 'include',
-        });
+        const res = await authenticatedFetch(
+          `${API_BASE}/api/integrations/gmail/status`,
+          {
+            credentials: 'include',
+          }
+        );
         if (res.ok) {
           const data = await res.json();
           setGmailConnected(data.connected ?? false);
@@ -248,9 +281,12 @@ const DashboardContent: React.FC = () => {
 
   const handleConnectGmail = async () => {
     try {
-      const res = await authenticatedFetch(`${API_BASE}/api/integrations/gmail/auth`, {
-        credentials: 'include',
-      });
+      const res = await authenticatedFetch(
+        `${API_BASE}/api/integrations/gmail/auth`,
+        {
+          credentials: 'include',
+        }
+      );
       if (res.ok) {
         const data = await res.json();
         if (data.url) window.location.href = data.url;
@@ -276,16 +312,21 @@ const DashboardContent: React.FC = () => {
 
   const handleSyncGmail = async () => {
     if (!gmailConnected) {
-      alert('Gmail is not connected yet. Redirecting you to Google authorization to link your Gmail account...');
+      alert(
+        'Gmail is not connected yet. Redirecting you to Google authorization to link your Gmail account...'
+      );
       handleConnectGmail();
       return;
     }
     setGmailSyncing(true);
     try {
-      const res = await authenticatedFetch(`${API_BASE}/api/integrations/gmail/sync`, {
-        method: 'POST',
-        credentials: 'include',
-      });
+      const res = await authenticatedFetch(
+        `${API_BASE}/api/integrations/gmail/sync`,
+        {
+          method: 'POST',
+          credentials: 'include',
+        }
+      );
       if (res.ok) {
         const data = await res.json();
         setToastMessage(`Synced ${data.synced} new email(s) from Gmail`);
@@ -302,16 +343,18 @@ const DashboardContent: React.FC = () => {
     }
   };
 
-
   // Load preferences from backend settings API
   useEffect(() => {
     if (activeTab !== 'settings') return;
 
     const loadSettings = async () => {
       try {
-        const res = await authenticatedFetch(`${API_BASE}/api/users/me/settings`, {
-          credentials: 'include',
-        });
+        const res = await authenticatedFetch(
+          `${API_BASE}/api/users/me/settings`,
+          {
+            credentials: 'include',
+          }
+        );
         if (res.ok) {
           const data = await res.json();
           setTheme(data.theme || 'dark');
@@ -324,7 +367,10 @@ const DashboardContent: React.FC = () => {
           setUserId(data.userId || '');
         }
       } catch (err) {
-        console.error('Failed to load user settings, using dev mock settings:', err);
+        console.error(
+          'Failed to load user settings, using dev mock settings:',
+          err
+        );
         setTheme('light');
         setSignature('Sent from InboxOS Dev');
         setAutoReply(true);
@@ -393,14 +439,17 @@ const DashboardContent: React.FC = () => {
   const handleGenerateDigest = async () => {
     setIsGeneratingDigest(true);
     try {
-      const response = await authenticatedFetch(`${API_BASE}/api/digests/generate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: digestSchedule === 'disabled' ? 'daily' : digestSchedule,
-        }),
-        credentials: 'include',
-      });
+      const response = await authenticatedFetch(
+        `${API_BASE}/api/digests/generate`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: digestSchedule === 'disabled' ? 'daily' : digestSchedule,
+          }),
+          credentials: 'include',
+        }
+      );
       if (response.ok) {
         await fetchDigests();
         alert('Digest generated successfully!');
@@ -418,10 +467,13 @@ const DashboardContent: React.FC = () => {
   const handleSendDigest = async (digestId: string) => {
     setIsSendingDigest(digestId);
     try {
-      const response = await authenticatedFetch(`${API_BASE}/api/digests/${digestId}/send`, {
-        method: 'POST',
-        credentials: 'include',
-      });
+      const response = await authenticatedFetch(
+        `${API_BASE}/api/digests/${digestId}/send`,
+        {
+          method: 'POST',
+          credentials: 'include',
+        }
+      );
       if (response.ok) {
         await fetchDigests();
         alert('Digest email sent successfully!');
@@ -440,21 +492,24 @@ const DashboardContent: React.FC = () => {
     e.preventDefault();
     setIsSaving(true);
     try {
-      const res = await authenticatedFetch(`${API_BASE}/api/users/me/settings`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          theme,
-          signature: signature || null,
-          autoReply,
-          timezone,
-          digestSchedule,
-          username: profileName || undefined,
-        }),
-        credentials: 'include',
-      });
+      const res = await authenticatedFetch(
+        `${API_BASE}/api/users/me/settings`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            theme,
+            signature: signature || null,
+            autoReply,
+            timezone,
+            digestSchedule,
+            username: profileName || undefined,
+          }),
+          credentials: 'include',
+        }
+      );
 
       if (res.ok) {
         setSaveSuccess(true);
@@ -469,14 +524,25 @@ const DashboardContent: React.FC = () => {
     }
   };
 
-
   if (activeTab === 'analytics') {
     return (
-      <Layout activeTab={activeTab} setActiveTab={setActiveTab} theme={theme} onToggleTheme={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}>
+      <Layout
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        theme={theme}
+        onToggleTheme={() =>
+          setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+        }
+      >
         {toastMessage && (
           <div
             className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-[14px] text-[13px] font-medium shadow-lg"
-            style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-hover)', color: 'var(--color-ink)' }}
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              boxShadow: 'var(--shadow-hover)',
+              color: 'var(--color-ink)',
+            }}
           >
             <Sparkles size={14} style={{ color: 'var(--color-primary)' }} />
             <span>{toastMessage}</span>
@@ -489,26 +555,58 @@ const DashboardContent: React.FC = () => {
 
   if (activeTab === 'settings') {
     return (
-      <Layout activeTab={activeTab} setActiveTab={setActiveTab} theme={theme} onToggleTheme={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}>
+      <Layout
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        theme={theme}
+        onToggleTheme={() =>
+          setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+        }
+      >
         {toastMessage && (
-          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-[14px] text-[13px] font-medium shadow-lg" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-hover)', color: 'var(--color-ink)' }}>
+          <div
+            className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-[14px] text-[13px] font-medium shadow-lg"
+            style={{
+              backgroundColor: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              boxShadow: 'var(--shadow-hover)',
+              color: 'var(--color-ink)',
+            }}
+          >
             <Sparkles size={14} style={{ color: 'var(--color-primary)' }} />
             <span>{toastMessage}</span>
           </div>
         )}
         <div className="space-y-6 animate-fadeIn">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5" style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div
+            className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5"
+            style={{ borderBottom: '1px solid var(--color-border)' }}
+          >
             <div className="text-left">
-              <h2 className="text-[22px] font-bold tracking-tight flex items-center gap-2" style={{ color: 'var(--color-ink)' }}>
-                System Preferences <Sliders size={18} style={{ color: 'var(--color-primary)' }} />
+              <h2
+                className="text-[22px] font-bold tracking-tight flex items-center gap-2"
+                style={{ color: 'var(--color-ink)' }}
+              >
+                System Preferences{' '}
+                <Sliders size={18} style={{ color: 'var(--color-primary)' }} />
               </h2>
-              <p className="text-[13px] mt-1" style={{ color: 'var(--color-muted)' }}>
-                Configure your AI operating system, LLM integration, and outbound channels.
+              <p
+                className="text-[13px] mt-1"
+                style={{ color: 'var(--color-muted)' }}
+              >
+                Configure your AI operating system, LLM integration, and
+                outbound channels.
               </p>
             </div>
             {saveSuccess && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-medium" style={{ backgroundColor: 'rgba(63,167,106,.12)', color: 'var(--color-success)' }}>
+              <div
+                className="flex items-center gap-2 px-4 py-2 rounded-full text-[12px] font-medium"
+                style={{
+                  backgroundColor: 'rgba(63,167,106,.12)',
+                  color: 'var(--color-success)',
+                }}
+              >
                 <CheckCircle2 size={14} />
                 <span>Changes saved</span>
               </div>
@@ -519,8 +617,16 @@ const DashboardContent: React.FC = () => {
             {/* Sub-navigation */}
             <div className="md:col-span-1 flex flex-col gap-1.5 relative">
               {[
-                { id: 'profile', label: 'General Profile', icon: <User size={15} /> },
-                { id: 'integrations', label: 'Connections', icon: <Mail size={15} /> },
+                {
+                  id: 'profile',
+                  label: 'General Profile',
+                  icon: <User size={15} />,
+                },
+                {
+                  id: 'integrations',
+                  label: 'Connections',
+                  icon: <Mail size={15} />,
+                },
               ].map((subTab) => {
                 const isActive = settingsSubTab === subTab.id;
                 return (
@@ -529,19 +635,25 @@ const DashboardContent: React.FC = () => {
                     onClick={() => setSettingsSubTab(subTab.id)}
                     className="relative flex items-center gap-2.5 px-3 py-2.5 rounded-[10px] text-[13px] font-medium transition-all text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/30"
                     style={{
-                      color: isActive ? 'var(--color-primary)' : 'var(--color-muted)',
+                      color: isActive
+                        ? 'var(--color-primary)'
+                        : 'var(--color-muted)',
                       backgroundColor: 'transparent',
                     }}
-                    onMouseEnter={e => {
+                    onMouseEnter={(e) => {
                       if (!isActive) {
-                        (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(93,107,47,.05)';
-                        (e.currentTarget as HTMLElement).style.color = 'var(--color-ink)';
+                        (e.currentTarget as HTMLElement).style.backgroundColor =
+                          'rgba(93,107,47,.05)';
+                        (e.currentTarget as HTMLElement).style.color =
+                          'var(--color-ink)';
                       }
                     }}
-                    onMouseLeave={e => {
+                    onMouseLeave={(e) => {
                       if (!isActive) {
-                        (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-                        (e.currentTarget as HTMLElement).style.color = 'var(--color-muted)';
+                        (e.currentTarget as HTMLElement).style.backgroundColor =
+                          'transparent';
+                        (e.currentTarget as HTMLElement).style.color =
+                          'var(--color-muted)';
                       }
                     }}
                   >
@@ -549,7 +661,11 @@ const DashboardContent: React.FC = () => {
                       <motion.div
                         layoutId="activeSettingsSubTab"
                         className="absolute inset-0 bg-[var(--color-primary)]/10 rounded-[10px] -z-10"
-                        transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+                        transition={{
+                          type: 'spring',
+                          damping: 25,
+                          stiffness: 350,
+                        }}
                       />
                     )}
                     <span className="relative z-10 flex items-center gap-2.5">
@@ -563,7 +679,6 @@ const DashboardContent: React.FC = () => {
 
             {/* Form card wrapper */}
             <div className="md:col-span-3 space-y-6">
-
               {settingsSubTab === 'profile' && (
                 <form onSubmit={handleSave} className="space-y-6 text-left">
                   {/* General Profile Panel */}
@@ -676,8 +791,8 @@ const DashboardContent: React.FC = () => {
                         AI Processor Model
                       </h3>
                       <p className="text-[11px] text-gray-500 font-medium">
-                        Choose the LLM engine that parses, scores, and classifies
-                        incoming streams.
+                        Choose the LLM engine that parses, scores, and
+                        classifies incoming streams.
                       </p>
                     </div>
 
@@ -771,8 +886,8 @@ const DashboardContent: React.FC = () => {
                         Inbox Connections
                       </h3>
                       <p className="text-[11px] text-gray-500 font-medium">
-                        Enable ingestion sources or connection webhooks to monitor
-                        and fetch mail.
+                        Enable ingestion sources or connection webhooks to
+                        monitor and fetch mail.
                       </p>
                     </div>
 
@@ -793,7 +908,9 @@ const DashboardContent: React.FC = () => {
                                 {gmailEmail ?? 'Connected'}
                               </p>
                             ) : (
-                              <p className="text-[10px] text-gray-500 font-medium">Not Connected</p>
+                              <p className="text-[10px] text-gray-500 font-medium">
+                                Not Connected
+                              </p>
                             )}
                           </div>
                         </div>
@@ -811,7 +928,11 @@ const DashboardContent: React.FC = () => {
                             </button>
                           )}
                           <button
-                            onClick={gmailConnected ? handleDisconnectGmail : handleConnectGmail}
+                            onClick={
+                              gmailConnected
+                                ? handleDisconnectGmail
+                                : handleConnectGmail
+                            }
                             className={`px-3 py-1.5 rounded-lg border text-[10px] font-bold transition-all uppercase tracking-wider ${
                               gmailConnected
                                 ? 'neu-btn'
@@ -903,7 +1024,8 @@ const DashboardContent: React.FC = () => {
                         Telegram Control Channel
                       </h4>
                       <p className="text-[11px] text-gray-500 font-medium">
-                        Configure Telegram Bot integration to receive alerts and manage emails.
+                        Configure Telegram Bot integration to receive alerts and
+                        manage emails.
                       </p>
                     </div>
 
@@ -966,7 +1088,9 @@ const DashboardContent: React.FC = () => {
                               💬 Link Your Chat ID
                             </p>
                             <p className="text-[10px] leading-relaxed text-amber-850 font-medium">
-                              To sync alerts with your Telegram, message your bot and send the start command with your unique Workspace User ID:
+                              To sync alerts with your Telegram, message your
+                              bot and send the start command with your unique
+                              Workspace User ID:
                             </p>
                             <div className="flex items-center gap-2">
                               <code className="bg-white border border-amber-200 px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold select-all w-full text-center text-amber-900">
@@ -976,9 +1100,16 @@ const DashboardContent: React.FC = () => {
                                 type="button"
                                 onClick={() => {
                                   if (userId) {
-                                    navigator.clipboard.writeText(`/start ${userId}`);
-                                    setToastMessage('Link command copied to clipboard!');
-                                    setTimeout(() => setToastMessage(null), 3000);
+                                    navigator.clipboard.writeText(
+                                      `/start ${userId}`
+                                    );
+                                    setToastMessage(
+                                      'Link command copied to clipboard!'
+                                    );
+                                    setTimeout(
+                                      () => setToastMessage(null),
+                                      3000
+                                    );
                                   }
                                 }}
                                 className="px-3 py-1.5 bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white rounded-lg text-[10px] uppercase transition-all active:scale-[0.97] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/40"
@@ -1284,14 +1415,20 @@ const DashboardContent: React.FC = () => {
   }
 
   if (activeTab === 'tasks') {
-    const pending = tasksList.filter(t => !t.isCompleted);
-    const completed = tasksList.filter(t => t.isCompleted);
+    const pending = tasksList.filter((t) => !t.isCompleted);
+    const completed = tasksList.filter((t) => t.isCompleted);
     return (
       <Layout activeTab={activeTab} setActiveTab={setActiveTab}>
         {toastMessage && (
           <div
             className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 text-xs font-bold uppercase tracking-wider"
-            style={{ backgroundColor: 'var(--color-ink)', border: '1px solid var(--color-ink)', boxShadow: '5px 5px 0 var(--color-accent)', fontFamily: 'var(--font-body)', color: '#fff' }}
+            style={{
+              backgroundColor: 'var(--color-ink)',
+              border: '1px solid var(--color-ink)',
+              boxShadow: '5px 5px 0 var(--color-accent)',
+              fontFamily: 'var(--font-body)',
+              color: '#fff',
+            }}
           >
             <Sparkles size={14} style={{ color: 'var(--color-accent)' }} />
             <span>{toastMessage}</span>
@@ -1299,14 +1436,27 @@ const DashboardContent: React.FC = () => {
         )}
         <div className="space-y-6 animate-fadeIn">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5" style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div
+            className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5"
+            style={{ borderBottom: '1px solid var(--color-border)' }}
+          >
             <div>
-              <h2 className="text-[22px] font-bold tracking-tight flex items-center gap-2" style={{ color: 'var(--color-ink)' }}>
-                <ListChecks size={20} style={{ color: 'var(--color-primary)' }} />
+              <h2
+                className="text-[22px] font-bold tracking-tight flex items-center gap-2"
+                style={{ color: 'var(--color-ink)' }}
+              >
+                <ListChecks
+                  size={20}
+                  style={{ color: 'var(--color-primary)' }}
+                />
                 Dashboard Tasks
               </h2>
-              <p className="text-[13px] mt-1" style={{ color: 'var(--color-muted)' }}>
-                AI-extracted action items from your inbox. {tasksTotal} total tracked.
+              <p
+                className="text-[13px] mt-1"
+                style={{ color: 'var(--color-muted)' }}
+              >
+                AI-extracted action items from your inbox. {tasksTotal} total
+                tracked.
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -1315,9 +1465,13 @@ const DashboardContent: React.FC = () => {
                 className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium rounded-[10px] transition-all"
                 style={{
                   border: '1px solid var(--color-border)',
-                  backgroundColor: showCompleted ? 'rgba(93,107,47,.08)' : 'var(--color-surface)',
+                  backgroundColor: showCompleted
+                    ? 'rgba(93,107,47,.08)'
+                    : 'var(--color-surface)',
                   boxShadow: 'var(--shadow-sm)',
-                  color: showCompleted ? 'var(--color-primary)' : 'var(--color-muted)',
+                  color: showCompleted
+                    ? 'var(--color-primary)'
+                    : 'var(--color-muted)',
                 }}
               >
                 <CheckSquare size={14} />
@@ -1329,49 +1483,101 @@ const DashboardContent: React.FC = () => {
           {tasksLoading ? (
             <div className="space-y-3">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className="h-16 rounded-[16px] animate-pulse" style={{ backgroundColor: 'var(--color-border)' }} />
+                <div
+                  key={i}
+                  className="h-16 rounded-[16px] animate-pulse"
+                  style={{ backgroundColor: 'var(--color-border)' }}
+                />
               ))}
             </div>
           ) : tasksList.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 gap-4">
-              <div className="w-16 h-16 flex items-center justify-center rounded-full" style={{ backgroundColor: 'rgba(93,107,47,.10)', color: 'var(--color-primary)' }}>
+              <div
+                className="w-16 h-16 flex items-center justify-center rounded-full"
+                style={{
+                  backgroundColor: 'rgba(93,107,47,.10)',
+                  color: 'var(--color-primary)',
+                }}
+              >
                 <CheckCircle2 size={28} />
               </div>
-              <p className="text-[15px] font-semibold" style={{ color: 'var(--color-ink)' }}>No tasks found</p>
-              <p className="text-[13px]" style={{ color: 'var(--color-muted)' }}>Process emails in your inbox to extract action items automatically.</p>
+              <p
+                className="text-[15px] font-semibold"
+                style={{ color: 'var(--color-ink)' }}
+              >
+                No tasks found
+              </p>
+              <p
+                className="text-[13px]"
+                style={{ color: 'var(--color-muted)' }}
+              >
+                Process emails in your inbox to extract action items
+                automatically.
+              </p>
             </div>
           ) : (
             <div className="space-y-4">
               {/* Pending tasks */}
               {pending.length > 0 && (
                 <div className="space-y-2">
-                  <div className="text-[11px] font-semibold uppercase tracking-widest px-1 mb-3" style={{ color: 'var(--color-muted)' }}>
+                  <div
+                    className="text-[11px] font-semibold uppercase tracking-widest px-1 mb-3"
+                    style={{ color: 'var(--color-muted)' }}
+                  >
                     Pending — {pending.length}
                   </div>
-                  {pending.map(task => (
+                  {pending.map((task) => (
                     <div
                       key={task.id}
                       className="flex items-start justify-between gap-4 p-4 rounded-[16px] transition-all duration-200"
-                      style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)' }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-card)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-sm)'; (e.currentTarget as HTMLElement).style.transform = ''; }}
+                      style={{
+                        backgroundColor: 'var(--color-surface)',
+                        border: '1px solid var(--color-border)',
+                        boxShadow: 'var(--shadow-sm)',
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.boxShadow =
+                          'var(--shadow-card)';
+                        (e.currentTarget as HTMLElement).style.transform =
+                          'translateY(-1px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.boxShadow =
+                          'var(--shadow-sm)';
+                        (e.currentTarget as HTMLElement).style.transform = '';
+                      }}
                     >
                       <div className="flex items-start gap-3 flex-1 min-w-0">
                         <button
-                          onClick={() => handleToggleTask(task.id, task.isCompleted)}
+                          onClick={() =>
+                            handleToggleTask(task.id, task.isCompleted)
+                          }
                           className="mt-0.5 shrink-0 w-5 h-5 flex items-center justify-center rounded-full transition-all hover:scale-110"
-                          style={{ border: '2px solid var(--color-border)', backgroundColor: 'transparent' }}
+                          style={{
+                            border: '2px solid var(--color-border)',
+                            backgroundColor: 'transparent',
+                          }}
                           aria-label="Mark complete"
                         >
                           <span />
                         </button>
                         <div className="flex-1 min-w-0">
-                          <p className="text-[13px] font-medium leading-snug" style={{ color: 'var(--color-ink)' }}>
+                          <p
+                            className="text-[13px] font-medium leading-snug"
+                            style={{ color: 'var(--color-ink)' }}
+                          >
                             {task.taskDescription}
                           </p>
                           {task.email && (
-                            <p className="text-[11px] mt-1" style={{ color: 'var(--color-muted)' }}>
-                              From: <span className="font-semibold">{task.email.sender}</span> · {task.email.subject}
+                            <p
+                              className="text-[11px] mt-1"
+                              style={{ color: 'var(--color-muted)' }}
+                            >
+                              From:{' '}
+                              <span className="font-semibold">
+                                {task.email.sender}
+                              </span>{' '}
+                              · {task.email.subject}
                             </p>
                           )}
                         </div>
@@ -1379,7 +1585,10 @@ const DashboardContent: React.FC = () => {
                       <button
                         onClick={() => handleDeleteTask(task.id)}
                         className="shrink-0 p-1.5 rounded-lg transition-all hover:opacity-70"
-                        style={{ border: '1px solid var(--color-border)', color: 'var(--color-muted)' }}
+                        style={{
+                          border: '1px solid var(--color-border)',
+                          color: 'var(--color-muted)',
+                        }}
                         aria-label="Delete task"
                       >
                         <Trash2 size={13} />
@@ -1392,32 +1601,50 @@ const DashboardContent: React.FC = () => {
               {/* Completed tasks */}
               {showCompleted && completed.length > 0 && (
                 <div className="space-y-2">
-                  <div className="text-[11px] font-semibold uppercase tracking-widest px-1 mb-3" style={{ color: 'var(--color-muted)' }}>
+                  <div
+                    className="text-[11px] font-semibold uppercase tracking-widest px-1 mb-3"
+                    style={{ color: 'var(--color-muted)' }}
+                  >
                     Completed — {completed.length}
                   </div>
-                  {completed.map(task => (
+                  {completed.map((task) => (
                     <div
                       key={task.id}
                       className="flex items-start justify-between gap-4 p-4 rounded-[16px] opacity-50 transition-all"
-                      style={{ backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)' }}
+                      style={{
+                        backgroundColor: 'var(--color-bg)',
+                        border: '1px solid var(--color-border)',
+                      }}
                     >
                       <div className="flex items-start gap-3 flex-1 min-w-0">
                         <button
-                          onClick={() => handleToggleTask(task.id, task.isCompleted)}
+                          onClick={() =>
+                            handleToggleTask(task.id, task.isCompleted)
+                          }
                           className="mt-0.5 shrink-0 w-5 h-5 flex items-center justify-center rounded-full"
-                          style={{ border: '2px solid var(--color-primary)', backgroundColor: 'rgba(93,107,47,.10)', color: 'var(--color-primary)' }}
+                          style={{
+                            border: '2px solid var(--color-primary)',
+                            backgroundColor: 'rgba(93,107,47,.10)',
+                            color: 'var(--color-primary)',
+                          }}
                           aria-label="Mark incomplete"
                         >
                           <CheckCircle2 size={11} />
                         </button>
-                        <p className="text-[13px] line-through" style={{ color: 'var(--color-muted)' }}>
+                        <p
+                          className="text-[13px] line-through"
+                          style={{ color: 'var(--color-muted)' }}
+                        >
                           {task.taskDescription}
                         </p>
                       </div>
                       <button
                         onClick={() => handleDeleteTask(task.id)}
                         className="shrink-0 p-1.5 rounded-lg hover:opacity-70"
-                        style={{ border: '1px solid var(--color-border)', color: 'var(--color-muted)' }}
+                        style={{
+                          border: '1px solid var(--color-border)',
+                          color: 'var(--color-muted)',
+                        }}
                         aria-label="Delete task"
                       >
                         <Trash2 size={13} />
@@ -1439,7 +1666,13 @@ const DashboardContent: React.FC = () => {
         {toastMessage && (
           <div
             className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 text-xs font-bold uppercase tracking-wider"
-            style={{ backgroundColor: 'var(--color-ink)', border: '1px solid var(--color-ink)', boxShadow: '5px 5px 0 var(--color-accent)', fontFamily: 'var(--font-body)', color: '#fff' }}
+            style={{
+              backgroundColor: 'var(--color-ink)',
+              border: '1px solid var(--color-ink)',
+              boxShadow: '5px 5px 0 var(--color-accent)',
+              fontFamily: 'var(--font-body)',
+              color: '#fff',
+            }}
           >
             <Sparkles size={14} style={{ color: 'var(--color-accent)' }} />
             <span>{toastMessage}</span>
@@ -1447,14 +1680,24 @@ const DashboardContent: React.FC = () => {
         )}
         <div className="space-y-6 animate-fadeIn">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5" style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <div
+            className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5"
+            style={{ borderBottom: '1px solid var(--color-border)' }}
+          >
             <div>
-              <h2 className="text-[22px] font-bold tracking-tight flex items-center gap-2" style={{ color: 'var(--color-ink)' }}>
+              <h2
+                className="text-[22px] font-bold tracking-tight flex items-center gap-2"
+                style={{ color: 'var(--color-ink)' }}
+              >
                 <Zap size={20} style={{ color: 'var(--color-primary)' }} />
                 Routing Rules
               </h2>
-              <p className="text-[13px] mt-1" style={{ color: 'var(--color-muted)' }}>
-                DSL-powered decision rules. Define conditions, actions, and priority routing for your inbox.
+              <p
+                className="text-[13px] mt-1"
+                style={{ color: 'var(--color-muted)' }}
+              >
+                DSL-powered decision rules. Define conditions, actions, and
+                priority routing for your inbox.
               </p>
             </div>
             <button
@@ -1464,12 +1707,15 @@ const DashboardContent: React.FC = () => {
                 color: '#fff',
                 boxShadow: '0 4px 14px rgba(93,107,47,.25)',
               }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 20px rgba(93,107,47,.35)';
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.boxShadow =
+                  '0 6px 20px rgba(93,107,47,.35)';
+                (e.currentTarget as HTMLElement).style.transform =
+                  'translateY(-1px)';
               }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 14px rgba(93,107,47,.25)';
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.boxShadow =
+                  '0 4px 14px rgba(93,107,47,.25)';
                 (e.currentTarget as HTMLElement).style.transform = '';
               }}
             >
@@ -1489,44 +1735,104 @@ const DashboardContent: React.FC = () => {
                   boxShadow: rule.enabled ? 'var(--shadow-card)' : 'none',
                   opacity: rule.enabled ? 1 : 0.5,
                 }}
-                onMouseEnter={e => { if (rule.enabled) { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-hover)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; } }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = rule.enabled ? 'var(--shadow-card)' : 'none'; (e.currentTarget as HTMLElement).style.transform = ''; }}
+                onMouseEnter={(e) => {
+                  if (rule.enabled) {
+                    (e.currentTarget as HTMLElement).style.boxShadow =
+                      'var(--shadow-hover)';
+                    (e.currentTarget as HTMLElement).style.transform =
+                      'translateY(-2px)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.boxShadow =
+                    rule.enabled ? 'var(--shadow-card)' : 'none';
+                  (e.currentTarget as HTMLElement).style.transform = '';
+                }}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-3">
                       <span
                         className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                        style={{ backgroundColor: rule.enabled ? 'rgba(93,107,47,.12)' : 'rgba(0,0,0,.06)', color: rule.enabled ? 'var(--color-primary)' : 'var(--color-muted)' }}
+                        style={{
+                          backgroundColor: rule.enabled
+                            ? 'rgba(93,107,47,.12)'
+                            : 'rgba(0,0,0,.06)',
+                          color: rule.enabled
+                            ? 'var(--color-primary)'
+                            : 'var(--color-muted)',
+                        }}
                       >
                         #{idx + 1}
                       </span>
-                      <span className="text-[15px] font-semibold" style={{ color: 'var(--color-ink)' }}>
+                      <span
+                        className="text-[15px] font-semibold"
+                        style={{ color: 'var(--color-ink)' }}
+                      >
                         {rule.name}
                       </span>
-                      <span className="text-[11px] ml-auto" style={{ color: 'var(--color-muted)' }}>
+                      <span
+                        className="text-[11px] ml-auto"
+                        style={{ color: 'var(--color-muted)' }}
+                      >
                         {rule.executions} runs
                       </span>
                     </div>
                     <div className="space-y-1.5">
                       <div className="flex items-start gap-3">
-                        <span className="text-[10px] font-bold uppercase tracking-widest shrink-0 pt-0.5 rounded" style={{ color: 'var(--color-muted)', minWidth: '40px' }}>IF</span>
-                        <code className="text-[12px] font-mono" style={{ color: 'var(--color-ink)' }}>{rule.condition}</code>
+                        <span
+                          className="text-[10px] font-bold uppercase tracking-widest shrink-0 pt-0.5 rounded"
+                          style={{
+                            color: 'var(--color-muted)',
+                            minWidth: '40px',
+                          }}
+                        >
+                          IF
+                        </span>
+                        <code
+                          className="text-[12px] font-mono"
+                          style={{ color: 'var(--color-ink)' }}
+                        >
+                          {rule.condition}
+                        </code>
                       </div>
                       <div className="flex items-start gap-3">
-                        <span className="text-[10px] font-bold uppercase tracking-widest shrink-0 pt-0.5" style={{ color: 'var(--color-muted)', minWidth: '40px' }}>THEN</span>
-                        <code className="text-[12px] font-mono" style={{ color: 'var(--color-primary)' }}>{rule.action}</code>
+                        <span
+                          className="text-[10px] font-bold uppercase tracking-widest shrink-0 pt-0.5"
+                          style={{
+                            color: 'var(--color-muted)',
+                            minWidth: '40px',
+                          }}
+                        >
+                          THEN
+                        </span>
+                        <code
+                          className="text-[12px] font-mono"
+                          style={{ color: 'var(--color-primary)' }}
+                        >
+                          {rule.action}
+                        </code>
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <button
-                      onClick={() => setRulesList(prev => prev.map(r => r.id === rule.id ? { ...r, enabled: !r.enabled } : r))}
+                      onClick={() =>
+                        setRulesList((prev) =>
+                          prev.map((r) =>
+                            r.id === rule.id ? { ...r, enabled: !r.enabled } : r
+                          )
+                        )
+                      }
                       className="px-3 py-1.5 text-[12px] font-medium rounded-full transition-all"
                       style={{
                         border: '1px solid var(--color-border)',
-                        backgroundColor: rule.enabled ? 'rgba(93,107,47,.10)' : 'transparent',
-                        color: rule.enabled ? 'var(--color-primary)' : 'var(--color-muted)',
+                        backgroundColor: rule.enabled
+                          ? 'rgba(93,107,47,.10)'
+                          : 'transparent',
+                        color: rule.enabled
+                          ? 'var(--color-primary)'
+                          : 'var(--color-muted)',
                       }}
                     >
                       {rule.enabled ? 'Enabled' : 'Disabled'}
@@ -1538,11 +1844,32 @@ const DashboardContent: React.FC = () => {
           </div>
 
           {/* Rules info */}
-          <div className="p-4 flex items-start gap-3 rounded-[16px]" style={{ border: '1px solid rgba(93,107,47,.15)', backgroundColor: 'rgba(93,107,47,.04)' }}>
-            <AlertCircle size={15} className="shrink-0 mt-0.5" style={{ color: 'var(--color-primary)' }} />
+          <div
+            className="p-4 flex items-start gap-3 rounded-[16px]"
+            style={{
+              border: '1px solid rgba(93,107,47,.15)',
+              backgroundColor: 'rgba(93,107,47,.04)',
+            }}
+          >
+            <AlertCircle
+              size={15}
+              className="shrink-0 mt-0.5"
+              style={{ color: 'var(--color-primary)' }}
+            />
             <div>
-              <p className="text-[13px] font-semibold" style={{ color: 'var(--color-ink)' }}>Rules run on every incoming email</p>
-              <p className="text-[12px] mt-0.5" style={{ color: 'var(--color-muted)' }}>Evaluated top-to-bottom. First matching rule wins. Define custom DSL conditions in the rule editor.</p>
+              <p
+                className="text-[13px] font-semibold"
+                style={{ color: 'var(--color-ink)' }}
+              >
+                Rules run on every incoming email
+              </p>
+              <p
+                className="text-[12px] mt-0.5"
+                style={{ color: 'var(--color-muted)' }}
+              >
+                Evaluated top-to-bottom. First matching rule wins. Define custom
+                DSL conditions in the rule editor.
+              </p>
             </div>
           </div>
         </div>
@@ -1551,9 +1878,24 @@ const DashboardContent: React.FC = () => {
   }
 
   return (
-    <Layout activeTab={activeTab} setActiveTab={setActiveTab} theme={theme} onToggleTheme={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}>
+    <Layout
+      activeTab={activeTab}
+      setActiveTab={setActiveTab}
+      theme={theme}
+      onToggleTheme={() =>
+        setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+      }
+    >
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-[14px] text-[13px] font-medium shadow-lg" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-hover)', color: 'var(--color-ink)' }}>
+        <div
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-[14px] text-[13px] font-medium shadow-lg"
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-border)',
+            boxShadow: 'var(--shadow-hover)',
+            color: 'var(--color-ink)',
+          }}
+        >
           <Sparkles size={14} style={{ color: 'var(--color-primary)' }} />
           <span>{toastMessage}</span>
         </div>
@@ -1562,11 +1904,17 @@ const DashboardContent: React.FC = () => {
         {/* Clean Dashboard Header */}
         <div className="flex flex-row items-center justify-between gap-4 pb-4 border-b border-[var(--color-border)]">
           <div className="text-left">
-            <h2 className="text-[22px] font-bold tracking-tight flex items-center gap-2" style={{ color: 'var(--color-ink)' }}>
+            <h2
+              className="text-[22px] font-bold tracking-tight flex items-center gap-2"
+              style={{ color: 'var(--color-ink)' }}
+            >
               My Inbox
               <Sparkles size={18} style={{ color: 'var(--color-primary)' }} />
             </h2>
-            <p className="text-[13px] mt-1" style={{ color: 'var(--color-muted)' }}>
+            <p
+              className="text-[13px] mt-1"
+              style={{ color: 'var(--color-muted)' }}
+            >
               Real-time, direct sync with your connected Google account.
             </p>
           </div>
@@ -1580,14 +1928,17 @@ const DashboardContent: React.FC = () => {
                 color: '#fff',
                 boxShadow: '0 4px 14px rgba(93,107,47,.25)',
               }}
-              onMouseEnter={e => {
+              onMouseEnter={(e) => {
                 if (!gmailSyncing) {
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 20px rgba(93,107,47,.35)';
-                  (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+                  (e.currentTarget as HTMLElement).style.boxShadow =
+                    '0 6px 20px rgba(93,107,47,.35)';
+                  (e.currentTarget as HTMLElement).style.transform =
+                    'translateY(-1px)';
                 }
               }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 14px rgba(93,107,47,.25)';
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.boxShadow =
+                  '0 4px 14px rgba(93,107,47,.25)';
                 (e.currentTarget as HTMLElement).style.transform = '';
               }}
             >
@@ -1602,7 +1953,10 @@ const DashboardContent: React.FC = () => {
 
         {/* Full-width Email list */}
         <div className="w-full">
-          <EmailList gmailConnected={gmailConnected} onConnectGmail={handleConnectGmail} />
+          <EmailList
+            gmailConnected={gmailConnected}
+            onConnectGmail={handleConnectGmail}
+          />
         </div>
       </div>
     </Layout>

@@ -64,10 +64,24 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   const hoverMap: Record<string, React.CSSProperties> = {
-    primary: { boxShadow: '0 6px 20px rgba(93,107,47,.35)', transform: 'translateY(-1px)' },
-    secondary: { boxShadow: 'var(--shadow-card)', borderColor: 'rgba(93,107,47,.25)', color: 'var(--color-ink)', transform: 'translateY(-1px)' },
-    accent: { backgroundColor: 'rgba(228,184,92,.20)', transform: 'translateY(-1px)' },
-    danger: { backgroundColor: 'rgba(217,104,87,.15)', transform: 'translateY(-1px)' },
+    primary: {
+      boxShadow: '0 6px 20px rgba(93,107,47,.35)',
+      transform: 'translateY(-1px)',
+    },
+    secondary: {
+      boxShadow: 'var(--shadow-card)',
+      borderColor: 'rgba(93,107,47,.25)',
+      color: 'var(--color-ink)',
+      transform: 'translateY(-1px)',
+    },
+    accent: {
+      backgroundColor: 'rgba(228,184,92,.20)',
+      transform: 'translateY(-1px)',
+    },
+    danger: {
+      backgroundColor: 'rgba(217,104,87,.15)',
+      transform: 'translateY(-1px)',
+    },
   };
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -125,7 +139,14 @@ export const Button: React.FC<ButtonProps> = ({
           viewBox="0 0 24 24"
           aria-hidden="true"
         >
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="3"
+          />
           <path
             className="opacity-75"
             fill="currentColor"

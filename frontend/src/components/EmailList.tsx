@@ -22,7 +22,6 @@ import { EmptyState } from './EmptyState';
 import { useSocket } from '../context/SocketContext';
 import { API_BASE, authenticatedFetch } from '../config';
 
-
 const CATEGORIES = [
   { id: 'all', label: 'All Ingests' },
   { id: 'urgent', label: 'Urgent' },
@@ -72,7 +71,12 @@ export const EmailList: React.FC<EmailListProps> = ({
       });
       if (!response.ok) throw new Error('API Endpoint not available');
       const json = await response.json();
-      if (json && typeof json === 'object' && 'emails' in json && Array.isArray(json.emails)) {
+      if (
+        json &&
+        typeof json === 'object' &&
+        'emails' in json &&
+        Array.isArray(json.emails)
+      ) {
         return json.emails;
       }
       if (Array.isArray(json)) return json;
@@ -89,10 +93,12 @@ export const EmailList: React.FC<EmailListProps> = ({
       refetch();
     };
     socket.on('email.received', handleNewEmail);
-    return () => { socket.off('email.received', handleNewEmail); };
+    return () => {
+      socket.off('email.received', handleNewEmail);
+    };
   }, [socket, refetch]);
 
-  const emailsList = data || [];
+  const emailsList = data;
 
   const handleSelectEmail = useCallback((id: string) => {
     setSelectedEmailId(id);
@@ -103,38 +109,65 @@ export const EmailList: React.FC<EmailListProps> = ({
   }, []);
 
   const filteredEmails = useMemo(() => {
-    return emailsList.filter((email) => {
+    const list = emailsList || [];
+    return list.filter((email) => {
       const matchesCategory =
         categoryFilter === 'all' ||
-        (email.analysis?.category || email.category || 'personal').toLowerCase() === categoryFilter.toLowerCase();
-      const subjectMatches = email.subject.toLowerCase().includes(searchQuery.toLowerCase());
+        (
+          email.analysis?.category ||
+          email.category ||
+          'personal'
+        ).toLowerCase() === categoryFilter.toLowerCase();
+      const subjectMatches = email.subject
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
       const senderMatches =
         email.sender.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (email.sender_name || '').toLowerCase().includes(searchQuery.toLowerCase());
+        (email.sender_name || '')
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
       const summaryMatches = (email.analysis?.summary || email.body_text || '')
-        .toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && (subjectMatches || senderMatches || summaryMatches);
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      return (
+        matchesCategory && (subjectMatches || senderMatches || summaryMatches)
+      );
     });
   }, [emailsList, categoryFilter, searchQuery]);
 
   const totalItems = filteredEmails.length;
-  const totalPages = useMemo(() => Math.max(1, Math.ceil(totalItems / pageSize)), [totalItems, pageSize]);
+  const totalPages = useMemo(
+    () => Math.max(1, Math.ceil(totalItems / pageSize)),
+    [totalItems, pageSize]
+  );
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = Math.min(startIndex + pageSize, totalItems);
-  const paginatedEmails = useMemo(() => filteredEmails.slice(startIndex, endIndex), [filteredEmails, startIndex, endIndex]);
+  const paginatedEmails = useMemo(
+    () => filteredEmails.slice(startIndex, endIndex),
+    [filteredEmails, startIndex, endIndex]
+  );
 
   useEffect(() => {
-    if (!isAiSearch) { setAiResults([]); return; }
-    if (!searchQuery.trim()) { setAiResults([]); return; }
+    if (!isAiSearch) {
+      setAiResults([]);
+      return;
+    }
+    if (!searchQuery.trim()) {
+      setAiResults([]);
+      return;
+    }
     const delayDebounceFn = setTimeout(async () => {
       setIsSearching(true);
       try {
-        const response = await authenticatedFetch(`${API_BASE}/api/rag/search`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query: searchQuery, limit: pageSize }),
-          credentials: 'include',
-        });
+        const response = await authenticatedFetch(
+          `${API_BASE}/api/rag/search`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: searchQuery, limit: pageSize }),
+            credentials: 'include',
+          }
+        );
         if (response.ok) {
           const data = await response.json();
           setAiResults(data);
@@ -195,7 +228,9 @@ export const EmailList: React.FC<EmailListProps> = ({
   const neuTabBtn = (isActive: boolean): React.CSSProperties => ({
     backgroundColor: isActive ? 'var(--color-primary)' : 'var(--color-surface)',
     color: isActive ? '#fff' : 'var(--color-muted)',
-    border: isActive ? '1px solid transparent' : '1px solid var(--color-border)',
+    border: isActive
+      ? '1px solid transparent'
+      : '1px solid var(--color-border)',
     boxShadow: isActive ? '0 4px 14px rgba(93,107,47,.20)' : 'var(--shadow-sm)',
     fontWeight: 500,
     fontSize: '12px',
@@ -220,7 +255,11 @@ export const EmailList: React.FC<EmailListProps> = ({
           className="flex justify-center items-center h-8 transition-opacity duration-200"
           style={{ opacity: pullDistance > 0 ? 1 : 0 }}
         >
-          <RefreshCw size={20} className={isFetching ? 'animate-spin' : ''} style={{ color: 'var(--color-ink)' }} />
+          <RefreshCw
+            size={20}
+            className={isFetching ? 'animate-spin' : ''}
+            style={{ color: 'var(--color-ink)' }}
+          />
         </div>
       )}
 
@@ -235,16 +274,20 @@ export const EmailList: React.FC<EmailListProps> = ({
                 key={cat.id}
                 onClick={() => handleCategoryChange(cat.id)}
                 style={neuTabBtn(isActive)}
-                onMouseEnter={e => {
+                onMouseEnter={(e) => {
                   if (!isActive) {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(93,107,47,.06)';
-                    (e.currentTarget as HTMLElement).style.color = 'var(--color-ink)';
+                    (e.currentTarget as HTMLElement).style.backgroundColor =
+                      'rgba(93,107,47,.06)';
+                    (e.currentTarget as HTMLElement).style.color =
+                      'var(--color-ink)';
                   }
                 }}
-                onMouseLeave={e => {
+                onMouseLeave={(e) => {
                   if (!isActive) {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-surface)';
-                    (e.currentTarget as HTMLElement).style.color = 'var(--color-muted)';
+                    (e.currentTarget as HTMLElement).style.backgroundColor =
+                      'var(--color-surface)';
+                    (e.currentTarget as HTMLElement).style.color =
+                      'var(--color-muted)';
                   }
                 }}
               >
@@ -259,7 +302,9 @@ export const EmailList: React.FC<EmailListProps> = ({
           <label
             className="flex items-center gap-2 cursor-pointer select-none px-3 py-1.5 font-medium text-[12px] rounded-full transition-all"
             style={{
-              backgroundColor: isAiSearch ? 'rgba(93,107,47,.10)' : 'var(--color-surface)',
+              backgroundColor: isAiSearch
+                ? 'rgba(93,107,47,.10)'
+                : 'var(--color-surface)',
               color: isAiSearch ? 'var(--color-primary)' : 'var(--color-muted)',
               border: '1px solid var(--color-border)',
               boxShadow: 'var(--shadow-sm)',
@@ -285,7 +330,9 @@ export const EmailList: React.FC<EmailListProps> = ({
             />
             <input
               type="text"
-              placeholder={isAiSearch ? 'AI-powered search...' : 'Search local inbox...'}
+              placeholder={
+                isAiSearch ? 'AI-powered search...' : 'Search local inbox...'
+              }
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -307,13 +354,17 @@ export const EmailList: React.FC<EmailListProps> = ({
               color: 'var(--color-muted)',
               boxShadow: 'var(--shadow-sm)',
             }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-primary)';
-              (e.currentTarget as HTMLElement).style.color = 'var(--color-primary)';
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor =
+                'var(--color-primary)';
+              (e.currentTarget as HTMLElement).style.color =
+                'var(--color-primary)';
             }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border)';
-              (e.currentTarget as HTMLElement).style.color = 'var(--color-muted)';
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor =
+                'var(--color-border)';
+              (e.currentTarget as HTMLElement).style.color =
+                'var(--color-muted)';
             }}
           >
             <RefreshCw
@@ -344,7 +395,10 @@ export const EmailList: React.FC<EmailListProps> = ({
             >
               Pipeline Sync Error
             </h4>
-            <p className="text-[12px] mt-1" style={{ color: 'var(--color-muted)' }}>
+            <p
+              className="text-[12px] mt-1"
+              style={{ color: 'var(--color-muted)' }}
+            >
               Failed to read email list from decision API.
             </p>
           </div>
@@ -356,12 +410,15 @@ export const EmailList: React.FC<EmailListProps> = ({
               color: '#fff',
               boxShadow: '0 4px 14px rgba(217,104,87,.30)',
             }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 20px rgba(217,104,87,.40)';
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.boxShadow =
+                '0 6px 20px rgba(217,104,87,.40)';
+              (e.currentTarget as HTMLElement).style.transform =
+                'translateY(-1px)';
             }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 14px rgba(217,104,87,.30)';
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.boxShadow =
+                '0 4px 14px rgba(217,104,87,.30)';
               (e.currentTarget as HTMLElement).style.transform = '';
             }}
           >
@@ -387,11 +444,18 @@ export const EmailList: React.FC<EmailListProps> = ({
             <Mail size={32} />
           </div>
           <div>
-            <h4 className="text-[16px] font-bold text-black" style={{ color: 'var(--color-ink)' }}>
+            <h4
+              className="text-[16px] font-bold text-black"
+              style={{ color: 'var(--color-ink)' }}
+            >
               Connect Your Gmail Account
             </h4>
-            <p className="text-[13px] mt-1.5 max-w-[400px] mx-auto text-gray-600" style={{ color: 'var(--color-muted)' }}>
-              InboxOS needs authorization to read and sync your emails. Connect your Google account to get started.
+            <p
+              className="text-[13px] mt-1.5 max-w-[400px] mx-auto text-gray-600"
+              style={{ color: 'var(--color-muted)' }}
+            >
+              InboxOS needs authorization to read and sync your emails. Connect
+              your Google account to get started.
             </p>
           </div>
           <button
@@ -402,12 +466,15 @@ export const EmailList: React.FC<EmailListProps> = ({
               color: '#fff',
               boxShadow: '0 4px 14px rgba(93,107,47,.25)',
             }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 20px rgba(93,107,47,.35)';
-              (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.boxShadow =
+                '0 6px 20px rgba(93,107,47,.35)';
+              (e.currentTarget as HTMLElement).style.transform =
+                'translateY(-1px)';
             }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 14px rgba(93,107,47,.25)';
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.boxShadow =
+                '0 4px 14px rgba(93,107,47,.25)';
               (e.currentTarget as HTMLElement).style.transform = '';
             }}
           >
@@ -455,25 +522,53 @@ export const EmailList: React.FC<EmailListProps> = ({
             fontSize: '12px',
           }}
         >
-          <div className="flex items-center gap-1.5 text-[12px]" style={{ color: 'var(--color-muted)' }}>
+          <div
+            className="flex items-center gap-1.5 text-[12px]"
+            style={{ color: 'var(--color-muted)' }}
+          >
             <span>Showing</span>
-            <span className="font-semibold" style={{ color: 'var(--color-ink)' }}>{startIndex + 1}</span>
+            <span
+              className="font-semibold"
+              style={{ color: 'var(--color-ink)' }}
+            >
+              {startIndex + 1}
+            </span>
             <span>to</span>
-            <span className="font-semibold" style={{ color: 'var(--color-ink)' }}>{endIndex}</span>
+            <span
+              className="font-semibold"
+              style={{ color: 'var(--color-ink)' }}
+            >
+              {endIndex}
+            </span>
             <span>of</span>
-            <span className="font-semibold" style={{ color: 'var(--color-ink)' }}>{totalItems}</span>
+            <span
+              className="font-semibold"
+              style={{ color: 'var(--color-ink)' }}
+            >
+              {totalItems}
+            </span>
             <span>records</span>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className="text-[12px]" style={{ color: 'var(--color-muted)' }}>Limit:</span>
+              <span
+                className="text-[12px]"
+                style={{ color: 'var(--color-muted)' }}
+              >
+                Limit:
+              </span>
               <select
                 value={pageSize}
-                onChange={(e) => { setPageSize(Number(e.target.value)); setCurrentPage(1); }}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
               >
                 {[5, 10, 25, 50].map((size) => (
-                  <option key={size} value={size}>{size} rows</option>
+                  <option key={size} value={size}>
+                    {size} rows
+                  </option>
                 ))}
               </select>
             </div>
@@ -490,8 +585,18 @@ export const EmailList: React.FC<EmailListProps> = ({
                   boxShadow: 'var(--shadow-sm)',
                   color: 'var(--color-muted)',
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-primary)'; (e.currentTarget as HTMLElement).style.color = 'var(--color-primary)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border)'; (e.currentTarget as HTMLElement).style.color = 'var(--color-muted)'; }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor =
+                    'var(--color-primary)';
+                  (e.currentTarget as HTMLElement).style.color =
+                    'var(--color-primary)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor =
+                    'var(--color-border)';
+                  (e.currentTarget as HTMLElement).style.color =
+                    'var(--color-muted)';
+                }}
               >
                 <ChevronLeft size={14} />
               </button>
@@ -516,8 +621,18 @@ export const EmailList: React.FC<EmailListProps> = ({
                   boxShadow: 'var(--shadow-sm)',
                   color: 'var(--color-muted)',
                 }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-primary)'; (e.currentTarget as HTMLElement).style.color = 'var(--color-primary)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border)'; (e.currentTarget as HTMLElement).style.color = 'var(--color-muted)'; }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor =
+                    'var(--color-primary)';
+                  (e.currentTarget as HTMLElement).style.color =
+                    'var(--color-primary)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor =
+                    'var(--color-border)';
+                  (e.currentTarget as HTMLElement).style.color =
+                    'var(--color-muted)';
+                }}
               >
                 <ChevronRight size={14} />
               </button>

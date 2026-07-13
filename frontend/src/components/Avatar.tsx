@@ -28,15 +28,15 @@ const getInitials = (name: string): string => {
  * Neubrutalism solid color palette for avatars.
  */
 const AVATAR_COLORS = [
-  { bg: '#FFE34D', fg: '#111' },  // Yellow
-  { bg: '#111111', fg: '#fff' },  // Black
-  { bg: '#2563EB', fg: '#fff' },  // Blue
-  { bg: '#16A34A', fg: '#fff' },  // Green
-  { bg: '#DC2626', fg: '#fff' },  // Red
-  { bg: '#D97706', fg: '#111' },  // Amber
-  { bg: '#7C3AED', fg: '#fff' },  // Purple
-  { bg: '#0891B2', fg: '#fff' },  // Cyan
-  { bg: '#BE185D', fg: '#fff' },  // Pink
+  { bg: '#FFE34D', fg: '#111' }, // Yellow
+  { bg: '#111111', fg: '#fff' }, // Black
+  { bg: '#2563EB', fg: '#fff' }, // Blue
+  { bg: '#16A34A', fg: '#fff' }, // Green
+  { bg: '#DC2626', fg: '#fff' }, // Red
+  { bg: '#D97706', fg: '#111' }, // Amber
+  { bg: '#7C3AED', fg: '#fff' }, // Purple
+  { bg: '#0891B2', fg: '#fff' }, // Cyan
+  { bg: '#BE185D', fg: '#fff' }, // Pink
 ];
 
 const getColorStyle = (name: string): { bg: string; fg: string } => {
@@ -63,15 +63,19 @@ export const Avatar: React.FC<AvatarProps> = ({
   const isPresetSize = typeof size === 'string';
 
   const sizeClass = isPresetSize
-    ? ({
+    ? {
         sm: 'h-8 w-8 text-xs',
         md: 'h-10 w-10 text-sm',
         lg: 'h-12 w-12 text-base',
-      }[size as 'sm' | 'md' | 'lg'] || 'h-10 w-10 text-sm')
+      }[size as 'sm' | 'md' | 'lg'] || 'h-10 w-10 text-sm'
     : '';
 
   const customStyle: React.CSSProperties = !isPresetSize
-    ? { width: `${size}px`, height: `${size}px`, fontSize: `${(size as number) * 0.38}px` }
+    ? {
+        width: `${size}px`,
+        height: `${size}px`,
+        fontSize: `${(size as number) * 0.38}px`,
+      }
     : {};
 
   const initials = getInitials(name);
@@ -85,7 +89,11 @@ export const Avatar: React.FC<AvatarProps> = ({
     return (
       <div
         className={`${baseClasses} ${sizeClass} ${className}`}
-        style={{ ...customStyle, border: '1px solid var(--avatar-border, var(--color-ink))', overflow: 'hidden' }}
+        style={{
+          ...customStyle,
+          border: '1px solid var(--avatar-border, var(--color-ink))',
+          overflow: 'hidden',
+        }}
       >
         <img
           src={imageUrl}

@@ -1,10 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import {
-  subDays,
-  format,
-  parseISO,
-} from 'date-fns';
+import { subDays, format, parseISO } from 'date-fns';
 import {
   ResponsiveContainer,
   PieChart,
@@ -26,7 +22,14 @@ import {
 } from 'lucide-react';
 import { API_BASE, authenticatedFetch } from '../config';
 
-const COLORS = ['#6366f1', '#a855f7', '#ec4899', '#14b8a6', '#f59e0b', '#10b981'];
+const COLORS = [
+  '#6366f1',
+  '#a855f7',
+  '#ec4899',
+  '#14b8a6',
+  '#f59e0b',
+  '#10b981',
+];
 
 export const AnalyticsPage: React.FC = () => {
   const [preset, setPreset] = useState<'7d' | '30d' | '90d' | 'custom'>('30d');
@@ -42,7 +45,7 @@ export const AnalyticsPage: React.FC = () => {
     const end = new Date();
     // Set current day boundary to end of day
     end.setHours(23, 59, 59, 999);
-    
+
     let start = subDays(end, 30);
     start.setHours(0, 0, 0, 0);
 
@@ -70,7 +73,11 @@ export const AnalyticsPage: React.FC = () => {
   }, [preset, customStart, customEnd]);
 
   // Fetch stats and heatmap data
-  const { data: stats, isLoading: statsLoading, error: statsError } = useQuery({
+  const {
+    data: stats,
+    isLoading: statsLoading,
+    error: statsError,
+  } = useQuery({
     queryKey: ['analytics-stats', dateRange.startDate, dateRange.endDate],
     queryFn: async () => {
       const url = `${API_BASE}/api/dashboard/stats?startDate=${encodeURIComponent(
@@ -82,7 +89,11 @@ export const AnalyticsPage: React.FC = () => {
     },
   });
 
-  const { data: heatmapData, isLoading: heatmapLoading, error: heatmapError } = useQuery({
+  const {
+    data: heatmapData,
+    isLoading: heatmapLoading,
+    error: heatmapError,
+  } = useQuery({
     queryKey: ['analytics-heatmap', dateRange.startDate, dateRange.endDate],
     queryFn: async () => {
       const url = `${API_BASE}/api/dashboard/heatmap?startDate=${encodeURIComponent(
@@ -126,9 +137,12 @@ export const AnalyticsPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-6">
         <AlertCircle className="text-rose-500 mb-4" size={48} />
-        <h3 className="text-lg font-bold text-black mb-2">Failed to load analytics</h3>
+        <h3 className="text-lg font-bold text-black mb-2">
+          Failed to load analytics
+        </h3>
         <p className="text-xs text-gray-700 font-bold max-w-md mb-6">
-          There was an error communicating with the InboxOS API server. Make sure the backend is active.
+          There was an error communicating with the InboxOS API server. Make
+          sure the backend is active.
         </p>
       </div>
     );
@@ -137,7 +151,11 @@ export const AnalyticsPage: React.FC = () => {
   // Fallback structures if database fields are empty
   const categoryBreakdown = stats?.categoryBreakdown || [];
   const priorityTrends = stats?.priorityTrends || [];
-  const actionCompletion = stats?.actionCompletion || { completed: 0, pending: 0, total: 0 };
+  const actionCompletion = stats?.actionCompletion || {
+    completed: 0,
+    pending: 0,
+    total: 0,
+  };
   const topSenders = stats?.topSenders || [];
   const heatmapDaily = heatmapData?.daily || [];
 
@@ -157,7 +175,8 @@ export const AnalyticsPage: React.FC = () => {
             {data.category}
           </p>
           <p className="text-xs text-blue-600 font-semibold">
-            Emails: <span className="text-black font-extrabold">{data.count}</span>
+            Emails:{' '}
+            <span className="text-black font-extrabold">{data.count}</span>
           </p>
         </div>
       );
@@ -197,7 +216,8 @@ export const AnalyticsPage: React.FC = () => {
             <BarChart3 className="text-blue-600 animate-pulse" size={20} />
           </h2>
           <p className="text-xs text-gray-700 font-bold">
-            Monitor email traffic volume, categorization, priority trends, and automated actions.
+            Monitor email traffic volume, categorization, priority trends, and
+            automated actions.
           </p>
         </div>
 
@@ -242,7 +262,9 @@ export const AnalyticsPage: React.FC = () => {
         {/* Total Ingested */}
         <div className="neu-card p-5 relative overflow-hidden transition-all duration-300">
           <div className="flex justify-between items-start mb-3">
-            <span className="text-xs font-medium text-gray-700 font-bold">Total Ingested</span>
+            <span className="text-xs font-medium text-gray-700 font-bold">
+              Total Ingested
+            </span>
             <div className="p-2 rounded-xl bg-white/5 text-blue-600">
               <Inbox size={18} />
             </div>
@@ -267,7 +289,9 @@ export const AnalyticsPage: React.FC = () => {
         {/* Action Completion Rate */}
         <div className="neu-card p-5 relative overflow-hidden transition-all duration-300">
           <div className="flex justify-between items-start mb-3">
-            <span className="text-xs font-medium text-gray-700 font-bold">Action Resolution Rate</span>
+            <span className="text-xs font-medium text-gray-700 font-bold">
+              Action Resolution Rate
+            </span>
             <div className="p-2 rounded-xl bg-green-500 text-white border border-black">
               <CheckCircle2 size={18} />
             </div>
@@ -292,7 +316,9 @@ export const AnalyticsPage: React.FC = () => {
         {/* Urgent Actions Required */}
         <div className="neu-card p-5 relative overflow-hidden transition-all duration-300">
           <div className="flex justify-between items-start mb-3">
-            <span className="text-xs font-medium text-gray-700 font-bold">Urgent Pending Actions</span>
+            <span className="text-xs font-medium text-gray-700 font-bold">
+              Urgent Pending Actions
+            </span>
             <div className="p-2 rounded-xl bg-yellow-400 text-black border border-black">
               <ShieldAlert size={18} className="animate-pulse" />
             </div>
@@ -320,8 +346,12 @@ export const AnalyticsPage: React.FC = () => {
         {/* Category Breakdown Pie Chart */}
         <div className="lg:col-span-1 neu-card p-6 relative overflow-hidden flex flex-col justify-between min-h-[380px] text-left">
           <div>
-            <h3 className="text-sm font-semibold text-black mb-1">Category Distribution</h3>
-            <p className="text-[10px] text-gray-700 font-bold mb-4">Email categories classified automatically by the AI system.</p>
+            <h3 className="text-sm font-semibold text-black mb-1">
+              Category Distribution
+            </h3>
+            <p className="text-[10px] text-gray-700 font-bold mb-4">
+              Email categories classified automatically by the AI system.
+            </p>
           </div>
 
           <div className="flex-1 flex items-center justify-center relative">
@@ -339,23 +369,36 @@ export const AnalyticsPage: React.FC = () => {
                     nameKey="category"
                   >
                     {categoryBreakdown.map((_entry: any, index: number) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip content={<CustomPieTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-center text-xs text-gray-600 font-bold py-10">No data for this period</div>
+              <div className="text-center text-xs text-gray-600 font-bold py-10">
+                No data for this period
+              </div>
             )}
           </div>
 
           {/* Simple Legend grid */}
           <div className="grid grid-cols-3 gap-2 border-t-4 border-black pt-4 text-[10px] font-semibold text-gray-800 font-bold text-left">
             {categoryBreakdown.slice(0, 6).map((item: any, idx: number) => (
-              <div key={item.category} className="flex items-center gap-1.5 truncate">
-                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: COLORS[idx % COLORS.length] }} />
-                <span className="truncate">{item.category} ({item.count})</span>
+              <div
+                key={item.category}
+                className="flex items-center gap-1.5 truncate"
+              >
+                <span
+                  className="w-2 h-2 rounded-full shrink-0"
+                  style={{ backgroundColor: COLORS[idx % COLORS.length] }}
+                />
+                <span className="truncate">
+                  {item.category} ({item.count})
+                </span>
               </div>
             ))}
           </div>
@@ -364,21 +407,38 @@ export const AnalyticsPage: React.FC = () => {
         {/* Priority Trend Chart */}
         <div className="lg:col-span-2 neu-card p-6 relative overflow-hidden flex flex-col min-h-[380px] text-left">
           <div>
-            <h3 className="text-sm font-semibold text-black mb-1">Average Priority Trend</h3>
-            <p className="text-[10px] text-gray-700 font-bold mb-4">Evolution of average importance rating scored by decision pipeline models.</p>
+            <h3 className="text-sm font-semibold text-black mb-1">
+              Average Priority Trend
+            </h3>
+            <p className="text-[10px] text-gray-700 font-bold mb-4">
+              Evolution of average importance rating scored by decision pipeline
+              models.
+            </p>
           </div>
 
           <div className="flex-1 w-full min-h-[220px]">
             {priorityTrends.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={priorityTrends} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <AreaChart
+                  data={priorityTrends}
+                  margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                >
                   <defs>
-                    <linearGradient id="priorityGradient" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient
+                      id="priorityGradient"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
                       <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4} />
                       <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="rgba(0,0,0,0.1)"
+                  />
                   <XAxis
                     dataKey="date"
                     tickFormatter={(tick) => format(parseISO(tick), 'MMM d')}
@@ -402,7 +462,9 @@ export const AnalyticsPage: React.FC = () => {
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex items-center justify-center h-full text-xs text-gray-600 font-bold">No data for this period</div>
+              <div className="flex items-center justify-center h-full text-xs text-gray-600 font-bold">
+                No data for this period
+              </div>
             )}
           </div>
         </div>
@@ -416,8 +478,13 @@ export const AnalyticsPage: React.FC = () => {
           <div className="neu-card p-6 relative overflow-hidden text-left">
             <div className="flex justify-between items-center mb-3">
               <div>
-                <h3 className="text-sm font-semibold text-black mb-1">Email Volume Heatmap</h3>
-                <p className="text-[10px] text-gray-700 font-bold">Total ingested emails showing density patterns for selected timeframe.</p>
+                <h3 className="text-sm font-semibold text-black mb-1">
+                  Email Volume Heatmap
+                </h3>
+                <p className="text-[10px] text-gray-700 font-bold">
+                  Total ingested emails showing density patterns for selected
+                  timeframe.
+                </p>
               </div>
             </div>
 
@@ -429,9 +496,12 @@ export const AnalyticsPage: React.FC = () => {
                 >
                   {heatmapDaily.map((day: any) => {
                     let level = 'bg-white/5';
-                    if (day.count >= 1 && day.count <= 2) level = 'bg-emerald-500/25';
-                    else if (day.count >= 3 && day.count <= 5) level = 'bg-emerald-500/50';
-                    else if (day.count >= 6 && day.count <= 9) level = 'bg-emerald-500/75';
+                    if (day.count >= 1 && day.count <= 2)
+                      level = 'bg-emerald-500/25';
+                    else if (day.count >= 3 && day.count <= 5)
+                      level = 'bg-emerald-500/50';
+                    else if (day.count >= 6 && day.count <= 9)
+                      level = 'bg-emerald-500/75';
                     else if (day.count >= 10) level = 'bg-emerald-500';
 
                     return (
@@ -454,15 +524,21 @@ export const AnalyticsPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="text-center text-xs text-gray-600 font-bold py-6">No data for this period</div>
+              <div className="text-center text-xs text-gray-600 font-bold py-6">
+                No data for this period
+              </div>
             )}
           </div>
 
           {/* Top Senders Table */}
           <div className="neu-card p-6 relative overflow-hidden text-left">
             <div>
-              <h3 className="text-sm font-semibold text-black mb-1">Top Active Senders</h3>
-              <p className="text-[10px] text-gray-700 font-bold mb-4">Senders who broadcast emails most frequently to this inbox.</p>
+              <h3 className="text-sm font-semibold text-black mb-1">
+                Top Active Senders
+              </h3>
+              <p className="text-[10px] text-gray-700 font-bold mb-4">
+                Senders who broadcast emails most frequently to this inbox.
+              </p>
             </div>
 
             {topSenders.length > 0 ? (
@@ -485,8 +561,12 @@ export const AnalyticsPage: React.FC = () => {
                             {sender.name.substring(0, 2).toUpperCase()}
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-100">{sender.name}</p>
-                            <p className="text-[9px] text-gray-600 font-bold">{sender.sender}</p>
+                            <p className="font-semibold text-gray-100">
+                              {sender.name}
+                            </p>
+                            <p className="text-[9px] text-gray-600 font-bold">
+                              {sender.sender}
+                            </p>
                           </div>
                         </td>
                         <td className="py-3.5 text-right pr-2 font-bold text-black">
@@ -498,7 +578,9 @@ export const AnalyticsPage: React.FC = () => {
                 </table>
               </div>
             ) : (
-              <div className="text-center text-xs text-gray-600 font-bold py-6">No data for this period</div>
+              <div className="text-center text-xs text-gray-600 font-bold py-6">
+                No data for this period
+              </div>
             )}
           </div>
         </div>
@@ -506,8 +588,12 @@ export const AnalyticsPage: React.FC = () => {
         {/* Action Completion Circular Gauge */}
         <div className="lg:col-span-1 neu-card p-6 relative overflow-hidden flex flex-col justify-between min-h-[320px] text-left">
           <div>
-            <h3 className="text-sm font-semibold text-black mb-1">Resolution Rate Gauge</h3>
-            <p className="text-[10px] text-gray-700 font-bold mb-4">Ratio of completed action items against pending workloads.</p>
+            <h3 className="text-sm font-semibold text-black mb-1">
+              Resolution Rate Gauge
+            </h3>
+            <p className="text-[10px] text-gray-700 font-bold mb-4">
+              Ratio of completed action items against pending workloads.
+            </p>
           </div>
 
           <div className="flex-1 flex flex-col items-center justify-center">
@@ -531,30 +617,46 @@ export const AnalyticsPage: React.FC = () => {
                     strokeWidth="10"
                     fill="transparent"
                     strokeDasharray={2 * Math.PI * 64}
-                    strokeDashoffset={2 * Math.PI * 64 * (1 - completionRate / 100)}
+                    strokeDashoffset={
+                      2 * Math.PI * 64 * (1 - completionRate / 100)
+                    }
                     strokeLinecap="round"
                   />
                 </svg>
                 {/* Visual content inside */}
                 <div className="absolute text-center">
-                  <span className="text-3xl font-extrabold text-black tracking-tight">{completionRate}%</span>
-                  <p className="text-[9px] text-gray-600 font-bold font-bold uppercase tracking-wider mt-0.5">Resolved</p>
+                  <span className="text-3xl font-extrabold text-black tracking-tight">
+                    {completionRate}%
+                  </span>
+                  <p className="text-[9px] text-gray-600 font-bold font-bold uppercase tracking-wider mt-0.5">
+                    Resolved
+                  </p>
                 </div>
               </div>
             ) : (
-              <div className="text-center text-xs text-gray-600 font-bold py-10">No action workloads found</div>
+              <div className="text-center text-xs text-gray-600 font-bold py-10">
+                No action workloads found
+              </div>
             )}
           </div>
 
           <div className="flex justify-around items-center border-t-4 border-black pt-4 text-center">
             <div>
-              <p className="text-lg font-bold text-black">{actionCompletion.completed}</p>
-              <p className="text-[9px] text-gray-600 font-bold font-semibold uppercase">Completed</p>
+              <p className="text-lg font-bold text-black">
+                {actionCompletion.completed}
+              </p>
+              <p className="text-[9px] text-gray-600 font-bold font-semibold uppercase">
+                Completed
+              </p>
             </div>
             <div className="h-6 w-px bg-white/5" />
             <div>
-              <p className="text-lg font-bold text-black">{actionCompletion.pending}</p>
-              <p className="text-[9px] text-gray-600 font-bold font-semibold uppercase">Pending</p>
+              <p className="text-lg font-bold text-black">
+                {actionCompletion.pending}
+              </p>
+              <p className="text-[9px] text-gray-600 font-bold font-semibold uppercase">
+                Pending
+              </p>
             </div>
           </div>
         </div>

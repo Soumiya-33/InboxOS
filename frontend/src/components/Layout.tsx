@@ -22,10 +22,13 @@ export const Layout: React.FC<LayoutProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <div className="flex min-h-screen font-sans" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-ink)' }}>
+    <div
+      className="flex min-h-screen font-sans dark:bg-zinc-950 dark:text-zinc-100"
+      style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-ink)' }}
+    >
       {/* ── Left Sidebar (Desktop) ────────────────────────────────────────── */}
       <aside
-        className="hidden md:flex flex-col w-[260px] h-screen sticky top-0 z-30 shrink-0"
+        className="hidden md:flex flex-col w-[260px] h-screen sticky top-0 z-30 shrink-0 dark:bg-zinc-900 dark:border-zinc-800"
         style={{
           backgroundColor: 'var(--color-surface)',
           borderRight: '1px solid var(--color-border)',
@@ -43,7 +46,7 @@ export const Layout: React.FC<LayoutProps> = ({
           onClick={() => setIsMobileMenuOpen(false)}
         />
         <aside
-          className={`relative flex flex-col w-[260px] h-full p-4 z-50 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+          className={`relative flex flex-col w-[260px] h-full p-4 z-50 transition-transform duration-300 ease-in-out dark:bg-zinc-900 dark:border-zinc-800 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
           style={{
             backgroundColor: 'var(--color-surface)',
             borderRight: '1px solid var(--color-border)',
@@ -60,7 +63,7 @@ export const Layout: React.FC<LayoutProps> = ({
       <div className="flex flex-col flex-1 min-w-0">
         {/* Header */}
         <header
-          className="px-4 md:px-8 py-3 flex items-center justify-between sticky top-0 z-20"
+          className="px-4 md:px-8 py-3 flex items-center justify-between sticky top-0 z-20 dark:bg-zinc-900 dark:border-zinc-800"
           style={{
             backgroundColor: 'var(--color-surface)',
             borderBottom: '1px solid var(--color-border)',
@@ -70,7 +73,7 @@ export const Layout: React.FC<LayoutProps> = ({
           {/* Mobile menu trigger */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="md:hidden p-2 flex items-center justify-center transition-all min-h-[40px] min-w-[40px] rounded-lg"
+            className="md:hidden p-2 flex items-center justify-center transition-all min-h-[40px] min-w-[40px] rounded-lg dark:border-zinc-800 dark:hover:bg-zinc-800"
             style={{ border: '1px solid var(--color-border)' }}
             aria-label="Open mobile menu"
           >
@@ -79,25 +82,32 @@ export const Layout: React.FC<LayoutProps> = ({
 
           {/* Search Bar */}
           <div className="hidden sm:flex items-center w-full max-w-[400px] relative">
-            <Search size={14} className="absolute left-3" style={{ color: 'var(--color-muted)' }} />
+            <Search
+              size={14}
+              className="absolute left-3"
+              style={{ color: 'var(--color-muted)' }}
+            />
             <input
               type="text"
               placeholder="Search emails…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-[13px] rounded-[10px] outline-none transition-all"
+              className="w-full pl-9 pr-4 py-2 text-[13px] rounded-[10px] outline-none transition-all dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder-zinc-500"
               style={{
                 backgroundColor: 'var(--color-bg)',
                 border: '1px solid var(--color-border)',
                 color: 'var(--color-ink)',
                 fontFamily: 'var(--font-body)',
               }}
-              onFocus={e => {
-                (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-primary)';
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 3px rgba(93,107,47,.08)';
+              onFocus={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor =
+                  'var(--color-primary)';
+                (e.currentTarget as HTMLElement).style.boxShadow =
+                  '0 0 0 3px rgba(93,107,47,.08)';
               }}
-              onBlur={e => {
-                (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border)';
+              onBlur={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor =
+                  'var(--color-border)';
                 (e.currentTarget as HTMLElement).style.boxShadow = 'none';
               }}
             />
@@ -108,10 +118,23 @@ export const Layout: React.FC<LayoutProps> = ({
             {/* Theme toggle */}
             <button
               onClick={onToggleTheme}
-              className="p-2 flex items-center justify-center transition-all min-h-[36px] min-w-[36px] rounded-lg"
-              style={{ border: '1px solid var(--color-border)', color: 'var(--color-muted)' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-primary)'; (e.currentTarget as HTMLElement).style.color = 'var(--color-primary)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border)'; (e.currentTarget as HTMLElement).style.color = 'var(--color-muted)'; }}
+              className="p-2 flex items-center justify-center transition-all min-h-[36px] min-w-[36px] rounded-lg dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              style={{
+                border: '1px solid var(--color-border)',
+                color: 'var(--color-muted)',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor =
+                  'var(--color-primary)';
+                (e.currentTarget as HTMLElement).style.color =
+                  'var(--color-primary)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor =
+                  'var(--color-border)';
+                (e.currentTarget as HTMLElement).style.color =
+                  'var(--color-muted)';
+              }}
               aria-label="Toggle theme"
             >
               {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
@@ -119,10 +142,23 @@ export const Layout: React.FC<LayoutProps> = ({
 
             {/* Notifications */}
             <button
-              className="p-2 flex items-center justify-center transition-all relative min-h-[36px] min-w-[36px] rounded-lg"
-              style={{ border: '1px solid var(--color-border)', color: 'var(--color-muted)' }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-primary)'; (e.currentTarget as HTMLElement).style.color = 'var(--color-primary)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border)'; (e.currentTarget as HTMLElement).style.color = 'var(--color-muted)'; }}
+              className="p-2 flex items-center justify-center transition-all relative min-h-[36px] min-w-[36px] rounded-lg dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+              style={{
+                border: '1px solid var(--color-border)',
+                color: 'var(--color-muted)',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor =
+                  'var(--color-primary)';
+                (e.currentTarget as HTMLElement).style.color =
+                  'var(--color-primary)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor =
+                  'var(--color-border)';
+                (e.currentTarget as HTMLElement).style.color =
+                  'var(--color-muted)';
+              }}
               aria-label="Notifications"
             >
               <Bell size={15} />
@@ -133,15 +169,24 @@ export const Layout: React.FC<LayoutProps> = ({
             </button>
 
             {/* Divider */}
-            <div className="w-px h-6 mx-1" style={{ backgroundColor: 'var(--color-border)' }} />
+            <div
+              className="w-px h-6 mx-1 dark:bg-zinc-800"
+              style={{ backgroundColor: 'var(--color-border)' }}
+            />
 
             {/* User Profile */}
             <div className="flex items-center gap-2.5">
               <div className="hidden sm:block text-right">
-                <p className="text-[13px] font-semibold leading-tight truncate max-w-[120px]" style={{ color: 'var(--color-ink)' }}>
+                <p
+                  className="text-[13px] font-semibold leading-tight truncate max-w-[120px] dark:text-zinc-100"
+                  style={{ color: 'var(--color-ink)' }}
+                >
                   {user?.email ? user.email.split('@')[0] : 'User'}
                 </p>
-                <p className="text-[11px] leading-tight truncate max-w-[120px]" style={{ color: 'var(--color-muted)' }}>
+                <p
+                  className="text-[11px] leading-tight truncate max-w-[120px] dark:text-zinc-400"
+                  style={{ color: 'var(--color-muted)' }}
+                >
                   {user?.email || 'offline'}
                 </p>
               </div>
@@ -157,12 +202,15 @@ export const Layout: React.FC<LayoutProps> = ({
             </div>
 
             {/* Divider */}
-            <div className="w-px h-6 mx-1" style={{ backgroundColor: 'var(--color-border)' }} />
+            <div
+              className="w-px h-6 mx-1 dark:bg-zinc-800"
+              style={{ backgroundColor: 'var(--color-border)' }}
+            />
 
             {/* Logout */}
             <button
               onClick={logout}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-lg border border-[var(--color-border)] text-[var(--color-muted)] bg-transparent hover:bg-[#FEF0EE] hover:border-[var(--color-danger)] hover:text-[var(--color-danger)] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--color-danger)]/30 focus-visible:outline-none transition-all duration-200"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium rounded-lg border border-[var(--color-border)] dark:border-zinc-700 text-[var(--color-muted)] dark:text-zinc-400 bg-transparent hover:bg-[#FEF0EE] dark:hover:bg-red-950/20 hover:border-[var(--color-danger)] hover:text-[var(--color-danger)] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[var(--color-danger)]/30 focus-visible:outline-none transition-all duration-200"
               title="Log Out"
             >
               <LogOut size={13} />

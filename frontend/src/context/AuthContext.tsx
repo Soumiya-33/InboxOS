@@ -14,9 +14,19 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   loginWithFirebase: (idToken: string) => Promise<void>;
-  checkGoogleRegistration: (idToken: string) => Promise<{ isRegistered: boolean; username?: string; email?: string }>;
-  registerWithGoogle: (idToken: string, username: string, password: string) => Promise<void>;
-  loginWithGoogle: (idToken: string, username: string, password: string) => Promise<void>;
+  checkGoogleRegistration: (
+    idToken: string
+  ) => Promise<{ isRegistered: boolean; username?: string; email?: string }>;
+  registerWithGoogle: (
+    idToken: string,
+    username: string,
+    password: string
+  ) => Promise<void>;
+  loginWithGoogle: (
+    idToken: string,
+    username: string,
+    password: string
+  ) => Promise<void>;
   logout: () => Promise<void>;
   error: string | null;
   clearError: () => void;
@@ -24,8 +34,10 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-
-const getErrorMessage = async (response: Response, defaultMessage: string): Promise<string> => {
+const getErrorMessage = async (
+  response: Response,
+  defaultMessage: string
+): Promise<string> => {
   try {
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
@@ -62,7 +74,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const urlToken = urlParams.get('token');
         if (urlToken) {
           localStorage.setItem('inboxos_token', urlToken);
-          const newUrl = window.location.pathname + window.location.search.replace(/[\?&]token=[^&]+/, '').replace(/^&/, '?');
+          const newUrl =
+            window.location.pathname +
+            window.location.search
+              .replace(/[?&]token=[^&]+/, '')
+              .replace(/^&/, '?');
           window.history.replaceState({}, document.title, newUrl);
         }
 
@@ -82,7 +98,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         }
       } catch (err) {
-        console.warn('[AuthContext] Could not reach backend to verify session. Falling back to mock user in dev.');
+        console.warn(
+          '[AuthContext] Could not reach backend to verify session. Falling back to mock user in dev.'
+        );
         setUser({
           id: 'demo-id',
           email: 'demo-user@inboxos.dev',
@@ -177,7 +195,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       });
 
       if (!response.ok) {
-        const errorMsg = await getErrorMessage(response, 'Firebase authentication failed');
+        const errorMsg = await getErrorMessage(
+          response,
+          'Firebase authentication failed'
+        );
         throw new Error(errorMsg);
       }
 
@@ -221,7 +242,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const registerWithGoogle = async (idToken: string, username: string, password: string) => {
+  const registerWithGoogle = async (
+    idToken: string,
+    username: string,
+    password: string
+  ) => {
     setError(null);
     setIsLoading(true);
     try {
@@ -232,7 +257,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         credentials: 'include',
       });
       if (!response.ok) {
-        const errorMsg = await getErrorMessage(response, 'Google registration failed');
+        const errorMsg = await getErrorMessage(
+          response,
+          'Google registration failed'
+        );
         throw new Error(errorMsg);
       }
       const data = await response.json();
@@ -254,7 +282,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const loginWithGoogle = async (idToken: string, username: string, password: string) => {
+  const loginWithGoogle = async (
+    idToken: string,
+    username: string,
+    password: string
+  ) => {
     setError(null);
     setIsLoading(true);
     try {

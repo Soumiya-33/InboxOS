@@ -54,10 +54,10 @@ export const ComposeModal: React.FC = () => {
     }
   }, [isOpen, initialValues, reset]);
 
-
-
   const insertMarkdown = (symbol: string) => {
-    const textarea = document.getElementById('compose-body') as HTMLTextAreaElement;
+    const textarea = document.getElementById(
+      'compose-body'
+    ) as HTMLTextAreaElement;
     if (!textarea) return;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
@@ -67,14 +67,18 @@ export const ComposeModal: React.FC = () => {
     const after = text.substring(end);
     let replacement = '';
     if (symbol === 'bold') replacement = `**${selected || 'bold text'}**`;
-    else if (symbol === 'italic') replacement = `*${selected || 'italic text'}*`;
+    else if (symbol === 'italic')
+      replacement = `*${selected || 'italic text'}*`;
     else if (symbol === 'code') replacement = `\`${selected || 'code'}\``;
     else if (symbol === 'list') replacement = `\n- ${selected || 'list item'}`;
     const newText = before + replacement + after;
     setValue('body', newText);
     setTimeout(() => {
       textarea.focus();
-      textarea.setSelectionRange(start + replacement.length, start + replacement.length);
+      textarea.setSelectionRange(
+        start + replacement.length,
+        start + replacement.length
+      );
     }, 50);
   };
 
@@ -101,7 +105,10 @@ export const ComposeModal: React.FC = () => {
       if (!response.ok) throw new Error('Endpoint send offline');
       setToastMessage('Email dispatched successfully!');
     } catch (err) {
-      console.warn('[ComposeModal] POST /api/emails/send failed. Fallback mock dispatch.', err);
+      console.warn(
+        '[ComposeModal] POST /api/emails/send failed. Fallback mock dispatch.',
+        err
+      );
       setToastMessage('Email dispatched successfully! (Mock pipeline)');
     } finally {
       setIsSending(false);
@@ -153,9 +160,7 @@ export const ComposeModal: React.FC = () => {
               }}
             >
               <CheckCircle size={16} />
-              <span className="text-[13px] font-medium">
-                {toastMessage}
-              </span>
+              <span className="text-[13px] font-medium">{toastMessage}</span>
             </div>
           )}
 
@@ -175,7 +180,10 @@ export const ComposeModal: React.FC = () => {
             {/* Modal Header */}
             <div
               className="flex items-center justify-between px-6 py-4"
-              style={{ borderBottom: '1px solid var(--color-border)', backgroundColor: 'rgba(93,107,47,.04)' }}
+              style={{
+                borderBottom: '1px solid var(--color-border)',
+                backgroundColor: 'rgba(93,107,47,.04)',
+              }}
             >
               <div className="flex items-center gap-2">
                 <Mail size={15} style={{ color: 'var(--color-primary)' }} />
@@ -224,7 +232,10 @@ export const ComposeModal: React.FC = () => {
                   disabled={isSending}
                   {...register('to', {
                     required: 'Recipient is required',
-                    pattern: { value: /\S+@\S+\.\S+/, message: 'Enter a valid email address' },
+                    pattern: {
+                      value: /\S+@\S+\.\S+/,
+                      message: 'Enter a valid email address',
+                    },
                   })}
                   className={`w-full bg-[var(--color-surface)] border rounded-[10px] px-4 py-2.5 text-xs text-[var(--color-ink)] transition-all outline-none ${
                     errors.to
@@ -274,7 +285,9 @@ export const ComposeModal: React.FC = () => {
                   type="text"
                   placeholder="Subject line"
                   disabled={isSending}
-                  {...register('subject', { required: 'Subject line is required' })}
+                  {...register('subject', {
+                    required: 'Subject line is required',
+                  })}
                   className={`w-full bg-[var(--color-surface)] border rounded-[10px] px-4 py-2.5 text-xs text-[var(--color-ink)] transition-all outline-none ${
                     errors.subject
                       ? 'border-[var(--color-danger)] focus:border-[var(--color-danger)] focus:ring-2 focus:ring-[var(--color-danger)]/25'
@@ -303,20 +316,37 @@ export const ComposeModal: React.FC = () => {
                   )}
                 </div>
 
-                <div
-                  className="flex flex-col flex-1 overflow-hidden rounded-[12px] border border-[var(--color-border)] focus-within:border-[var(--color-primary)] focus-within:ring-2 focus-within:ring-[var(--color-primary)]/20 transition-all"
-                >
+                <div className="flex flex-col flex-1 overflow-hidden rounded-[12px] border border-[var(--color-border)] focus-within:border-[var(--color-primary)] focus-within:ring-2 focus-within:ring-[var(--color-primary)]/20 transition-all">
                   {/* Text formatting bar */}
                   <div
                     className="flex items-center justify-between px-2 py-1.5"
-                    style={{ borderBottom: '1px solid var(--color-border)', backgroundColor: 'rgba(93,107,47,.03)' }}
+                    style={{
+                      borderBottom: '1px solid var(--color-border)',
+                      backgroundColor: 'rgba(93,107,47,.03)',
+                    }}
                   >
                     <div className="flex items-center gap-0.5">
                       {[
-                        { symbol: 'bold', icon: <Bold size={12} />, title: 'Bold' },
-                        { symbol: 'italic', icon: <Italic size={12} />, title: 'Italic' },
-                        { symbol: 'code', icon: <Code size={12} />, title: 'Code' },
-                        { symbol: 'list', icon: <List size={12} />, title: 'List' },
+                        {
+                          symbol: 'bold',
+                          icon: <Bold size={12} />,
+                          title: 'Bold',
+                        },
+                        {
+                          symbol: 'italic',
+                          icon: <Italic size={12} />,
+                          title: 'Italic',
+                        },
+                        {
+                          symbol: 'code',
+                          icon: <Code size={12} />,
+                          title: 'Code',
+                        },
+                        {
+                          symbol: 'list',
+                          icon: <List size={12} />,
+                          title: 'List',
+                        },
                       ].map(({ symbol, icon, title }) => (
                         <button
                           key={symbol}
@@ -324,15 +354,23 @@ export const ComposeModal: React.FC = () => {
                           onClick={() => insertMarkdown(symbol)}
                           title={title}
                           style={toolbarBtnStyle}
-                          onMouseEnter={e => {
-                            (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(93,107,47,.10)';
-                            (e.currentTarget as HTMLElement).style.color = 'var(--color-primary)';
-                            (e.currentTarget as HTMLElement).style.borderColor = 'rgba(93,107,47,.20)';
+                          onMouseEnter={(e) => {
+                            (
+                              e.currentTarget as HTMLElement
+                            ).style.backgroundColor = 'rgba(93,107,47,.10)';
+                            (e.currentTarget as HTMLElement).style.color =
+                              'var(--color-primary)';
+                            (e.currentTarget as HTMLElement).style.borderColor =
+                              'rgba(93,107,47,.20)';
                           }}
-                          onMouseLeave={e => {
-                            (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-                            (e.currentTarget as HTMLElement).style.color = 'var(--color-muted)';
-                            (e.currentTarget as HTMLElement).style.borderColor = 'transparent';
+                          onMouseLeave={(e) => {
+                            (
+                              e.currentTarget as HTMLElement
+                            ).style.backgroundColor = 'transparent';
+                            (e.currentTarget as HTMLElement).style.color =
+                              'var(--color-muted)';
+                            (e.currentTarget as HTMLElement).style.borderColor =
+                              'transparent';
                           }}
                         >
                           {icon}
@@ -351,13 +389,16 @@ export const ComposeModal: React.FC = () => {
                         color: 'var(--color-primary)',
                         border: '1px solid rgba(93,107,47,.20)',
                       }}
-                      onMouseEnter={e => {
-                        (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-primary)';
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.backgroundColor =
+                          'var(--color-primary)';
                         (e.currentTarget as HTMLElement).style.color = '#fff';
                       }}
-                      onMouseLeave={e => {
-                        (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(93,107,47,.10)';
-                        (e.currentTarget as HTMLElement).style.color = 'var(--color-primary)';
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.backgroundColor =
+                          'rgba(93,107,47,.10)';
+                        (e.currentTarget as HTMLElement).style.color =
+                          'var(--color-primary)';
                       }}
                     >
                       {isAiLoading ? (
@@ -379,7 +420,9 @@ export const ComposeModal: React.FC = () => {
                     id="compose-body"
                     placeholder="Write your email here..."
                     disabled={isSending}
-                    {...register('body', { required: 'Message body is required' })}
+                    {...register('body', {
+                      required: 'Message body is required',
+                    })}
                     className="w-full flex-1 min-h-[160px] resize-none p-4 text-[13px] leading-relaxed bg-[var(--color-surface)] text-[var(--color-ink)] outline-none"
                   />
                 </div>

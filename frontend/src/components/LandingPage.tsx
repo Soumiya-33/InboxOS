@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from 'framer-motion';
 import { Avatar } from './Avatar';
 import {
   Sparkles,
@@ -131,11 +136,11 @@ const XIcon: React.FC<{ size?: number; className?: string }> = ({
 );
 
 // Reusable Circular Social Icon Link component
-const SocialIcon: React.FC<{ href: string; children: React.ReactNode; ariaLabel: string }> = ({
-  href,
-  children,
-  ariaLabel,
-}) => (
+const SocialIcon: React.FC<{
+  href: string;
+  children: React.ReactNode;
+  ariaLabel: string;
+}> = ({ href, children, ariaLabel }) => (
   <a
     href={href}
     target="_blank"
@@ -193,7 +198,8 @@ const mockEmails: MockEmail[] = [
     id: '2',
     sender: 'AWS Billing (billing@aws.com)',
     avatar: 'AW',
-    avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+    avatarUrl:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
     time: '1 hour ago',
     subject: 'June 2026 Invoice #8937492',
     snippet:
@@ -240,9 +246,9 @@ const sectionVariants: any = {
     transition: {
       duration: 0.45,
       staggerChildren: 0.06,
-      ease: [0.21, 0.47, 0.32, 0.98]
-    }
-  }
+      ease: [0.21, 0.47, 0.32, 0.98],
+    },
+  },
 };
 
 const itemVariants: any = {
@@ -250,8 +256,8 @@ const itemVariants: any = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.35, ease: "easeOut" }
-  }
+    transition: { duration: 0.35, ease: 'easeOut' },
+  },
 };
 
 export const LandingPage: React.FC = () => {
@@ -259,8 +265,24 @@ export const LandingPage: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Light/Dark toggle placeholder state
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // Light/Dark toggle state synced with localStorage and html class
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      return savedTheme === 'dark';
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDarkMode]);
 
   // Active section tracking state
   const [activeSection, setActiveSection] = useState<string>('');
@@ -413,7 +435,9 @@ export const LandingPage: React.FC = () => {
             <a
               href="#features"
               className={`group relative py-1.5 transition-colors duration-200 hover:text-[#5F6B38] ${
-                activeSection === 'features' ? 'text-[#5F6B38] font-semibold' : ''
+                activeSection === 'features'
+                  ? 'text-[#5F6B38] font-semibold'
+                  : ''
               }`}
             >
               Features
@@ -430,7 +454,9 @@ export const LandingPage: React.FC = () => {
             <a
               href="#pipeline"
               className={`group relative py-1.5 transition-colors duration-200 hover:text-[#5F6B38] ${
-                activeSection === 'pipeline' ? 'text-[#5F6B38] font-semibold' : ''
+                activeSection === 'pipeline'
+                  ? 'text-[#5F6B38] font-semibold'
+                  : ''
               }`}
             >
               How it Works
@@ -464,7 +490,9 @@ export const LandingPage: React.FC = () => {
             <a
               href="#comparison"
               className={`group relative py-1.5 transition-colors duration-200 hover:text-[#5F6B38] ${
-                activeSection === 'comparison' ? 'text-[#5F6B38] font-semibold' : ''
+                activeSection === 'comparison'
+                  ? 'text-[#5F6B38] font-semibold'
+                  : ''
               }`}
             >
               InboxOS vs Standard
@@ -497,12 +525,20 @@ export const LandingPage: React.FC = () => {
               aria-label="Toggle theme placeholder"
             >
               {isDarkMode ? (
-                <Moon size={18} strokeWidth={1.5} className="rotate-12 transition-transform duration-300" />
+                <Sun
+                  size={18}
+                  strokeWidth={1.5}
+                  className="transition-transform duration-300"
+                />
               ) : (
-                <Sun size={18} strokeWidth={1.5} className="transition-transform duration-300" />
+                <Moon
+                  size={18}
+                  strokeWidth={1.5}
+                  className="rotate-12 transition-transform duration-300"
+                />
               )}
             </button>
-            
+
             <button
               onClick={() => navigate('/login')}
               className="h-[48px] px-6 text-[15px] font-semibold text-white bg-[#5F6B38] hover:bg-[#4F5A2F] rounded-[16px] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(95,107,56,0.25)] active:scale-95 duration-200 flex items-center justify-center"
@@ -518,9 +554,15 @@ export const LandingPage: React.FC = () => {
             aria-label="Toggle mobile menu"
           >
             <div className="w-5 h-4 flex flex-col justify-between relative">
-              <span className={`w-full h-0.5 bg-current rounded-full transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
-              <span className={`w-full h-0.5 bg-current rounded-full transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`} />
-              <span className={`w-full h-0.5 bg-current rounded-full transition-transform duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
+              <span
+                className={`w-full h-0.5 bg-current rounded-full transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-[7px]' : ''}`}
+              />
+              <span
+                className={`w-full h-0.5 bg-current rounded-full transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}
+              />
+              <span
+                className={`w-full h-0.5 bg-current rounded-full transition-transform duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-[7px]' : ''}`}
+              />
             </div>
           </button>
         </div>
@@ -540,7 +582,9 @@ export const LandingPage: React.FC = () => {
                 href="#features"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={`text-sm font-medium py-1 transition-colors duration-200 ${
-                  activeSection === 'features' ? 'text-[#5F6B38] font-semibold' : 'text-[#6B7280]'
+                  activeSection === 'features'
+                    ? 'text-[#5F6B38] font-semibold'
+                    : 'text-[#6B7280]'
                 }`}
               >
                 Features
@@ -549,7 +593,9 @@ export const LandingPage: React.FC = () => {
                 href="#pipeline"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={`text-sm font-medium py-1 transition-colors duration-200 ${
-                  activeSection === 'pipeline' ? 'text-[#5F6B38] font-semibold' : 'text-[#6B7280]'
+                  activeSection === 'pipeline'
+                    ? 'text-[#5F6B38] font-semibold'
+                    : 'text-[#6B7280]'
                 }`}
               >
                 How it Works
@@ -558,7 +604,9 @@ export const LandingPage: React.FC = () => {
                 href="#demo"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={`text-sm font-medium py-1 transition-colors duration-200 ${
-                  activeSection === 'demo' ? 'text-[#5F6B38] font-semibold' : 'text-[#6B7280]'
+                  activeSection === 'demo'
+                    ? 'text-[#5F6B38] font-semibold'
+                    : 'text-[#6B7280]'
                 }`}
               >
                 Interactive Demo
@@ -567,7 +615,9 @@ export const LandingPage: React.FC = () => {
                 href="#comparison"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={`text-sm font-medium py-1 transition-colors duration-200 ${
-                  activeSection === 'comparison' ? 'text-[#5F6B38] font-semibold' : 'text-[#6B7280]'
+                  activeSection === 'comparison'
+                    ? 'text-[#5F6B38] font-semibold'
+                    : 'text-[#6B7280]'
                 }`}
               >
                 InboxOS vs Standard
@@ -589,7 +639,11 @@ export const LandingPage: React.FC = () => {
                 className="w-10 h-10 rounded-[14px] border border-[#EAE5DA] bg-white text-[#6B7280] hover:text-[#1D1D1D] hover:bg-[#FAF7F2] hover:-translate-y-0.5 active:scale-95 transition-all duration-200 flex items-center justify-center"
                 aria-label="Toggle theme placeholder"
               >
-                {isDarkMode ? <Moon size={18} strokeWidth={1.5} /> : <Sun size={18} strokeWidth={1.5} />}
+                {isDarkMode ? (
+                  <Sun size={18} strokeWidth={1.5} />
+                ) : (
+                  <Moon size={18} strokeWidth={1.5} />
+                )}
               </button>
               <button
                 onClick={() => {
@@ -609,7 +663,7 @@ export const LandingPage: React.FC = () => {
       <motion.section
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         variants={sectionVariants}
         className="relative pt-36 pb-20 md:pt-44 md:pb-28 px-6 max-w-[1280px] mx-auto z-10"
       >
@@ -623,10 +677,11 @@ export const LandingPage: React.FC = () => {
 
             <h1 className="text-4xl md:text-5xl lg:text-[64px] font-bold tracking-tight text-[#1D1D1D] leading-[1.1] lg:max-w-2xl">
               Email that{' '}
-              <span 
+              <span
                 className="text-[#5F6B38]"
                 style={{
-                  backgroundImage: 'linear-gradient(to right, #5F6B38, #E2B65C, #5F6B38)',
+                  backgroundImage:
+                    'linear-gradient(to right, #5F6B38, #E2B65C, #5F6B38)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
@@ -651,14 +706,22 @@ export const LandingPage: React.FC = () => {
                 className="group h-[48px] px-6 text-[15px] font-semibold text-white bg-[#5F6B38] hover:bg-[#4F5A2F] rounded-[16px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(95,107,56,0.25)] active:scale-95 flex items-center justify-center gap-2"
               >
                 <span>Get Started Free</span>
-                <ArrowRight size={16} strokeWidth={2} className="transition-transform duration-200 group-hover:translate-x-[5px]" />
+                <ArrowRight
+                  size={16}
+                  strokeWidth={2}
+                  className="transition-transform duration-200 group-hover:translate-x-[5px]"
+                />
               </button>
               <a
                 href="#demo"
                 className="group h-[48px] px-6 text-[15px] font-semibold text-[#5F6B38] bg-white border border-[#5F6B38] hover:bg-[#FAF7F2] rounded-[16px] transition-all duration-200 hover:-translate-y-0.5 active:scale-95 text-center flex items-center justify-center gap-2"
               >
                 <span>Watch Live Demo</span>
-                <ChevronRight size={16} strokeWidth={2} className="transition-transform duration-200 group-hover:translate-x-[5px]" />
+                <ChevronRight
+                  size={16}
+                  strokeWidth={2}
+                  className="transition-transform duration-200 group-hover:translate-x-[5px]"
+                />
               </a>
             </div>
 
@@ -674,15 +737,15 @@ export const LandingPage: React.FC = () => {
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ 
-                opacity: 1, 
+              animate={{
+                opacity: 1,
                 scale: 1,
-                y: [0, -4, 0]
+                y: [0, -4, 0],
               }}
               transition={{
                 opacity: { duration: 0.8 },
                 scale: { duration: 0.8 },
-                y: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+                y: { duration: 5, repeat: Infinity, ease: 'easeInOut' },
               }}
               className="w-full max-w-[480px] bg-white border border-[#EAE5DA] shadow-[0_8px_30px_rgba(95,107,56,0.02)] rounded-[22px] p-6 relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_15px_30px_rgba(95,107,56,0.06)] hover:border-[#5F6B38]"
             >
@@ -927,7 +990,7 @@ export const LandingPage: React.FC = () => {
       <motion.section
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         variants={sectionVariants}
         className="max-w-[1280px] mx-auto px-6 md:px-12 my-[120px] z-10 relative"
       >
@@ -1015,7 +1078,7 @@ export const LandingPage: React.FC = () => {
         id="pipeline"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         variants={sectionVariants}
         className="max-w-[1280px] mx-auto px-6 md:px-12 my-[120px] z-10 relative"
       >
@@ -1025,9 +1088,9 @@ export const LandingPage: React.FC = () => {
               Every email goes through an intelligent pipeline.
             </h2>
             <p className="text-sm text-[#6B7280] leading-relaxed">
-              InboxOS acts as a middle-tier decision engine. Below is the precise
-              5-layer pipeline that runs in under a second for every message.
-              Click any step to inspect the details.
+              InboxOS acts as a middle-tier decision engine. Below is the
+              precise 5-layer pipeline that runs in under a second for every
+              message. Click any step to inspect the details.
             </p>
           </div>
 
@@ -1142,7 +1205,11 @@ export const LandingPage: React.FC = () => {
                             key={i}
                             className="text-[10px] text-[#6B7280] flex items-center gap-1.5"
                           >
-                            <CheckCircle2 size={10} strokeWidth={1.5} className="text-[#5F6B38]" />
+                            <CheckCircle2
+                              size={10}
+                              strokeWidth={1.5}
+                              className="text-[#5F6B38]"
+                            />
                             <span>{d}</span>
                           </li>
                         ))}
@@ -1161,7 +1228,7 @@ export const LandingPage: React.FC = () => {
         id="features"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         variants={sectionVariants}
         className="max-w-[1280px] mx-auto px-6 md:px-12 my-[120px] z-10 relative"
       >
@@ -1182,7 +1249,11 @@ export const LandingPage: React.FC = () => {
               className="group bg-white border border-[#EAE5DA] p-6 rounded-[22px] shadow-[0_8px_30px_rgba(95,107,56,0.02)] transition-all duration-[250ms] hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(95,107,56,0.08)] hover:border-[#5F6B38] text-left"
             >
               <div className="h-10 w-10 rounded-xl bg-[#FAF7F2] border border-[#EAE5DA] text-[#5F6B38] flex items-center justify-center mb-4 transition-all duration-[250ms] group-hover:border-[#5F6B38]">
-                <Cpu size={18} strokeWidth={1.5} className="transition-transform duration-[250ms] group-hover:rotate-[5deg]" />
+                <Cpu
+                  size={18}
+                  strokeWidth={1.5}
+                  className="transition-transform duration-[250ms] group-hover:rotate-[5deg]"
+                />
               </div>
               <h4 className="text-sm font-bold text-[#1D1D1D] mb-2">
                 🧠 AI Email Understanding
@@ -1198,7 +1269,11 @@ export const LandingPage: React.FC = () => {
               className="group bg-white border border-[#EAE5DA] p-6 rounded-[22px] shadow-[0_8px_30px_rgba(95,107,56,0.02)] transition-all duration-[250ms] hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(95,107,56,0.08)] hover:border-[#5F6B38] text-left"
             >
               <div className="h-10 w-10 rounded-xl bg-[#FAF7F2] border border-[#EAE5DA] text-[#5F6B38] flex items-center justify-center mb-4 transition-all duration-[250ms] group-hover:border-[#5F6B38]">
-                <ShieldAlert size={18} strokeWidth={1.5} className="transition-transform duration-[250ms] group-hover:rotate-[5deg]" />
+                <ShieldAlert
+                  size={18}
+                  strokeWidth={1.5}
+                  className="transition-transform duration-[250ms] group-hover:rotate-[5deg]"
+                />
               </div>
               <h4 className="text-sm font-bold text-[#1D1D1D] mb-2">
                 ⚡ Instant Prioritization
@@ -1214,7 +1289,11 @@ export const LandingPage: React.FC = () => {
               className="group bg-white border border-[#EAE5DA] p-6 rounded-[22px] shadow-[0_8px_30px_rgba(95,107,56,0.02)] transition-all duration-[250ms] hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(95,107,56,0.08)] hover:border-[#5F6B38] text-left"
             >
               <div className="h-10 w-10 rounded-xl bg-[#FAF7F2] border border-[#EAE5DA] text-[#5F6B38] flex items-center justify-center mb-4 transition-all duration-[250ms] group-hover:border-[#5F6B38]">
-                <Calendar size={18} strokeWidth={1.5} className="transition-transform duration-[250ms] group-hover:rotate-[5deg]" />
+                <Calendar
+                  size={18}
+                  strokeWidth={1.5}
+                  className="transition-transform duration-[250ms] group-hover:rotate-[5deg]"
+                />
               </div>
               <h4 className="text-sm font-bold text-[#1D1D1D] mb-2">
                 📅 Deadline Detection
@@ -1230,7 +1309,11 @@ export const LandingPage: React.FC = () => {
               className="group bg-white border border-[#EAE5DA] p-6 rounded-[22px] shadow-[0_8px_30px_rgba(95,107,56,0.02)] transition-all duration-[250ms] hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(95,107,56,0.08)] hover:border-[#5F6B38] text-left"
             >
               <div className="h-10 w-10 rounded-xl bg-[#FAF7F2] border border-[#EAE5DA] text-[#5F6B38] flex items-center justify-center mb-4 transition-all duration-[250ms] group-hover:border-[#5F6B38]">
-                <CheckCircle2 size={18} strokeWidth={1.5} className="transition-transform duration-[250ms] group-hover:rotate-[5deg]" />
+                <CheckCircle2
+                  size={18}
+                  strokeWidth={1.5}
+                  className="transition-transform duration-[250ms] group-hover:rotate-[5deg]"
+                />
               </div>
               <h4 className="text-sm font-bold text-[#1D1D1D] mb-2">
                 ✅ Task Generation
@@ -1246,7 +1329,11 @@ export const LandingPage: React.FC = () => {
               className="group bg-white border border-[#EAE5DA] p-6 rounded-[22px] shadow-[0_8px_30px_rgba(95,107,56,0.02)] transition-all duration-[250ms] hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(95,107,56,0.08)] hover:border-[#5F6B38] text-left"
             >
               <div className="h-10 w-10 rounded-xl bg-[#FAF7F2] border border-[#EAE5DA] text-[#5F6B38] flex items-center justify-center mb-4 transition-all duration-[250ms] group-hover:border-[#5F6B38]">
-                <Smartphone size={18} strokeWidth={1.5} className="transition-transform duration-[250ms] group-hover:rotate-[5deg]" />
+                <Smartphone
+                  size={18}
+                  strokeWidth={1.5}
+                  className="transition-transform duration-[250ms] group-hover:rotate-[5deg]"
+                />
               </div>
               <h4 className="text-sm font-bold text-[#1D1D1D] mb-2">
                 📲 WhatsApp & SMS Alerts
@@ -1262,7 +1349,11 @@ export const LandingPage: React.FC = () => {
               className="group bg-white border border-[#EAE5DA] p-6 rounded-[22px] shadow-[0_8px_30px_rgba(95,107,56,0.02)] transition-all duration-[250ms] hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(95,107,56,0.08)] hover:border-[#5F6B38] text-left"
             >
               <div className="h-10 w-10 rounded-xl bg-[#FAF7F2] border border-[#EAE5DA] text-[#5F6B38] flex items-center justify-center mb-4 transition-all duration-[250ms] group-hover:border-[#5F6B38]">
-                <TrendingUp size={18} strokeWidth={1.5} className="transition-transform duration-[250ms] group-hover:rotate-[5deg]" />
+                <TrendingUp
+                  size={18}
+                  strokeWidth={1.5}
+                  className="transition-transform duration-[250ms] group-hover:rotate-[5deg]"
+                />
               </div>
               <h4 className="text-sm font-bold text-[#1D1D1D] mb-2">
                 📈 Analytics & Insight
@@ -1278,7 +1369,11 @@ export const LandingPage: React.FC = () => {
               className="group bg-white border border-[#EAE5DA] p-6 rounded-[22px] shadow-[0_8px_30px_rgba(95,107,56,0.02)] transition-all duration-[250ms] hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(95,107,56,0.08)] hover:border-[#5F6B38] text-left"
             >
               <div className="h-10 w-10 rounded-xl bg-[#FAF7F2] border border-[#EAE5DA] text-[#5F6B38] flex items-center justify-center mb-4 transition-all duration-[250ms] group-hover:border-[#5F6B38]">
-                <Lock size={18} strokeWidth={1.5} className="transition-transform duration-[250ms] group-hover:rotate-[5deg]" />
+                <Lock
+                  size={18}
+                  strokeWidth={1.5}
+                  className="transition-transform duration-[250ms] group-hover:rotate-[5deg]"
+                />
               </div>
               <h4 className="text-sm font-bold text-[#1D1D1D] mb-2">
                 🔒 Local Privacy First
@@ -1294,7 +1389,11 @@ export const LandingPage: React.FC = () => {
               className="group bg-white border border-[#EAE5DA] p-6 rounded-[22px] shadow-[0_8px_30px_rgba(95,107,56,0.02)] transition-all duration-[250ms] hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(95,107,56,0.08)] hover:border-[#5F6B38] text-left"
             >
               <div className="h-10 w-10 rounded-xl bg-[#FAF7F2] border border-[#EAE5DA] text-[#5F6B38] flex items-center justify-center mb-4 transition-all duration-[250ms] group-hover:border-[#5F6B38]">
-                <Zap size={18} strokeWidth={1.5} className="transition-transform duration-[250ms] group-hover:rotate-[5deg]" />
+                <Zap
+                  size={18}
+                  strokeWidth={1.5}
+                  className="transition-transform duration-[250ms] group-hover:rotate-[5deg]"
+                />
               </div>
               <h4 className="text-sm font-bold text-[#1D1D1D] mb-2">
                 ⚙ Modular SDK Abstraction
@@ -1313,7 +1412,7 @@ export const LandingPage: React.FC = () => {
         id="demo"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         variants={sectionVariants}
         className="max-w-[1280px] mx-auto px-6 md:px-12 my-[120px] z-10 relative"
       >
@@ -1334,7 +1433,11 @@ export const LandingPage: React.FC = () => {
             <div className="lg:col-span-5 bg-white border border-[#EAE5DA] rounded-[22px] shadow-[0_8px_30px_rgba(95,107,56,0.02)] transition-all duration-[250ms] hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(95,107,56,0.08)] hover:border-[#5F6B38] p-5 flex flex-col justify-start">
               <div className="flex items-center justify-between pb-3 border-b border-[#EAE5DA] mb-4">
                 <span className="text-xs font-bold text-[#1D1D1D] uppercase flex items-center gap-1.5">
-                  <Inbox size={14} strokeWidth={1.5} className="text-[#5F6B38]" />
+                  <Inbox
+                    size={14}
+                    strokeWidth={1.5}
+                    className="text-[#5F6B38]"
+                  />
                   <span>Simulated Inbound Stream</span>
                 </span>
                 <span className="text-[10px] text-[#6B7280]/60 font-semibold">
@@ -1407,7 +1510,11 @@ export const LandingPage: React.FC = () => {
               <div>
                 <div className="flex items-center justify-between pb-3 border-b border-[#EAE5DA] mb-5 text-left">
                   <span className="text-xs font-bold text-[#1D1D1D] uppercase flex items-center gap-1.5">
-                    <Cpu size={14} strokeWidth={1.5} className="text-[#5F6B38] animate-pulse" />
+                    <Cpu
+                      size={14}
+                      strokeWidth={1.5}
+                      className="text-[#5F6B38] animate-pulse"
+                    />
                     <span>AI Decision & Parsing Output</span>
                   </span>
                   <div className="flex items-center gap-2">
@@ -1449,7 +1556,8 @@ export const LandingPage: React.FC = () => {
                       <p className="text-[11px] text-[#5F6B38] font-bold mt-1.5 flex items-center gap-1">
                         <Clock size={11} strokeWidth={1.5} />
                         <span>
-                          {selectedEmail.deadline || 'No specific deadline found'}
+                          {selectedEmail.deadline ||
+                            'No specific deadline found'}
                         </span>
                       </p>
                     </div>
@@ -1513,7 +1621,10 @@ export const LandingPage: React.FC = () => {
                       <>
                         <Zap size={12} strokeWidth={1.5} />
                         <span>Run Pipeline Actions</span>
-                        <ArrowRight size={12} className="transition-transform duration-200 group-hover:translate-x-[5px]" />
+                        <ArrowRight
+                          size={12}
+                          className="transition-transform duration-200 group-hover:translate-x-[5px]"
+                        />
                       </>
                     )}
                   </button>
@@ -1528,7 +1639,11 @@ export const LandingPage: React.FC = () => {
                       exit={{ opacity: 0, y: -10 }}
                       className="p-3 bg-[#5F6B38]/5 border border-[#5F6B38]/20 rounded-xl text-[#5F6B38] text-xs font-semibold flex items-center gap-2"
                     >
-                      <CheckCircle2 size={14} strokeWidth={1.5} className="text-[#5F6B38]" />
+                      <CheckCircle2
+                        size={14}
+                        strokeWidth={1.5}
+                        className="text-[#5F6B38]"
+                      />
                       <span>{executedAction}</span>
                     </motion.div>
                   )}
@@ -1543,7 +1658,7 @@ export const LandingPage: React.FC = () => {
       <motion.section
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         variants={sectionVariants}
         className="max-w-[1280px] mx-auto px-6 md:px-12 my-[120px] z-10 relative"
       >
@@ -1553,7 +1668,11 @@ export const LandingPage: React.FC = () => {
             <div className="lg:col-span-7 relative flex justify-center">
               <motion.div
                 animate={{ y: [0, -4, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
                 className="w-full max-w-[540px] bg-[#0A0D1A] rounded-[22px] p-5 border border-[#EAE5DA] shadow-[0_8px_30px_rgba(95,107,56,0.02)] relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_15px_30px_rgba(95,107,56,0.06)] hover:border-[#5F6B38]"
               >
                 {/* Ambient glow */}
@@ -1577,15 +1696,21 @@ export const LandingPage: React.FC = () => {
                 {/* Simulated metrics */}
                 <div className="grid grid-cols-3 gap-3 mb-4">
                   <div className="bg-white/5 border border-white/5 rounded-xl p-3 text-left">
-                    <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Total Ingested</p>
+                    <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
+                      Total Ingested
+                    </p>
                     <p className="text-lg font-bold text-white mt-1">1,284</p>
                   </div>
                   <div className="bg-white/5 border border-white/5 rounded-xl p-3 text-left">
-                    <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Urgent Alerts</p>
+                    <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
+                      Urgent Alerts
+                    </p>
                     <p className="text-lg font-bold text-[#E2B65C] mt-1">4</p>
                   </div>
                   <div className="bg-white/5 border border-white/5 rounded-xl p-3 text-left">
-                    <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Auto-Resolved</p>
+                    <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
+                      Auto-Resolved
+                    </p>
                     <p className="text-lg font-bold text-[#5F6B38] mt-1">84%</p>
                   </div>
                 </div>
@@ -1606,7 +1731,9 @@ export const LandingPage: React.FC = () => {
                     </p>
                     <p className="text-[9px] text-[#5F6B38] font-semibold mt-1.5 flex items-center gap-1">
                       <Check size={10} strokeWidth={1.5} />
-                      <span>AI Action: Scheduled calendar event Wednesday 2:00 PM</span>
+                      <span>
+                        AI Action: Scheduled calendar event Wednesday 2:00 PM
+                      </span>
                     </p>
                   </div>
                   <div className="bg-white/5 border border-white/5 rounded-xl p-3.5 opacity-60">
@@ -1623,7 +1750,9 @@ export const LandingPage: React.FC = () => {
                     </p>
                     <p className="text-[9px] text-[#5F6B38] font-semibold mt-1.5 flex items-center gap-1">
                       <Check size={10} strokeWidth={1.5} />
-                      <span>AI Action: Created task backlogs in AWS logging</span>
+                      <span>
+                        AI Action: Created task backlogs in AWS logging
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -1677,7 +1806,7 @@ export const LandingPage: React.FC = () => {
       <motion.section
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         variants={sectionVariants}
         className="max-w-[1280px] mx-auto px-6 md:px-12 my-[120px] z-10 relative"
       >
@@ -1696,8 +1825,8 @@ export const LandingPage: React.FC = () => {
 
               <p className="text-sm text-[#6B7280] leading-relaxed">
                 InboxOS is completely open source and self-hostable. We decouple
-                ingestion connectors from the reasoning code. Want custom rules or
-                want to run entirely local LLMs? Check the codebase, deploy
+                ingestion connectors from the reasoning code. Want custom rules
+                or want to run entirely local LLMs? Check the codebase, deploy
                 manually using Docker, or write a plugin utilizing the InboxOS
                 SDK.
               </p>
@@ -1748,7 +1877,9 @@ export const LandingPage: React.FC = () => {
 
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-[#5F6B38]">📁</span>
-                    <span className="text-[#5F6B38] font-semibold">config/</span>
+                    <span className="text-[#5F6B38] font-semibold">
+                      config/
+                    </span>
                   </div>
                   <div className="pl-6 flex items-center gap-2">
                     <span className="text-[#6B7280]">📁</span>
@@ -1767,7 +1898,9 @@ export const LandingPage: React.FC = () => {
 
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-[#5F6B38]">📁</span>
-                    <span className="text-[#5F6B38] font-semibold">packages/</span>
+                    <span className="text-[#5F6B38] font-semibold">
+                      packages/
+                    </span>
                   </div>
                   <div className="pl-6 flex items-center gap-2">
                     <span className="text-[#6B7280]">📁</span>
@@ -1805,7 +1938,7 @@ export const LandingPage: React.FC = () => {
       <motion.section
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         variants={sectionVariants}
         className="max-w-[1280px] mx-auto px-6 md:px-12 my-[120px] z-10 relative"
       >
@@ -1826,8 +1959,10 @@ export const LandingPage: React.FC = () => {
               className="group bg-white border border-[#EAE5DA] p-6 rounded-[22px] shadow-[0_8px_30px_rgba(95,107,56,0.02)] transition-all duration-300 hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(95,107,56,0.08)] hover:border-[#5F6B38] text-left flex flex-col justify-between relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[#5F6B38]/1 to-[#5F6B38]/3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-              <span className="absolute top-4 right-6 text-[80px] font-serif text-[#5F6B38]/10 group-hover:opacity-0 transition-opacity duration-300 select-none pointer-events-none leading-none">“</span>
-              
+              <span className="absolute top-4 right-6 text-[80px] font-serif text-[#5F6B38]/10 group-hover:opacity-0 transition-opacity duration-300 select-none pointer-events-none leading-none">
+                “
+              </span>
+
               <p className="text-xs text-[#6B7280] leading-relaxed italic relative z-10">
                 "InboxOS changed everything for us. Critical infrastructure
                 downtime reports from our servers are picked up, analyzed, and
@@ -1836,7 +1971,11 @@ export const LandingPage: React.FC = () => {
               </p>
               <div className="flex items-center gap-3 mt-6 border-t border-[#EAE5DA] pt-4 relative z-10">
                 <div className="rounded-full ring-2 ring-transparent group-hover:ring-[#5F6B38] transition-all duration-300 p-0.5 shrink-0">
-                  <Avatar name="Mark Henderson" size={36} className="rounded-full overflow-hidden" />
+                  <Avatar
+                    name="Mark Henderson"
+                    size={36}
+                    className="rounded-full overflow-hidden"
+                  />
                 </div>
                 <div>
                   <h5 className="text-xs font-bold text-[#1D1D1D]">
@@ -1854,7 +1993,9 @@ export const LandingPage: React.FC = () => {
               className="group bg-white border border-[#EAE5DA] p-6 rounded-[22px] shadow-[0_8px_30px_rgba(95,107,56,0.02)] transition-all duration-300 hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(95,107,56,0.08)] hover:border-[#5F6B38] text-left flex flex-col justify-between relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[#5F6B38]/1 to-[#5F6B38]/3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-              <span className="absolute top-4 right-6 text-[80px] font-serif text-[#5F6B38]/10 group-hover:opacity-0 transition-opacity duration-300 select-none pointer-events-none leading-none">“</span>
+              <span className="absolute top-4 right-6 text-[80px] font-serif text-[#5F6B38]/10 group-hover:opacity-0 transition-opacity duration-300 select-none pointer-events-none leading-none">
+                “
+              </span>
 
               <p className="text-xs text-[#6B7280] leading-relaxed italic relative z-10">
                 "As a recruiter, my inbox gets flooded with hundreds of
@@ -1865,7 +2006,11 @@ export const LandingPage: React.FC = () => {
               </p>
               <div className="flex items-center gap-3 mt-6 border-t border-[#EAE5DA] pt-4 relative z-10">
                 <div className="rounded-full ring-2 ring-transparent group-hover:ring-[#5F6B38] transition-all duration-300 p-0.5 shrink-0">
-                  <Avatar name="Alisha Robinson" size={36} className="rounded-full overflow-hidden" />
+                  <Avatar
+                    name="Alisha Robinson"
+                    size={36}
+                    className="rounded-full overflow-hidden"
+                  />
                 </div>
                 <div>
                   <h5 className="text-xs font-bold text-[#1D1D1D]">
@@ -1883,7 +2028,9 @@ export const LandingPage: React.FC = () => {
               className="group bg-white border border-[#EAE5DA] p-6 rounded-[22px] shadow-[0_8px_30px_rgba(95,107,56,0.02)] transition-all duration-300 hover:-translate-y-[6px] hover:shadow-[0_20px_40px_rgba(95,107,56,0.08)] hover:border-[#5F6B38] text-left flex flex-col justify-between relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[#5F6B38]/1 to-[#5F6B38]/3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-              <span className="absolute top-4 right-6 text-[80px] font-serif text-[#5F6B38]/10 group-hover:opacity-0 transition-opacity duration-300 select-none pointer-events-none leading-none">“</span>
+              <span className="absolute top-4 right-6 text-[80px] font-serif text-[#5F6B38]/10 group-hover:opacity-0 transition-opacity duration-300 select-none pointer-events-none leading-none">
+                “
+              </span>
 
               <p className="text-xs text-[#6B7280] leading-relaxed italic relative z-10">
                 "I run multiple businesses and used to miss invoice payment
@@ -1893,7 +2040,11 @@ export const LandingPage: React.FC = () => {
               </p>
               <div className="flex items-center gap-3 mt-6 border-t border-[#EAE5DA] pt-4 relative z-10">
                 <div className="rounded-full ring-2 ring-transparent group-hover:ring-[#5F6B38] transition-all duration-300 p-0.5 shrink-0">
-                  <Avatar name="Thomas Loe" size={36} className="rounded-full overflow-hidden" />
+                  <Avatar
+                    name="Thomas Loe"
+                    size={36}
+                    className="rounded-full overflow-hidden"
+                  />
                 </div>
                 <div>
                   <h5 className="text-xs font-bold text-[#1D1D1D]">
@@ -1914,7 +2065,7 @@ export const LandingPage: React.FC = () => {
         id="comparison"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         variants={sectionVariants}
         className="max-w-[1280px] mx-auto px-6 md:px-12 my-[120px] z-10 relative"
       >
@@ -1942,7 +2093,10 @@ export const LandingPage: React.FC = () => {
                   </th>
                   <th className="p-4 text-xs font-bold text-[#5F6B38] uppercase tracking-widest">
                     <div className="flex items-center gap-1.5">
-                      <Sparkles size={14} className="text-[#5F6B38] animate-pulse" />
+                      <Sparkles
+                        size={14}
+                        className="text-[#5F6B38] animate-pulse"
+                      />
                       <span>InboxOS</span>
                     </div>
                   </th>
@@ -1961,7 +2115,11 @@ export const LandingPage: React.FC = () => {
                   </td>
                   <td className="p-4 text-[#5F6B38] font-semibold">
                     <span className="flex items-center gap-1.5">
-                      <Check size={14} strokeWidth={2.5} className="text-[#5F6B38] shrink-0" />
+                      <Check
+                        size={14}
+                        strokeWidth={2.5}
+                        className="text-[#5F6B38] shrink-0"
+                      />
                       <span>Parses content contextually using LLMs</span>
                     </span>
                   </td>
@@ -1974,12 +2132,18 @@ export const LandingPage: React.FC = () => {
                   <td className="p-4 text-[#6B7280]">
                     <div className="flex items-center gap-2">
                       <Minus size={14} className="text-[#E2B65C] shrink-0" />
-                      <span>Flat chronological listing / basic label rules</span>
+                      <span>
+                        Flat chronological listing / basic label rules
+                      </span>
                     </div>
                   </td>
                   <td className="p-4 text-[#5F6B38] font-semibold">
                     <span className="flex items-center gap-1.5">
-                      <Check size={14} strokeWidth={2.5} className="text-[#5F6B38] shrink-0" />
+                      <Check
+                        size={14}
+                        strokeWidth={2.5}
+                        className="text-[#5F6B38] shrink-0"
+                      />
                       <span>Granular priority index score (0–100)</span>
                     </span>
                   </td>
@@ -1992,12 +2156,18 @@ export const LandingPage: React.FC = () => {
                   <td className="p-4 text-[#6B7280]">
                     <div className="flex items-center gap-2">
                       <Minus size={14} className="text-[#E2B65C] shrink-0" />
-                      <span>Open separate calendars and manually copy/paste</span>
+                      <span>
+                        Open separate calendars and manually copy/paste
+                      </span>
                     </div>
                   </td>
                   <td className="p-4 text-[#5F6B38] font-semibold">
                     <span className="flex items-center gap-1.5">
-                      <Check size={14} strokeWidth={2.5} className="text-[#5F6B38] shrink-0" />
+                      <Check
+                        size={14}
+                        strokeWidth={2.5}
+                        className="text-[#5F6B38] shrink-0"
+                      />
                       <span>Automatically triggers API dispatches</span>
                     </span>
                   </td>
@@ -2015,8 +2185,14 @@ export const LandingPage: React.FC = () => {
                   </td>
                   <td className="p-4 text-[#5F6B38] font-semibold">
                     <span className="flex items-center gap-1.5">
-                      <Check size={14} strokeWidth={2.5} className="text-[#5F6B38] shrink-0" />
-                      <span>DSL boolean scripts with dynamic condition maps</span>
+                      <Check
+                        size={14}
+                        strokeWidth={2.5}
+                        className="text-[#5F6B38] shrink-0"
+                      />
+                      <span>
+                        DSL boolean scripts with dynamic condition maps
+                      </span>
                     </span>
                   </td>
                 </tr>
@@ -2033,7 +2209,11 @@ export const LandingPage: React.FC = () => {
                   </td>
                   <td className="p-4 text-[#5F6B38] font-semibold">
                     <span className="flex items-center gap-1.5">
-                      <Check size={14} strokeWidth={2.5} className="text-[#5F6B38] shrink-0" />
+                      <Check
+                        size={14}
+                        strokeWidth={2.5}
+                        className="text-[#5F6B38] shrink-0"
+                      />
                       <span>Self-hostable, runs entirely local models</span>
                     </span>
                   </td>
@@ -2048,7 +2228,7 @@ export const LandingPage: React.FC = () => {
       <motion.section
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         variants={sectionVariants}
         className="max-w-[1280px] mx-auto px-6 md:px-12 my-[120px] z-10 relative"
       >
@@ -2101,7 +2281,11 @@ export const LandingPage: React.FC = () => {
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               >
                 <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#5F6B38] shadow-sm">
-                  <Sparkles size={14} strokeWidth={1.5} className="text-white" />
+                  <Sparkles
+                    size={14}
+                    strokeWidth={1.5}
+                    className="text-white"
+                  />
                 </div>
                 <h4 className="text-sm font-bold text-[#1D1D1D]">InboxOS</h4>
               </div>
