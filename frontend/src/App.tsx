@@ -165,9 +165,11 @@ const DashboardContent: React.FC = () => {
 
   useEffect(() => {
     if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
+      document.documentElement.classList.add('dark', 'dark-theme');
+      document.documentElement.classList.remove('light-theme');
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove('dark', 'dark-theme');
+      document.documentElement.classList.add('light-theme');
     }
     localStorage.setItem('theme', theme);
   }, [theme]);
@@ -1967,12 +1969,21 @@ export default function App() {
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     if (savedTheme === 'dark') {
-      document.documentElement.classList.add('dark-theme');
+      document.documentElement.classList.add('dark', 'dark-theme');
       document.documentElement.classList.remove('light-theme');
     } else {
       document.documentElement.classList.add('light-theme');
-      document.documentElement.classList.remove('dark-theme');
+      document.documentElement.classList.remove('dark', 'dark-theme');
     }
+
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      document.documentElement.style.setProperty('--global-mouse-x', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--global-mouse-y', `${e.clientY}px`);
+    };
+    window.addEventListener('mousemove', handleGlobalMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+    };
   }, []);
 
   return (

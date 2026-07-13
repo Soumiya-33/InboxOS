@@ -481,6 +481,20 @@ html.dark-theme {
   --text-secondary: #C2C2C2;
   --text-muted: #7A7A7A;
   
+  /* Core design variables mapping */
+  --color-bg: #050505;
+  --color-surface: #0B0B0B;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-ink: #FFFFFF;
+  --color-muted: #C2C2C2;
+  --color-primary: #FF6A00;
+  --color-accent: #FF8C32;
+  
+  /* Ambient Orange Shadows */
+  --shadow-card: 0 4px 24px rgba(255, 106, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 12px 40px rgba(255, 106, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 12px rgba(255, 106, 0, 0.05);
+
   color-scheme: dark;
 }
 
@@ -492,10 +506,23 @@ html.dark-theme body::before {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(circle at 10% 20%, rgba(255, 106, 0, 0.03) 0%, transparent 50%),
-              radial-gradient(circle at 90% 80%, rgba(255, 140, 50, 0.02) 0%, transparent 60%);
+  background: radial-gradient(circle at 15% 15%, rgba(255, 106, 0, 0.04) 0%, transparent 55%),
+              radial-gradient(circle at 85% 85%, rgba(255, 140, 50, 0.03) 0%, transparent 60%);
   pointer-events: none;
-  z-index: 0;
+  z-index: -2;
+}
+
+/* Global Mouse Follow Orange Glow Background */
+html.dark-theme body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(600px circle at var(--global-mouse-x, -999px) var(--global-mouse-y, -999px), rgba(255, 106, 0, 0.05), transparent 50%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Base Override */
@@ -778,4 +805,125 @@ html.dark-theme .hover\:border-slate-300:hover,
 html.dark-theme .hover\:border-slate-200:hover {
   border-color: var(--border-active) !important;
 }
+
+/* ── Custom Landing Page & Auth Component Overrides ──────────────────────── */
+
+/* Background Cream/White/Light Color Overrides */
+html.dark-theme .bg-\[\#FAF7F2\],
+html.dark-theme .bg-\[\#FAF7F2\]\/5,
+html.dark-theme .bg-\[\#FAF7F2\]\/10,
+html.dark-theme .bg-\[\#FAF7F2\]\/60,
+html.dark-theme .bg-\[\#FAF7F2\]\/80,
+html.dark-theme .bg-slate-50,
+html.dark-theme .bg-slate-50\/40,
+html.dark-theme .bg-slate-50\/50,
+html.dark-theme .bg-white\/95,
+html.dark-theme .bg-white\/80,
+html.dark-theme .bg-white\/65 {
+  background-color: var(--bg-elevated) !important;
+  background-image: none !important;
+}
+
+/* Specific Hover Background Overrides to prevent "becoming quite light" */
+html.dark-theme .hover\:bg-\[\#FAF7F2\]:hover,
+html.dark-theme .hover\:bg-\[\#FAF7F2\]\/60:hover,
+html.dark-theme .hover\:bg-slate-50:hover,
+html.dark-theme .hover\:bg-slate-100:hover,
+html.dark-theme .hover\:bg-white\/10:hover,
+html.dark-theme .group:hover .group-hover\:bg-\[\#FAF7F2\],
+html.dark-theme .group:hover .group-hover\:bg-slate-50 {
+  background-color: rgba(255, 106, 0, 0.06) !important;
+  background-image: none !important;
+}
+
+/* Border Color Overrides */
+html.dark-theme .border-\[\#EAE5DA\],
+html.dark-theme .border-\[\#EAE5DA\]\/20,
+html.dark-theme .border-\[\#EAE5DA\]\/30,
+html.dark-theme .border-b.border-\[\#EAE5DA\],
+html.dark-theme .border-b.border-\[\#EAE5DA\]\/20,
+html.dark-theme .border-t.border-\[\#EAE5DA\],
+html.dark-theme .border-t.border-\[\#EAE5DA\]\/20,
+html.dark-theme .border-r.border-\[\#EAE5DA\],
+html.dark-theme .border-l.border-\[\#EAE5DA\] {
+  border-color: var(--border-color) !important;
+}
+
+/* Primary Green Backgrounds -> Orange Neon Accent */
+html.dark-theme .bg-\[\#5F6B38\],
+html.dark-theme .bg-\[\#5F6B38\]\/5,
+html.dark-theme .bg-\[\#5F6B38\]\/10,
+html.dark-theme .bg-\[\#5F6B38\]\/20,
+html.dark-theme .hover\:bg-\[\#5F6B38\]:hover,
+html.dark-theme .hover\:bg-\[\#4F5A2F\]:hover,
+html.dark-theme .bg-indigo-600,
+html.dark-theme .bg-indigo-600\/20,
+html.dark-theme .bg-indigo-600\/10 {
+  background-color: var(--accent) !important;
+  background-image: none !important;
+  color: #FFFFFF !important;
+}
+
+/* Primary Green Borders -> Orange Active Border */
+html.dark-theme .border-\[\#5F6B38\],
+html.dark-theme .border-\[\#5F6B38\]\/10,
+html.dark-theme .border-\[\#5F6B38\]\/20,
+html.dark-theme .hover\:border-\[\#5F6B38\]:hover,
+html.dark-theme .group:hover .group-hover\:border-\[\#5F6B38\] {
+  border-color: var(--border-active) !important;
+}
+
+/* Text Selection Orange Highlight */
+html.dark-theme .selection\:bg-\[\#5F6B38\]\/10::selection,
+html.dark-theme .selection\:text-\[\#5F6B38\]::selection {
+  background-color: var(--accent-glow) !important;
+  color: var(--accent-hover) !important;
+}
+
+/* Active Section indicators / underlines */
+html.dark-theme .bg-\[\#5F6B38\] {
+  background-color: var(--accent) !important;
+}
+
+/* Primary text & headers */
+html.dark-theme .text-\[\#1D1D1D\],
+html.dark-theme .hover\:text-\[\#1D1D1D\]:hover {
+  color: var(--text-primary) !important;
+}
+
+/* Muted / Secondary texts */
+html.dark-theme .text-\[\#6B7280\],
+html.dark-theme .text-\[\#6B7280\]\/60,
+html.dark-theme .text-\[\#6B7280\]\/70,
+html.dark-theme .text-\[\#6B7280\]\/80,
+html.dark-theme .hover\:text-\[\#6B7280\]:hover {
+  color: var(--text-secondary) !important;
+}
+
+/* Olive Green texts -> Neon Orange Accent */
+html.dark-theme .text-\[\#5F6B38\],
+html.dark-theme .text-\[\#5F6B38\]\/80,
+html.dark-theme .text-\[\#5F6B38\]\/90,
+html.dark-theme .hover\:text-\[\#5F6B38\]:hover,
+html.dark-theme .group:hover .group-hover\:text-\[\#5F6B38\] {
+  color: var(--accent-hover) !important;
+}
+
+/* Shadow Glows for Cards & Buttons */
+html.dark-theme .hover\:shadow-\[0_8px_25px_rgba\(95\,107\,56\,0\.25\)\]:hover,
+html.dark-theme .hover\:shadow-\[0_8px_25px_rgba\(255\,255\,255\,0\.25\)\]:hover,
+html.dark-theme .shadow-\[0_8px_30px_rgba\(95\,107\,56\,0\.02\)\],
+html.dark-theme .hover\:shadow-\[0_15px_30px_rgba\(95\,107\,56\,0\.06\)\]:hover,
+html.dark-theme .hover\:shadow-\[0_20px_40px_rgba\(95\,107\,56\,0\.08\)\]:hover {
+  box-shadow: 0 4px 20px var(--accent-glow) !important;
+}
+
+/* Input elements focus state */
+html.dark-theme .focus\:ring-\[\#5F6B38\]\/10:focus {
+  --tw-ring-color: var(--accent-glow) !important;
+}
+html.dark-theme .focus\:border-\[\#5F6B38\]:focus {
+  border-color: var(--border-active) !important;
+}
+
 
