@@ -276,10 +276,12 @@ export const LandingPage: React.FC = () => {
 
   useEffect(() => {
     if (isDarkMode) {
-      document.documentElement.classList.add('dark');
+      document.documentElement.classList.add('dark', 'dark-theme');
+      document.documentElement.classList.remove('light-theme');
       localStorage.setItem('theme', 'dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove('dark', 'dark-theme');
+      document.documentElement.classList.add('light-theme');
       localStorage.setItem('theme', 'light');
     }
   }, [isDarkMode]);
