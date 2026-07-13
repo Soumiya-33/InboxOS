@@ -41,7 +41,12 @@ const GoogleIcon = () => (
 );
 
 export const RegisterForm: React.FC = () => {
-  const { registerWithGoogle, checkGoogleRegistration, error: authError, clearError } = useAuth();
+  const {
+    registerWithGoogle,
+    checkGoogleRegistration,
+    error: authError,
+    clearError,
+  } = useAuth();
   const navigate = useNavigate();
 
   const [googleConnected, setGoogleConnected] = useState(false);
@@ -51,7 +56,7 @@ export const RegisterForm: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +64,9 @@ export const RegisterForm: React.FC = () => {
 
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState<
+    string | null
+  >(null);
   const [isCapsLockOn, setIsCapsLockOn] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
 
@@ -75,8 +82,10 @@ export const RegisterForm: React.FC = () => {
     if (/[A-Z]/.test(password)) score += 1;
     if (/[0-9]/.test(password)) score += 1;
     if (/[^A-Za-z0-9]/.test(password)) score += 1;
-    if (score <= 2) return { label: 'Weak', score: 1, colorBg: 'var(--color-danger)' };
-    if (score <= 4) return { label: 'Medium', score: 2, colorBg: 'var(--color-pending)' };
+    if (score <= 2)
+      return { label: 'Weak', score: 1, colorBg: 'var(--color-danger)' };
+    if (score <= 4)
+      return { label: 'Medium', score: 2, colorBg: 'var(--color-pending)' };
     return { label: 'Strong', score: 3, colorBg: 'var(--color-success)' };
   };
 
@@ -101,11 +110,13 @@ export const RegisterForm: React.FC = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const tokenVal = await result.user.getIdToken();
-      
+
       // Check if already registered
       const check = await checkGoogleRegistration(tokenVal);
       if (check.isRegistered) {
-        setLocalError('This Google account is already registered. Please go to the Login page to sign in.');
+        setLocalError(
+          'This Google account is already registered. Please go to the Login page to sign in.'
+        );
         return;
       }
 
@@ -122,7 +133,7 @@ export const RegisterForm: React.FC = () => {
 
   const validate = () => {
     let isValid = true;
-    
+
     if (!username) {
       setUsernameError('Username is required');
       isValid = false;
@@ -178,32 +189,41 @@ export const RegisterForm: React.FC = () => {
       <div className="w-full space-y-6 text-left">
         {/* Welcome */}
         <div className="space-y-1.5 pb-2">
-          <h3 className="text-[36px] font-bold text-[#1D1D1D] tracking-tight leading-none flex items-center gap-2.5">
-            Create Account <UserCheck size={24} className="text-[#5F6B38]" />
+          <h3 className="text-[36px] font-bold text-[#1D1D1D] dark:text-zinc-100 tracking-tight leading-none flex items-center gap-2.5">
+            Create Account{' '}
+            <UserCheck
+              size={24}
+              className="text-[#5F6B38] dark:text-[#778b46]"
+            />
           </h3>
-          <p className="text-[16px] text-[#6B7280]">
+          <p className="text-[16px] text-[#6B7280] dark:text-zinc-400">
             Join the AI Inbox Operating System.
           </p>
         </div>
 
         {/* Auth Errors */}
         {(authError || localError) && (
-          <div className="flex items-center gap-3 p-4 bg-[#FFF0F0] border border-[#FCA5A5] rounded-[14px] text-[#EF4444] text-xs">
-            <AlertCircle size={16} className="shrink-0 text-[#EF4444]" />
-            <p className="leading-snug font-medium">{localError || authError}</p>
+          <div className="flex items-center gap-3 p-4 bg-[#FFF0F0] dark:bg-red-950/20 border border-[#FCA5A5] dark:border-red-900/30 rounded-[14px] text-[#EF4444] dark:text-red-400 text-xs">
+            <AlertCircle
+              size={16}
+              className="shrink-0 text-[#EF4444] dark:text-red-400"
+            />
+            <p className="leading-snug font-medium">
+              {localError || authError}
+            </p>
           </div>
         )}
 
         {!googleConnected ? (
           <div className="space-y-4">
-            <p className="text-[14px] text-[#6B7280]">
+            <p className="text-[14px] text-[#6B7280] dark:text-zinc-400">
               To sign up, first authenticate with your Google account:
             </p>
             <button
               type="button"
               disabled={googleLoading}
               onClick={handleConnectGoogle}
-              className="w-full h-[54px] flex items-center justify-center gap-3 bg-white border border-[#EAE5DA] rounded-[16px] text-[#1D1D1D] text-[15px] font-semibold transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] hover:bg-[#FAF7F2] disabled:opacity-50"
+              className="w-full h-[54px] flex items-center justify-center gap-3 bg-white dark:bg-zinc-900 border border-[#EAE5DA] dark:border-zinc-800 rounded-[16px] text-[#1D1D1D] dark:text-zinc-200 text-[15px] font-semibold transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] hover:bg-[#FAF7F2] dark:hover:bg-zinc-800 disabled:opacity-50"
             >
               {googleLoading ? (
                 <>
@@ -221,15 +241,17 @@ export const RegisterForm: React.FC = () => {
         ) : (
           <div className="space-y-4">
             {/* Google Identity Badge */}
-            <div className="p-3 bg-[#FAF7F2] border border-[#EAE5DA] rounded-[14px] flex items-center justify-between text-xs text-[#5F6B38] font-medium">
+            <div className="p-3 bg-[#FAF7F2] dark:bg-zinc-800/40 border border-[#EAE5DA] dark:border-zinc-850 rounded-[14px] flex items-center justify-between text-xs text-[#5F6B38] dark:text-[#778b46] font-medium">
               <div className="flex items-center gap-2">
                 <GoogleIcon />
-                <span>Connected as <strong>{googleEmail}</strong></span>
+                <span>
+                  Connected as <strong>{googleEmail}</strong>
+                </span>
               </div>
               <button
                 type="button"
                 onClick={() => setGoogleConnected(false)}
-                className="underline hover:text-[#4F5A2F]"
+                className="underline hover:text-[#4F5A2F] dark:hover:text-[#8ba256]"
               >
                 Change
               </button>
@@ -239,7 +261,7 @@ export const RegisterForm: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Username */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-[#374151] tracking-wide block">
+                <label className="text-xs font-semibold text-[#374151] dark:text-zinc-300 tracking-wide block">
                   Choose Username
                 </label>
                 <div className="relative">
@@ -255,10 +277,10 @@ export const RegisterForm: React.FC = () => {
                       if (usernameError) setUsernameError(null);
                     }}
                     disabled={isLoading}
-                    className={`w-full h-[54px] pl-11 pr-4 text-[15px] bg-[#FCFCFE] border rounded-[14px] text-[#1D1D1D] placeholder-[#9CA3AF] outline-none transition-all duration-200 ${
+                    className={`w-full h-[54px] pl-11 pr-4 text-[15px] bg-[#FCFCFE] dark:bg-zinc-900 border rounded-[14px] text-[#1D1D1D] dark:text-zinc-200 placeholder-[#9CA3AF] dark:placeholder-zinc-500 outline-none transition-all duration-200 ${
                       usernameError
                         ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-4 focus:ring-[#EF4444]/10'
-                        : 'border-[#EAE5DA] focus:border-[#5F6B38] focus:ring-4 focus:ring-[#5F6B38]/10'
+                        : 'border-[#EAE5DA] dark:border-zinc-800 focus:border-[#5F6B38] dark:focus:border-[#778b46] focus:ring-4 focus:ring-[#5F6B38]/10'
                     }`}
                   />
                 </div>
@@ -272,7 +294,7 @@ export const RegisterForm: React.FC = () => {
 
               {/* Password */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-[#374151] tracking-wide block">
+                <label className="text-xs font-semibold text-[#374151] dark:text-zinc-300 tracking-wide block">
                   Set Password
                 </label>
                 <div className="relative">
@@ -289,26 +311,30 @@ export const RegisterForm: React.FC = () => {
                       if (passwordError) setPasswordError(null);
                     }}
                     disabled={isLoading}
-                    className={`w-full h-[54px] pl-11 pr-12 text-[15px] bg-[#FCFCFE] border rounded-[14px] text-[#1D1D1D] placeholder-[#9CA3AF] outline-none transition-all duration-200 ${
+                    className={`w-full h-[54px] pl-11 pr-12 text-[15px] bg-[#FCFCFE] dark:bg-zinc-900 border rounded-[14px] text-[#1D1D1D] dark:text-zinc-200 placeholder-[#9CA3AF] dark:placeholder-zinc-500 outline-none transition-all duration-200 ${
                       passwordError
                         ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-4 focus:ring-[#EF4444]/10'
-                        : 'border-[#EAE5DA] focus:border-[#5F6B38] focus:ring-4 focus:ring-[#5F6B38]/10'
+                        : 'border-[#EAE5DA] dark:border-zinc-800 focus:border-[#5F6B38] dark:focus:border-[#778b46] focus:ring-4 focus:ring-[#5F6B38]/10'
                     }`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     tabIndex={-1}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#1D1D1D] transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6B7280] dark:text-zinc-400 hover:text-[#1D1D1D] dark:hover:text-zinc-200 transition-colors"
                   >
-                    {showPassword ? <EyeOff size={16} strokeWidth={1.5} /> : <Eye size={16} strokeWidth={1.5} />}
+                    {showPassword ? (
+                      <EyeOff size={16} strokeWidth={1.5} />
+                    ) : (
+                      <Eye size={16} strokeWidth={1.5} />
+                    )}
                   </button>
                 </div>
 
                 {/* Password Strength */}
                 {password && (
                   <div className="space-y-1.5 mt-2.5">
-                    <div className="flex justify-between text-[10px] font-bold text-[#6B7280]">
+                    <div className="flex justify-between text-[10px] font-bold text-[#6B7280] dark:text-zinc-400">
                       <span>Password Strength</span>
                       <span
                         className="font-semibold"
@@ -317,8 +343,8 @@ export const RegisterForm: React.FC = () => {
                             strength.colorBg === 'var(--color-danger)'
                               ? '#EF4444'
                               : strength.colorBg === 'var(--color-pending)'
-                              ? '#F59E0B'
-                              : '#22C55E',
+                                ? '#F59E0B'
+                                : '#22C55E',
                         }}
                       >
                         {strength.label}
@@ -330,14 +356,21 @@ export const RegisterForm: React.FC = () => {
                           strength.colorBg === 'var(--color-danger)'
                             ? '#EF4444'
                             : strength.colorBg === 'var(--color-pending)'
-                            ? '#F59E0B'
-                            : '#22C55E';
+                              ? '#F59E0B'
+                              : '#22C55E';
                         return (
                           <div
                             key={level}
                             className="h-1.5 flex-1 rounded-full transition-all duration-300"
                             style={{
-                              backgroundColor: strength.score >= level ? color : '#EAE5DA',
+                              backgroundColor:
+                                strength.score >= level
+                                  ? color
+                                  : document.documentElement.classList.contains(
+                                        'dark'
+                                      )
+                                    ? '#27272a'
+                                    : '#EAE5DA',
                             }}
                           />
                         );
@@ -362,7 +395,7 @@ export const RegisterForm: React.FC = () => {
 
               {/* Confirm Password */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-[#374151] tracking-wide block">
+                <label className="text-xs font-semibold text-[#374151] dark:text-zinc-300 tracking-wide block">
                   Confirm Password
                 </label>
                 <div className="relative">
@@ -379,19 +412,23 @@ export const RegisterForm: React.FC = () => {
                       if (confirmPasswordError) setConfirmPasswordError(null);
                     }}
                     disabled={isLoading}
-                    className={`w-full h-[54px] pl-11 pr-12 text-[15px] bg-[#FCFCFE] border rounded-[14px] text-[#1D1D1D] placeholder-[#9CA3AF] outline-none transition-all duration-200 ${
+                    className={`w-full h-[54px] pl-11 pr-12 text-[15px] bg-[#FCFCFE] dark:bg-zinc-900 border rounded-[14px] text-[#1D1D1D] dark:text-zinc-200 placeholder-[#9CA3AF] dark:placeholder-zinc-500 outline-none transition-all duration-200 ${
                       confirmPasswordError
                         ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-4 focus:ring-[#EF4444]/10'
-                        : 'border-[#EAE5DA] focus:border-[#5F6B38] focus:ring-4 focus:ring-[#5F6B38]/10'
+                        : 'border-[#EAE5DA] dark:border-zinc-800 focus:border-[#5F6B38] dark:focus:border-[#778b46] focus:ring-4 focus:ring-[#5F6B38]/10'
                     }`}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     tabIndex={-1}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#1D1D1D] transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6B7280] dark:text-zinc-400 hover:text-[#1D1D1D] dark:hover:text-zinc-200 transition-colors"
                   >
-                    {showConfirmPassword ? <EyeOff size={16} strokeWidth={1.5} /> : <Eye size={16} strokeWidth={1.5} />}
+                    {showConfirmPassword ? (
+                      <EyeOff size={16} strokeWidth={1.5} />
+                    ) : (
+                      <Eye size={16} strokeWidth={1.5} />
+                    )}
                   </button>
                 </div>
                 {confirmPasswordError && (
@@ -406,7 +443,7 @@ export const RegisterForm: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-[54px] flex items-center justify-center gap-2 bg-[#5F6B38] hover:bg-[#4F5A2F] text-white text-[15px] font-semibold rounded-[16px] transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_8px_25px_rgba(95,107,56,0.25)] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none mt-4"
+                className="w-full h-[54px] flex items-center justify-center gap-2 bg-[#5F6B38] dark:bg-[#778b46] hover:bg-[#4F5A2F] dark:hover:bg-[#8ba256] text-white text-[15px] font-semibold rounded-[16px] transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_8px_25px_rgba(95,107,56,0.25)] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none mt-4"
               >
                 {isLoading ? (
                   <>
@@ -425,14 +462,14 @@ export const RegisterForm: React.FC = () => {
         )}
 
         {/* Footer */}
-        <div className="text-center pt-5 border-t border-[#EAE5DA] mt-3">
-          <p className="text-xs text-[#6B7280]">
+        <div className="text-center pt-5 border-t border-[#EAE5DA] dark:border-zinc-800 mt-3">
+          <p className="text-xs text-[#6B7280] dark:text-zinc-400">
             Join thousands of users running email as an operating system.
           </p>
           <Link
             to="/login"
             onClick={clearError}
-            className="text-xs font-semibold text-[#5F6B38] hover:underline mt-2 block"
+            className="text-xs font-semibold text-[#5F6B38] dark:text-[#778b46] hover:underline mt-2 block"
           >
             Sign In
           </Link>

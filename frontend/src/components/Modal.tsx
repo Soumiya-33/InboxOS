@@ -27,7 +27,8 @@ export const Modal: React.FC<ModalProps> = ({
       previousActiveElement.current = document.activeElement as HTMLElement;
 
       if (modalRef.current) {
-        const focusableElements = modalRef.current.querySelectorAll(FOCUSABLE_SELECTOR);
+        const focusableElements =
+          modalRef.current.querySelectorAll(FOCUSABLE_SELECTOR);
         if (focusableElements.length > 0) {
           (focusableElements[0] as HTMLElement).focus();
         } else {
@@ -44,13 +45,22 @@ export const Modal: React.FC<ModalProps> = ({
           const focusable = Array.from(
             modalRef.current.querySelectorAll(FOCUSABLE_SELECTOR)
           ) as HTMLElement[];
-          if (focusable.length === 0) { e.preventDefault(); return; }
+          if (focusable.length === 0) {
+            e.preventDefault();
+            return;
+          }
           const first = focusable[0];
           const last = focusable[focusable.length - 1];
           if (e.shiftKey) {
-            if (document.activeElement === first) { last.focus(); e.preventDefault(); }
+            if (document.activeElement === first) {
+              last.focus();
+              e.preventDefault();
+            }
           } else {
-            if (document.activeElement === last) { first.focus(); e.preventDefault(); }
+            if (document.activeElement === last) {
+              first.focus();
+              e.preventDefault();
+            }
           }
         }
       };
@@ -78,7 +88,10 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto animate-fadeIn"
-      style={{ backgroundColor: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}
+      style={{
+        backgroundColor: 'rgba(0,0,0,0.35)',
+        backdropFilter: 'blur(4px)',
+      }}
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
@@ -121,15 +134,21 @@ export const Modal: React.FC<ModalProps> = ({
               color: 'var(--color-muted)',
             }}
             aria-label="Close modal"
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-danger)';
-              (e.currentTarget as HTMLElement).style.color = 'var(--color-danger)';
-              (e.currentTarget as HTMLElement).style.backgroundColor = '#FEF0EE';
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor =
+                'var(--color-danger)';
+              (e.currentTarget as HTMLElement).style.color =
+                'var(--color-danger)';
+              (e.currentTarget as HTMLElement).style.backgroundColor =
+                '#FEF0EE';
             }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'var(--color-border)';
-              (e.currentTarget as HTMLElement).style.color = 'var(--color-muted)';
-              (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--color-surface)';
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor =
+                'var(--color-border)';
+              (e.currentTarget as HTMLElement).style.color =
+                'var(--color-muted)';
+              (e.currentTarget as HTMLElement).style.backgroundColor =
+                'var(--color-surface)';
             }}
           >
             <X size={15} />

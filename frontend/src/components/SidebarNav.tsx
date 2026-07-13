@@ -1,12 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import {
-  Inbox,
-  Settings,
-  Plus,
-  X,
-  Sparkles,
-} from 'lucide-react';
+import { Inbox, Settings, Plus, X, Sparkles } from 'lucide-react';
 import { useCompose } from '../context/ComposeContext';
 
 export interface SidebarNavProps {
@@ -44,11 +38,17 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   const isItemActive = (path: string) => {
     if (path.includes('tab=integrations')) {
       const searchParams = new URLSearchParams(location.search);
-      return location.pathname.startsWith('/dashboard/settings') && searchParams.get('tab') === 'integrations';
+      return (
+        location.pathname.startsWith('/dashboard/settings') &&
+        searchParams.get('tab') === 'integrations'
+      );
     }
     if (path === '/dashboard/settings') {
       const searchParams = new URLSearchParams(location.search);
-      return location.pathname.startsWith('/dashboard/settings') && searchParams.get('tab') !== 'integrations';
+      return (
+        location.pathname.startsWith('/dashboard/settings') &&
+        searchParams.get('tab') !== 'integrations'
+      );
     }
     if (path === '/dashboard') {
       return (
@@ -66,9 +66,14 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full flex-1" style={{ backgroundColor: 'var(--color-surface)' }}>
+    <div
+      className="flex flex-col h-full flex-1 dark:bg-zinc-900"
+      style={{ backgroundColor: 'var(--color-surface)' }}
+    >
       {/* ── Brand Logo ──────────────────────────────────────────────────── */}
-      <div className={`flex items-center justify-between ${isMobile ? 'pb-4 mb-2' : 'px-5 py-5'}`}>
+      <div
+        className={`flex items-center justify-between ${isMobile ? 'pb-4 mb-2' : 'px-5 py-5'}`}
+      >
         <div className="flex items-center gap-2.5">
           {/* Logo mark: olive rounded */}
           <div
@@ -79,13 +84,16 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           </div>
           <div className="text-left">
             <h1
-              className="text-[15px] leading-none font-bold tracking-tight"
-              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+              className="text-[15px] leading-none font-bold tracking-tight dark:text-zinc-100"
+              style={{
+                fontFamily: 'var(--font-display)',
+                color: 'var(--color-ink)',
+              }}
             >
               InboxOS
             </h1>
             <span
-              className="text-[10px] font-medium tracking-wide block mt-0.5"
+              className="text-[10px] font-medium tracking-wide block mt-0.5 dark:text-zinc-400"
               style={{ color: 'var(--color-muted)' }}
             >
               Decision Layer
@@ -96,8 +104,11 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         {isMobile && onCloseMobileMenu && (
           <button
             onClick={onCloseMobileMenu}
-            className="p-2 flex items-center justify-center rounded-lg transition-all"
-            style={{ border: '1px solid var(--color-border)', color: 'var(--color-muted)' }}
+            className="p-2 flex items-center justify-center rounded-lg transition-all dark:border-zinc-700 dark:text-zinc-400"
+            style={{
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-muted)',
+            }}
             aria-label="Close menu"
           >
             <X size={16} />
@@ -120,9 +131,11 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
       </div>
 
       {/* ── Navigation Links ────────────────────────────────────────────── */}
-      <nav className={`flex-1 overflow-y-auto text-left ${isMobile ? '' : 'px-3'}`}>
+      <nav
+        className={`flex-1 overflow-y-auto text-left ${isMobile ? '' : 'px-3'}`}
+      >
         <div
-          className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-2"
+          className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-2 dark:text-zinc-500"
           style={{ color: 'var(--color-muted)' }}
         >
           Workspace
@@ -135,36 +148,28 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
                 key={item.path}
                 to={item.path}
                 onClick={handleLinkClick}
-                className="w-full flex items-center justify-between px-3 py-2.5 rounded-[10px] transition-all duration-150 text-[13px] font-medium"
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-[10px] transition-all duration-150 text-[13px] font-medium ${
+                  active
+                    ? 'bg-[rgba(93,107,47,0.12)] text-[var(--color-primary)] font-semibold'
+                    : 'text-[var(--color-muted)] hover:bg-[rgba(93,107,47,0.05)] dark:hover:bg-zinc-800/40 hover:text-[var(--color-ink)]'
+                }`}
                 style={{
-                  backgroundColor: active ? 'rgba(93,107,47,.10)' : 'transparent',
-                  color: active ? 'var(--color-primary)' : 'var(--color-muted)',
                   fontFamily: 'var(--font-body)',
-                }}
-                onMouseEnter={e => {
-                  if (!active) {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(93,107,47,.05)';
-                    (e.currentTarget as HTMLElement).style.color = 'var(--color-ink)';
-                  }
-                }}
-                onMouseLeave={e => {
-                  if (!active) {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-                    (e.currentTarget as HTMLElement).style.color = 'var(--color-muted)';
-                  }
                 }}
               >
                 <div className="flex items-center gap-2.5">
-                  <span style={{ opacity: active ? 1 : 0.7 }}>{item.icon}</span>
+                  <span className={`${active ? 'opacity-100' : 'opacity-70'}`}>
+                    {item.icon}
+                  </span>
                   <span>{item.label}</span>
                 </div>
                 {item.count !== undefined && item.count > 0 && (
                   <span
-                    className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
-                    style={{
-                      backgroundColor: active ? 'var(--color-primary)' : 'rgba(93,107,47,.12)',
-                      color: active ? '#fff' : 'var(--color-primary)',
-                    }}
+                    className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
+                      active
+                        ? 'bg-[var(--color-primary)] text-white'
+                        : 'bg-[rgba(93,107,47,0.12)] text-[var(--color-primary)]'
+                    }`}
                   >
                     {item.count}
                   </span>
@@ -174,8 +179,6 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
           })}
         </div>
       </nav>
-
-
     </div>
   );
 };

@@ -61,7 +61,8 @@ export const EmailRow = React.memo(function EmailRow({
     email.body ||
     'No summary generated.';
 
-  const rawDate = email.received_at || email.createdAt || email.received || 'Recently';
+  const rawDate =
+    email.received_at || email.createdAt || email.received || 'Recently';
   const displayDate = React.useMemo(() => {
     if (!rawDate) return '';
     if (
@@ -73,7 +74,10 @@ export const EmailRow = React.memo(function EmailRow({
       return rawDate;
     try {
       const date = new Date(rawDate);
-      return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+      return date.toLocaleDateString(undefined, {
+        month: 'short',
+        day: 'numeric',
+      });
     } catch {
       return rawDate;
     }
@@ -82,22 +86,34 @@ export const EmailRow = React.memo(function EmailRow({
   // Premium soft badge styles — no harsh black borders
   const getCategoryStyle = (cat: string): React.CSSProperties => {
     switch (cat) {
-      case 'urgent':     return { backgroundColor: 'rgba(217,104,87,.12)', color: '#D96857' };
-      case 'job':        return { backgroundColor: 'rgba(139,92,246,.12)', color: '#7C3AED' };
-      case 'finance':    return { backgroundColor: 'rgba(63,167,106,.12)', color: '#3FA76A' };
-      case 'meeting':    return { backgroundColor: 'rgba(59,130,246,.10)', color: '#3B82F6' };
-      case 'otp':        return { backgroundColor: 'rgba(217,164,65,.12)', color: '#D9A441' };
-      case 'newsletter': return { backgroundColor: 'rgba(112,112,112,.10)', color: '#707070' };
-      case 'support':    return { backgroundColor: 'rgba(59,130,246,.10)', color: '#3B82F6' };
-      case 'academic':   return { backgroundColor: 'rgba(93,107,47,.12)', color: '#5D6B2F' };
-      case 'work':       return { backgroundColor: 'rgba(93,107,47,.12)', color: '#5D6B2F' };
-      default:           return { backgroundColor: 'rgba(228,184,92,.12)', color: '#C49030' };
+      case 'urgent':
+        return { backgroundColor: 'rgba(217,104,87,.12)', color: '#D96857' };
+      case 'job':
+        return { backgroundColor: 'rgba(139,92,246,.12)', color: '#7C3AED' };
+      case 'finance':
+        return { backgroundColor: 'rgba(63,167,106,.12)', color: '#3FA76A' };
+      case 'meeting':
+        return { backgroundColor: 'rgba(59,130,246,.10)', color: '#3B82F6' };
+      case 'otp':
+        return { backgroundColor: 'rgba(217,164,65,.12)', color: '#D9A441' };
+      case 'newsletter':
+        return { backgroundColor: 'rgba(112,112,112,.10)', color: '#707070' };
+      case 'support':
+        return { backgroundColor: 'rgba(59,130,246,.10)', color: '#3B82F6' };
+      case 'academic':
+        return { backgroundColor: 'rgba(93,107,47,.12)', color: '#5D6B2F' };
+      case 'work':
+        return { backgroundColor: 'rgba(93,107,47,.12)', color: '#5D6B2F' };
+      default:
+        return { backgroundColor: 'rgba(228,184,92,.12)', color: '#C49030' };
     }
   };
 
   const getPriorityStyle = (score: number): React.CSSProperties => {
-    if (score > 85) return { backgroundColor: 'rgba(217,104,87,.12)', color: '#D96857' };
-    if (score > 65) return { backgroundColor: 'rgba(217,164,65,.12)', color: '#D9A441' };
+    if (score > 85)
+      return { backgroundColor: 'rgba(217,104,87,.12)', color: '#D96857' };
+    if (score > 65)
+      return { backgroundColor: 'rgba(217,164,65,.12)', color: '#D9A441' };
     return { backgroundColor: 'rgba(112,112,112,.08)', color: '#9E9585' };
   };
 
@@ -110,19 +126,26 @@ export const EmailRow = React.memo(function EmailRow({
         border: isUnread
           ? '1px solid rgba(93,107,47,.20)'
           : '1px solid var(--color-border)',
-        boxShadow: isUnread ? '0 2px 12px rgba(93,107,47,.08)' : 'var(--shadow-sm)',
+        boxShadow: isUnread
+          ? '0 2px 12px rgba(93,107,47,.08)'
+          : 'var(--shadow-sm)',
         marginBottom: '6px',
       }}
-      onMouseEnter={e => {
+      onMouseEnter={(e) => {
         (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-card)';
         (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
-        (e.currentTarget as HTMLElement).style.borderColor = 'rgba(93,107,47,.25)';
+        (e.currentTarget as HTMLElement).style.borderColor =
+          'rgba(93,107,47,.25)';
       }}
-      onMouseLeave={e => {
+      onMouseLeave={(e) => {
         const el = e.currentTarget as HTMLElement;
-        el.style.boxShadow = isUnread ? '0 2px 12px rgba(93,107,47,.08)' : 'var(--shadow-sm)';
+        el.style.boxShadow = isUnread
+          ? '0 2px 12px rgba(93,107,47,.08)'
+          : 'var(--shadow-sm)';
         el.style.transform = '';
-        el.style.borderColor = isUnread ? 'rgba(93,107,47,.20)' : 'var(--color-border)';
+        el.style.borderColor = isUnread
+          ? 'rgba(93,107,47,.20)'
+          : 'var(--color-border)';
       }}
     >
       {/* Unread indicator */}
@@ -158,7 +181,10 @@ export const EmailRow = React.memo(function EmailRow({
                 </span>
                 <span
                   className="text-[11px] truncate hidden sm:inline"
-                  style={{ color: 'var(--color-muted)', fontFamily: 'var(--font-mono)' }}
+                  style={{
+                    color: 'var(--color-muted)',
+                    fontFamily: 'var(--font-mono)',
+                  }}
                 >
                   &lt;{senderEmail}&gt;
                 </span>
@@ -181,7 +207,12 @@ export const EmailRow = React.memo(function EmailRow({
               </div>
             </div>
 
-            <span className="hidden md:inline" style={{ color: 'var(--color-border)', fontSize: 10 }}>•</span>
+            <span
+              className="hidden md:inline"
+              style={{ color: 'var(--color-border)', fontSize: 10 }}
+            >
+              •
+            </span>
 
             {/* Subject */}
             <h4
@@ -206,7 +237,10 @@ export const EmailRow = React.memo(function EmailRow({
             {email.similarity !== undefined && (
               <span
                 className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
-                style={{ backgroundColor: 'rgba(63,167,106,.12)', color: 'var(--color-success)' }}
+                style={{
+                  backgroundColor: 'rgba(63,167,106,.12)',
+                  color: 'var(--color-success)',
+                }}
               >
                 {(email.similarity * 100).toFixed(0)}% Match
               </span>
@@ -240,7 +274,10 @@ export const EmailRow = React.memo(function EmailRow({
             {priorityScore > 85 && (
               <span
                 className="text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1"
-                style={{ backgroundColor: 'rgba(217,104,87,.12)', color: '#D96857' }}
+                style={{
+                  backgroundColor: 'rgba(217,104,87,.12)',
+                  color: '#D96857',
+                }}
               >
                 <ShieldAlert size={9} />
                 <span>Urgent</span>
