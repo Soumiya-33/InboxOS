@@ -115,7 +115,13 @@ export async function syncDigestSchedule(userId: string): Promise<void> {
     // 2. Query and clear any existing repeatable digest jobs for this user
     const repeatableJobs = await digestQueue.getRepeatableJobs();
     for (const job of repeatableJobs) {
-      if (job.name.startsWith(`digest-`) && job.name.endsWith(`-${userId}`)) {
+      if (
+        job &&
+        job.name &&
+        typeof job.name === 'string' &&
+        job.name.startsWith(`digest-`) &&
+        job.name.endsWith(`-${userId}`)
+      ) {
         logger.info(`[DigestScheduler] Removing repeatable job: ${job.key}`);
         await digestQueue.removeRepeatableByKey(job.key);
       }
@@ -157,8 +163,8 @@ export async function syncDigestSchedule(userId: string): Promise<void> {
     }
   } catch (err: any) {
     logger.error(
-      `[DigestScheduler] Failed to sync schedule for user ${userId}:`,
-      err.message || err
+      `[DigestScheduler] Failed to sync schedule for user ${userId}: ${err.message || err}`,
+      { stack: err.stack }
     );
   }
 }
