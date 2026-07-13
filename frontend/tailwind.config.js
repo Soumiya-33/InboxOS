@@ -8,6 +8,9 @@ export default {
   theme: {
     extend: {
       colors: {
+        'bg-base': 'var(--bg-base, #080b14)',
+        'bg-elevated': 'var(--bg-elevated, #111827)',
+        'accent': 'var(--accent, #6366f1)',
         // Neubrutalism palette
         'neu-bg': '#F5EFDC',
         'neu-surface': '#FFFFFF',

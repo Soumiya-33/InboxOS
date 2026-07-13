@@ -1831,6 +1831,16 @@ export const LandingPage: React.FC = () => {
                 SDK.
               </p>
 
+            <div className="flex gap-3 pt-2">
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3 rounded-xl bg-slate-900 text-white font-semibold text-xs transition-all hover:bg-slate-800 flex items-center justify-center gap-2"
+              >
+                <GithubIcon size={14} />
+                <span>Explore GitHub Repository</span>
+              </a>
               <div className="flex gap-3 pt-2">
                 <a
                   href="https://github.com"
@@ -2251,6 +2261,7 @@ export const LandingPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 max-w-md mx-auto">
               <button
                 onClick={() => navigate('/login')}
+                className="w-full sm:w-auto px-6 py-3.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-2xl transition-all shadow-lg active:scale-98"
                 className="w-full sm:w-auto h-[48px] px-6 text-[15px] font-semibold text-[#5F6B38] bg-white hover:bg-slate-50 rounded-[16px] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(255,255,255,0.25)] active:scale-95 flex items-center justify-center"
               >
                 Get Started Free

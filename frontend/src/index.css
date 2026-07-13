@@ -463,3 +463,319 @@ html.dark ::-webkit-scrollbar-thumb {
 html.dark ::-webkit-scrollbar-thumb:hover {
   background: #52525b;
 }
+
+/* ==========================================================================
+   PREMIUM FUTURISTIC DARK THEME (BLACK & ORANGE NEON AESTHETIC)
+   ========================================================================== */
+
+html.dark-theme {
+  --bg-base: #050505;
+  --bg-elevated: #0B0B0B;
+  --accent: #FF6A00;
+  --accent-hover: #FF8C32;
+  --accent-light: #FF8C32;
+  --accent-glow: rgba(255, 106, 0, 0.35);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(255, 140, 50, 0.30);
+  --text-primary: #FFFFFF;
+  --text-secondary: #C2C2C2;
+  --text-muted: #7A7A7A;
+  
+  color-scheme: dark;
+}
+
+/* Ambient Radial Glow Background */
+html.dark-theme body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at 10% 20%, rgba(255, 106, 0, 0.03) 0%, transparent 50%),
+              radial-gradient(circle at 90% 80%, rgba(255, 140, 50, 0.02) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Base Override */
+html.dark-theme body {
+  background-color: var(--bg-base) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Background Layout Overrides */
+html.dark-theme .bg-\[\#fafafa\],
+html.dark-theme .bg-white,
+html.dark-theme .bg-slate-50,
+html.dark-theme .bg-slate-50\/50,
+html.dark-theme .bg-slate-100,
+html.dark-theme .bg-slate-200,
+html.dark-theme .bg-gray-50,
+html.dark-theme .bg-gray-100,
+html.dark-theme .bg-gray-200,
+html.dark-theme .bg-indigo-50,
+html.dark-theme .bg-indigo-50\/50,
+html.dark-theme .bg-indigo-50\/40,
+html.dark-theme .bg-indigo-50\/30,
+html.dark-theme .bg-blue-50,
+html.dark-theme .bg-emerald-50,
+html.dark-theme .bg-\[\#09090F\] {
+  background-color: var(--bg-elevated) !important;
+  background-image: none !important;
+}
+
+/* Glassmorphism Overrides */
+html.dark-theme .glass,
+html.dark-theme .bg-white\/\[0\.02\] {
+  background: rgba(18, 18, 18, 0.88) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-color: var(--border-color) !important;
+}
+
+html.dark-theme .glass-panel,
+html.dark-theme .bg-white\/3,
+html.dark-theme .bg-white\/5,
+html.dark-theme .bg-white\/60,
+html.dark-theme .bg-white\/\[0\.05\] {
+  background: rgba(18, 18, 18, 0.82) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-color: var(--border-color) !important;
+}
+
+html.dark-theme .bg-\[\#131625\],
+html.dark-theme .bg-\[\#1a1d2e\],
+html.dark-theme .bg-bg-elevated {
+  background-color: var(--bg-elevated) !important;
+}
+
+/* Text Color Overrides */
+html.dark-theme .text-slate-900,
+html.dark-theme .text-slate-800,
+html.dark-theme .text-slate-700,
+html.dark-theme .text-gray-900,
+html.dark-theme .text-gray-800 {
+  color: var(--text-primary) !important;
+}
+
+html.dark-theme .text-slate-600,
+html.dark-theme .text-slate-500,
+html.dark-theme .text-gray-600,
+html.dark-theme .text-gray-500 {
+  color: var(--text-secondary) !important;
+}
+
+html.dark-theme .text-slate-400,
+html.dark-theme .text-gray-400 {
+  color: var(--text-muted) !important;
+}
+
+/* Accent Indigo Replaced by Accent Orange */
+html.dark-theme .text-indigo-600,
+html.dark-theme .text-indigo-500,
+html.dark-theme .text-indigo-400,
+html.dark-theme .text-indigo-400\/80,
+html.dark-theme .text-violet-600,
+html.dark-theme .text-accent,
+html.dark-theme .text-\[\#6D5DF6\],
+html.dark-theme .text-\[\#5B7CFF\] {
+  color: var(--accent-hover) !important;
+}
+
+/* Glow Elements Overrides */
+html.dark-theme .glow-accent,
+html.dark-theme .shadow-indigo-600\/10,
+html.dark-theme .shadow-\[0_0_20px_rgba\(109\,93\,246\,0\.3\)\],
+html.dark-theme .shadow-\[0_0_20px_rgba\(109\,93\,246\,0\.2\)\],
+html.dark-theme .shadow-\[0_0_15px_rgba\(109\,93\,246\,0\.15\)\] {
+  box-shadow: 0 0 20px var(--accent-glow) !important;
+}
+
+html.dark-theme .glow-accent-hover:hover,
+html.dark-theme .hover\:shadow-indigo-600\/25:hover,
+html.dark-theme .hover\:shadow-\[0_0_25px_rgba\(109\,93\,246\,0\.3\)\]:hover,
+html.dark-theme .shadow-\[0_4px_12px_rgba\(99\,102\,241\,0\.15\)\] {
+  box-shadow: 0 4px 20px var(--accent-glow) !important;
+}
+
+html.dark-theme .glass-hover:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: var(--border-active) !important;
+  box-shadow: 0 4px 20px -2px var(--accent-glow) !important;
+}
+
+/* Border Overrides */
+html.dark-theme .border-slate-200,
+html.dark-theme .border-slate-200\/60,
+html.dark-theme .border-slate-200\/50,
+html.dark-theme .border-slate-100,
+html.dark-theme .border-indigo-100,
+html.dark-theme .border-indigo-200,
+html.dark-theme .border-white\/5,
+html.dark-theme .border-white\/10,
+html.dark-theme .border-white\/\[0\.04\],
+html.dark-theme .border-white\/\[0\.05\],
+html.dark-theme .border-white\/8,
+html.dark-theme .border-emerald-50\/20,
+html.dark-theme .border-emerald-500\/20,
+html.dark-theme .border-rose-500\/20,
+html.dark-theme .border-rose-500\/25 {
+  border-color: var(--border-color) !important;
+}
+
+/* Active Nav State border */
+html.dark-theme .border-accent {
+  border-left-color: var(--accent) !important;
+}
+
+/* Active navigation item gradient fill */
+html.dark-theme .bg-gradient-to-r.from-indigo-600\/30.to-purple-600\/20 {
+  background: linear-gradient(to right, rgba(255, 106, 0, 0.15), rgba(255, 140, 50, 0.05)) !important;
+  color: #FFFFFF !important;
+  border-left-color: var(--accent) !important;
+}
+
+/* Buttons & Gradient Buttons */
+html.dark-theme .bg-indigo-600,
+html.dark-theme .bg-gradient-to-r.from-\[\#6D5DF6\].to-\[\#5B7CFF\],
+html.dark-theme .bg-gradient-to-tr.from-indigo-600.to-violet-600,
+html.dark-theme .bg-gradient-to-tr.from-indigo-500.to-purple-600 {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%) !important;
+  color: #FFFFFF !important;
+}
+
+html.dark-theme .hover\:bg-indigo-500:hover,
+html.dark-theme .bg-indigo-600:hover,
+html.dark-theme .bg-indigo-500:hover {
+  background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent) 100%) !important;
+  color: #FFFFFF !important;
+}
+
+/* Custom ambient glows in Landing Page & Auth Layout */
+html.dark-theme .bg-gradient-to-tr.from-indigo-500\/10.to-violet-500\/5,
+html.dark-theme .bg-gradient-to-tr.from-\[\#6D5DF6\]\/10.to-\[\#5B7CFF\]\/5,
+html.dark-theme .bg-\[\#5B7CFF\]\/5,
+html.dark-theme .bg-indigo-500\/5,
+html.dark-theme .bg-indigo-500\/10 {
+  background: radial-gradient(circle, rgba(255, 106, 0, 0.08) 0%, rgba(255, 140, 50, 0.02) 70%, transparent 100%) !important;
+}
+
+/* Mouse follow radial glow inside AuthLayout */
+html.dark-theme [style*="radial-gradient(600px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(109, 93, 246, 0.07), transparent 40%)"] {
+  background: radial-gradient(600px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 106, 0, 0.12), transparent 45%) !important;
+}
+
+/* Forms & Input Elements */
+html.dark-theme input[type="text"],
+html.dark-theme input[type="email"],
+html.dark-theme input[type="password"],
+html.dark-theme input[type="url"],
+html.dark-theme select,
+html.dark-theme textarea {
+  background-color: rgba(18, 18, 18, 0.9) !important;
+  color: #FFFFFF !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+html.dark-theme input:focus,
+html.dark-theme select:focus,
+html.dark-theme textarea:focus,
+html.dark-theme .focus\:border-indigo-500\/40:focus,
+html.dark-theme .focus\:border-\[\#6D5DF6\]\/40:focus {
+  border-color: var(--border-active) !important;
+  box-shadow: 0 0 0 1px var(--border-active), 0 0 8px var(--accent-glow) !important;
+}
+
+/* Select option background fix */
+html.dark-theme select option {
+  background-color: #0B0B0B !important;
+  color: #FFFFFF !important;
+}
+
+/* Checkboxes, Radios, Toggles & Range sliders */
+html.dark-theme input[type="checkbox"],
+html.dark-theme input[type="radio"] {
+  accent-color: var(--accent) !important;
+}
+
+html.dark-theme input[type="range"] {
+  accent-color: var(--accent) !important;
+}
+
+/* Scrollbars */
+html.dark-theme ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+html.dark-theme ::-webkit-scrollbar-thumb {
+  background: rgba(255, 106, 0, 0.25) !important;
+}
+html.dark-theme ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 106, 0, 0.45) !important;
+}
+
+/* Charts, Graphs & Widgets */
+html.dark-theme .bg-indigo-500\/30 {
+  background-color: rgba(255, 106, 0, 0.15) !important;
+}
+
+html.dark-theme .hover\:bg-indigo-500:hover {
+  background-color: var(--accent-hover) !important;
+}
+
+/* Landing Page Navigation styling */
+html.dark-theme header.bg-white\/80 {
+  background-color: rgba(11, 11, 11, 0.8) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+/* Drawer / Mobile Menu */
+html.dark-theme .bg-white.border-b.border-slate-200 {
+  background-color: var(--bg-elevated) !important;
+  border-bottom-color: var(--border-color) !important;
+}
+
+/* Theme hover and card state overrides for readability */
+html.dark-theme .hover\:text-slate-900:hover,
+html.dark-theme .hover\:text-slate-800:hover,
+html.dark-theme .hover\:text-slate-700:hover,
+html.dark-theme .hover\:text-gray-900:hover,
+html.dark-theme .hover\:text-gray-800:hover {
+  color: var(--text-primary) !important;
+}
+
+html.dark-theme .hover\:text-slate-600:hover,
+html.dark-theme .hover\:text-slate-500:hover,
+html.dark-theme .hover\:text-gray-600:hover,
+html.dark-theme .hover\:text-gray-500:hover {
+  color: var(--text-secondary) !important;
+}
+
+html.dark-theme .hover\:text-slate-400:hover,
+html.dark-theme .hover\:text-gray-400:hover {
+  color: var(--text-primary) !important;
+}
+
+html.dark-theme .hover\:bg-white:hover,
+html.dark-theme .hover\:bg-slate-50:hover,
+html.dark-theme .hover\:bg-slate-100:hover,
+html.dark-theme .hover\:bg-slate-200:hover,
+html.dark-theme .hover\:bg-gray-50:hover,
+html.dark-theme .hover\:bg-gray-100:hover,
+html.dark-theme .hover\:bg-gray-200:hover,
+html.dark-theme .hover\:bg-indigo-50:hover,
+html.dark-theme .hover\:bg-indigo-100:hover,
+html.dark-theme .hover\:bg-slate-50\/40:hover,
+html.dark-theme .hover\:bg-slate-50\/50:hover,
+html.dark-theme .hover\:bg-indigo-50\/40:hover,
+html.dark-theme .hover\:bg-indigo-50\/50:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  background-image: none !important;
+}
+
+html.dark-theme .hover\:border-slate-300:hover,
+html.dark-theme .hover\:border-slate-200:hover {
+  border-color: var(--border-active) !important;
+}
+
